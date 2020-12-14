@@ -6,4 +6,320 @@
 \subsection{PT1000 temperature sensor}
 \section{Actuators: Selection and Evaluation}
 \subsection{RF attenuator}
+A RF attenuator provides a fast and simple way of influencing the RF control loop without interfering too much with existing subsystems, such as the LLRF crate from DESY.
+
+\FloatBarrier
+\subsection{Requirements}
+In order for the attenuator to be useful for its application, some requirements are formulated first (\autoref{tab:atteneval-reqs}).
+
+\begin{table}[tbh!]
+	\centering
+	\caption{Requirements against the attenuator is evaluated}
+	\label{tab:atteneval-reqs}
+	\begin{tabular}{ll}
+		\toprule
+		\textbf{Requirement} & \textbf{Value}\\
+		\midrule
+		attenuation set point resolution & \SI{0.1}{\dB}\\
+		attenuation repeatability  & \SI{0.01}{\dB}\\
+		\midrule
+		temperature range & TODO \\
+		voltage supply range & TODO\\
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+\FloatBarrier
+\section{Overview of the device}
+The ZX73-2500-S+ is a voltage controllable RF attenuator with coaxial SMA connectors by Mini-Circuits. Internally it is based on the Mini Circuits RVA-2500+, a variable SMD attenuator in the DV874 case form factor. According to equivalent circuit in the data sheet in \cite{mini-circuitsZX732500VoltageVariable} it can be assumed it is based on the common quad-$\pi$ pin diode design\cite{waughLowCostSurfaceMount1992}.
+
+To get a first impression of the device capabilities, the attenuation over frequency measurements from the data sheet are repeated but with a higher maximum frequency of \SI{4}{\GHz} instead of \SI{2.5}{\GHz} (the highest frequency for which the attenuator is specified). \autoref{fig:atteneval-overview-NA} shows the result.
+
+\begin{figure}[tb]
+	\centering
+	\includegraphics[width=\textwidth,height=0.5\textwidth]{chap/4-own-work/img/atteneval/NA/attenuationOverFrequencyParamVctrl.tikz}
+	\caption{Device attenuation vs. RF frequency over DC control voltage;\\ measured with network analyzer (see \ref{app:agilent-e5071c}, parameters: $\#AVG$: 16, $IF\text{-}BW$: \SI{10}{\kHz})}
+	\label{fig:atteneval-overview-NA}
+\end{figure}
+
+In the next sections an operating point is chosen (only relative changes in attenuation are relevant) and then the influences of environment changes on the attenuation are examined.
+
+\FloatBarrier
+\subsection{Measurement setup}
+For all the following sections in this chapter, a common measurement setup is needed. It needs to
+\begin{itemize}
+\item supply the attenuator with the supply voltage $V+$\footnote{To experiment with the influence of the supply voltage on attenuation, this also should be tunable.}
+\item feed in the (tunable) control voltage $V_{control}$
+\item supply RF power
+\item measure the attenuation
+\item keep track of $V+$, $V_{control}$ and the temperature $\vartheta_{case}$
+\end{itemize}
+
+To achieve this, the setup in \autoref{fig:atteneval-setup} is used. In addition to the shown connection, each device is connected via Ethernet to a network switch and subsequently to a computer which runs a custom python program. Since all lab devices used are VXI11 compatible, they are easy to remote control. So for most measurements needed in this chapter no manual operation of the devices is needed and the program can set all parameters according to the test protocol before doing a measurement.
+
+With the setup, a measurement frequency of about \SI{0.5}{\Hz} to \SI{1}{\Hz} can be achieved\footnote{Limited by the long measurement times of the HP E4419B}.
+
+\begin{figure}[tb]
+	\centering
+	\includegraphics[]{chap/4-own-work/img/atteneval/schematic.tikz}
+	\caption{Measurement setup: DUT(red), RF generator/power splitter/meter(blue),\\ DC sources/meters(green), temperature probe(yellow)}
+	\label{fig:atteneval-setup}
+\end{figure}
+
+\FloatBarrier
+\subsection{Choosing an operating point}
+The spectra in \autoref{fig:atteneval-overview-NA} already suggest that there is a nonlinear relation between the control voltage and the attenuation. This also implies a non-constant sensitivity. Therefore if a precise relative change in attenuation is desired, the needed change in the control voltage is not the same over the whole range of possible control voltages. Since the expected changes in attenuation (a few \SI{0.1}{\dB}) are small compared to the whole dynamic range of the device of about \SI{80}{\dB}, only small changes in the control voltage $V_{control}$ are necessary. 
+
+For the whole attenuator setup to meet the requirements in \autoref{tab:atteneval-reqs}, the minimum changes in the control voltage needed by the devices operating point, need to be larger than any noise and instability of the control voltage source.
+
+In \autoref{fig:atteneval-attenAnddAttenVsVcontrol} the relation between attenuation $A$ and the control voltage $V_{control}$ at a fixed RF frequency of \SI{3}{\GHz} is plotted. In addition, on the secondary axis, the sensitivity, with
+\begin{equation}
+\text{Sensitivity} \coloneq \frac{\text{d}A(V_{control})}{\text{d}V_{control}}
+\end{equation}
+is plotted, too.
+
+The figure shows, that for low control voltages both the absolute attenuation is quite large and the magnitude of the sensitivity is also high. Operating the attenuator in this region would require a very stable control voltage (for example at $V_{control}=\SI{2}{\volt}$, the sensitivity is \SI{-10}{\dB\per\volt}).
+
+\begin{figure}[tb]
+	\centering
+	\includegraphics[width=\textwidth,height=0.5\textwidth]{chap/4-own-work/img/atteneval/operatingpoint/AttenAndDatten.tikz}
+	\caption{Attenuation over control voltage}
+	\label{fig:atteneval-attenAnddAttenVsVcontrol}
+\end{figure}
+
+In \autoref{fig:atteneval-attenAnddAttenVsVcontrol10}, the range $V_{control}=\SI{10}{\volt}\pm\SI{1}{\volt}$ is examined further. \SI{10}{\volt} is chosen because the monotonically decreasing magnitude of the sensitivity suggests a high value but the maximum output voltage of the Keysight 34972A DAC of \SI{12}{\volt} limits the choice. With \SI{10}{\volt} there is still a margin for further experiments.
+
+\begin{figure}[tb]
+	\centering
+	\includegraphics[width=\textwidth,height=0.5\textwidth]{chap/4-own-work/img/atteneval/operatingpoint/AttenAndDatten10.tikz}
+	\caption{Attenuation over control voltage (zoomed in version of \autoref{fig:atteneval-attenAnddAttenVsVcontrol})}
+	\label{fig:atteneval-attenAnddAttenVsVcontrol10}
+\end{figure}
+
+For now, the operating point is set to $V_{control}=\SI{10}{\volt}$. For this control voltage, the absolute attenuation is $A=\SI{6.48}{\dB}$ and the sensitivity is \SI{-0.1511}{\dB\per\volt}.
+
+\FloatBarrier
+\subsection{Stability requirements and measurement of the actual stability of $V_{control}$}
+\subsubsection{Required stability}
+\autoref{fig:atteneval-attenAnddAttenVsVcontrol10} shows the attenuation $A$ to be almost linearly dependent of $V_{control}$ in the vicinity of the operating point $V_{control,o}=\SI{10}{\volt}$, thus the function $A(V_{control})$ can be approximated by its first order derivative around $V_{control,o}$:
+\begin{align}
+A(V_{control}) - A(V_{control,o}) &= \left.\frac{\text{d}A(V_{control})}{\text{d}V_{control}}\right|_{o} \cdot 
+\left( V_{control} - V_{control,o}\right)\\
+\Delta A(V_{control}) &= \left.\frac{\text{d}A(V_{control})}{\text{d}V_{control}}\right|_{o} \cdot \Delta V_{control}
+\end{align}
+
+With $\left.\frac{\text{d}A(V_{control})}{\text{d}V_{control}}\right|_{o} = \SI{-0.1511}{\dB\per\volt}$ and the required $\Delta A < \SI{0.01}{\dB}$ (so $\Delta A < \SI{0.005}{\dB}$ in one direction), the allowed deviation of $V_{control}$ from $V_{control,o}$, i.e. $\Delta V_{control}$ becomes
+\begin{align}\label{eq:atteneval-stabVc}
+\left|\Delta V_{control}\right| &= \left|\Delta A(V_{control})\right| \cdot 
+\left|\left[\left.\frac{\text{d}A(V_{control})}{\text{d}V_{control}}\right|_{o}\right]^{-1}\right| \\
+ &= \SI{0.005}{\dB} \cdot \SI{6.618}{\volt\per\dB} = \SI{33.09}{\milli\volt}
+\end{align}
+
+\autoref{eq:atteneval-stabVc} requires the control voltage to be stable in the interval of \SI{\pm33}{\mV} around the operating point.
+
+\FloatBarrier
+\subsubsection{Actual stability - long term}
+To asses the actual stability of $V_{control}$, delivered from the Keysight 34972A (see \autoref{app:keysight-34972A}) DAC, first its long term stability over the course of one day is measured. For that the voltage is taken once every 2 seconds with a Keysight 34470A multimeter (see \autoref{app:keysight-34470A}). The result is shown in \autoref{fig:atteneval-vcontrolstab-longterm}.
+
+\begin{figure}[tb]
+	\centering
+	\includegraphics[width=\textwidth,height=0.5\textwidth]{chap/4-own-work/img/atteneval/VcontrolStab/Vccontrolstab.tikz}
+	\caption{Long term stability of $V_{control}$ as delivered by the Keysight 34972A DAC (ch. 205); measured with Keysight 34470A;\\room temperature during measurement: $\mu_\vartheta=\SI{19.12}{\degreeCelsius}$, $\sigma_\vartheta=\SI{0.28}{\degreeCelsius}$}
+	\label{fig:atteneval-vcontrolstab-longterm}
+\end{figure}
+
+This measurement shows the stability of $V_{control}$ to be
+\begin{equation}
+\sigma_{V,control,longterm} = \SI{0.173}{\milli\volt}
+\end{equation}
+
+\FloatBarrier
+\subsubsection{Actual stability - short term}\label{sec:atteneval-VcStabST}
+Since the Keysight 34470A has a limited bandwidth of \SI{15}{\kHz}, higher frequency noise is not captured in \autoref{fig:atteneval-vcontrolstab-longterm}. Therefore for short term stability the DAC channel is measured again with a Tektronix MSO64 oscilloscope (\autoref{app:tektronix-MSO64},on the \SI{500}{\MHz} bandwidth setting). The resulting time signal is shown in \autoref{fig:atteneval-vcontrolstab-shorttermTime}, the spectrum shows \autoref{fig:atteneval-vcontrolstab-shorttermSpec}.
+
+\begin{figure}[tb]
+	\centering
+	\includegraphics[width=\textwidth,height=0.5\textwidth]{chap/4-own-work/img/atteneval/spec/vctrl_time.tikz}
+	\caption{Short term stability of $V_{control}$ as delivered by the Keysight 34972A DAC (ch. 205); measured with Tektronix MSO64}
+	\label{fig:atteneval-vcontrolstab-shorttermTime}
+\end{figure}
+
+\begin{figure}[tb]
+	\centering
+	\includegraphics[width=\textwidth,height=0.5\textwidth]{chap/4-own-work/img/atteneval/spec/vctrl_spec.tikz}
+	\caption{Power spectrum of $V_{control}$}
+	\label{fig:atteneval-vcontrolstab-shorttermSpec}
+\end{figure}
+
+This measurement shows the stability of $V_{control}$ to be
+\begin{equation}
+\sigma_{V,control,shortterm} = \SI{7}{\milli\volt}
+\end{equation}
+
+\subsection{Conclusion}
+With an allowed deviation of \SI{33}{\mV}, the output resolution of the Keysight 34972A DAC ($\nicefrac{\SI{24}{\volt}}{2^{16}-1}=\SI{366.22}{\micro\volt}$) and its stability (\SI{0.173}{\mV} long term, \SI{7}{\mV} short term) pose no problems on the device operation (if the other parameters are to be assumed with no error).
+
+\FloatBarrier
+\subsection{Stability requirements and measurement of the actual stability of $V_{+}$}
+\subsubsection{Required stability}
+To get the required stability for the power supply voltage, the effect of the power supply voltage $V+$ on the attenuation has to be examined first. For that $V+$ is varied \SI{\pm0.2}{\volt} around the nominal supply voltage of $V+_0=\SI{3}{\volt}$, all other parameters are kept constant and the attenuation is measured. To make the measurement more robust against fluctuations of the room temperature and drift of the devices, the procedure of stepping through the voltages is repeated and the means for each set $V+$ are computed. The result is shown in \autoref{fig:atteneval-vsupp-influence}.
+
+\begin{figure}[tb]
+	\centering
+	\includegraphics[width=\textwidth,height=0.5\textwidth]{chap/4-own-work/img/atteneval/VsuppStab/influenceVsupp.tikz}
+	\caption{Influence of the supply voltage on the attenuation}
+	\label{fig:atteneval-vsupp-influence}
+\end{figure}
+
+This leads to:
+\begin{align}
+\Delta A(V+) &= \left.\frac{\text{d}A(V+)}{\text{d}V+}\right|_{o} \cdot \Delta V+ \\
+\Delta A(V+) &= \SI{0.00375}{\dB\per\volt} \cdot \Delta V+
+\end{align}
+
+which means the allowed deviation of $V+$ from $V+_0$ becomes
+\begin{align}\label{eq:atteneval-stabVsupp}
+\left|\Delta V_{+}\right| &= \left|\Delta A(V+)\right| \cdot 
+\left|\left[\left.\frac{\text{d}A(V_{+})}{\text{d}V_{+}}\right|_{0}\right]^{-1}\right| \\
+ &= \SI{0.005}{\dB} \cdot \SI{266.67}{\volt\per\dB} = \SI{1.33}{\volt}
+\end{align}
+
+\FloatBarrier
+\subsubsection{Actual stability - long term}
+
+\begin{figure}[tb]
+	\centering
+	\includegraphics[width=\textwidth,height=0.5\textwidth]{chap/4-own-work/img/atteneval/VsuppStab/Vsuppstab.tikz}
+	\caption{Long term stability of $V+$ as delivered by the Keysight 34972A DAC (ch. 204); measured with Keysight 34470A;\\room temperature during measurement: $\mu_\vartheta=\SI{19.12}{\degreeCelsius}$, $\sigma_\vartheta=\SI{0.28}{\degreeCelsius}$}
+	\label{fig:atteneval-vsupplstab-longterm}
+\end{figure}
+
+This long term measurement yields a standard deviation of
+\begin{equation}
+\sigma_{V,+,longterm} = \SI{0.154}{\milli\volt}
+\end{equation}
+
+\FloatBarrier
+\subsubsection{Actual stability - short term}
+Again because of the lower bandwidth of the multimeter compared with an oscilloscope (compare \autoref{sec:atteneval-VcStabST}), the short term stability is evaluated with an oscilloscope measurement (see \autoref{fig:atteneval-vsuppstab-shorttermTime} and \autoref{fig:atteneval-vsuppstab-shorttermSpec}).
+
+\begin{figure}[tb]
+	\centering
+	\includegraphics[width=\textwidth,height=0.5\textwidth]{chap/4-own-work/img/atteneval/spec/vplus_time.tikz}
+	\caption{Short term stability of $V+$ as delivered by the Keysight 34972A DAC (ch. 204); measured with Tektronix MSO64}
+	\label{fig:atteneval-vsuppstab-shorttermTime}
+\end{figure}
+
+\begin{figure}[tb]
+	\centering
+	\includegraphics[width=\textwidth,height=0.5\textwidth]{chap/4-own-work/img/atteneval/spec/vplus_spec.tikz}
+	\caption{Power spectrum of $V+$}
+	\label{fig:atteneval-vsuppstab-shorttermSpec}
+\end{figure}
+
+The oscilloscope measurement shows a much higher standard deviation than the multimeter measurement of
+\begin{equation}
+\sigma_{V,+,shortterm} = \SI{50}{\milli\volt}
+\end{equation}
+
+\FloatBarrier
+\subsubsection{Conclusion}
+The short term noise with $\sigma_{V,+,shortterm} = \SI{50}{\milli\volt}$ is fairly high compared to the other DAC channel (with a higher output voltage). But these variations are not visible on the multimeter due to the lower bandwidth ($\sigma_{V,+,longterm} = \SI{0.154}{\milli\volt}$). This suggests the power supply can simply be stabilized with a RC lowpass or just a capacitor at the devices supply voltage input.
+
+But even without compensation the effects of the high frequency noise could not be seen in the attenuation, so device naturally rejects high frequency noise on its supply input.
+
+\FloatBarrier
+\subsection{Stability requirements of the case temperature $\theta_{case}$}
+\subsubsection{Required stability}
+To asses acceptable temperature change, first the influence of the device temperature of the attenuation is measured. For that the bottom of the device is fixed to an rectangular iron profile with zip ties. The iron profile is heated with the tip of a soldering iron (set to \SI{150}{\degreeCelsius}) for \SI{1}{\minute} and then allowed to cool for \SI{20}{\minute}. This cycle is repeated three times and the device temperature and the attenuation are measured once every \SI{2}{\second}. Due to the dynamic flow of heat from the soldering iron to the iron profile and through device itself, a strong hysteresis is visible in the curve in \autoref{fig:atteneval-tempstab-influence}. 
+
+To linearly approximate the temperature influence, the single measurements are binned together for similar temperature values (rounded to two decimal places). Then a mean operation is applied over the binned values (see \autoref{fig:atteneval-tempstab-influenceMean}).
+
+\begin{figure}[tb]
+	\centering
+	\includegraphics[width=\textwidth,height=0.5\textwidth]{chap/4-own-work/img/atteneval/TempStab/influenceTemp.tikz}
+	\caption{Attenuation over case temperature; color scale shows time progress of the total measurement}
+	\label{fig:atteneval-tempstab-influence}
+\end{figure}
+
+\begin{figure}[tb]
+	\centering
+	\includegraphics[width=\textwidth,height=0.5\textwidth]{chap/4-own-work/img/atteneval/TempStab/influenceTempmean.tikz}
+	\caption{Attenuation over case temperature}
+	\label{fig:atteneval-tempstab-influenceMean}
+\end{figure}
+
+From that the slope of the curve is taken at $\vartheta_{case,0}=\SI{23}{\degreeCelsius}$\footnote{This is not necessarily room temperature or expected operating temperature of the device but a convenient choice to get a linear curve section.}.
+
+With a slope of $\left.\frac{\text{d}A(\vartheta_{case})}{\text{d}\vartheta_{case}}\right|_{0} = \SI{0.0075}{\dB\per\kelvin}$, the influence on attenuation becomes
+\begin{align}
+\Delta A(\vartheta_{case}) &= \left.\frac{\text{d}A(V_{control})}{\text{d}V_{control}}\right|_{o} \cdot \Delta T_{case} \\
+\Delta A(\vartheta_{case}) &= \SI{0.0075}{\dB\per\kelvin} \cdot \Delta V+
+\end{align}
+
+which means the allowed deviation of $\vartheta_{case}$ from $\vartheta_{case,0}$ becomes
+\begin{align}\label{eq:atteneval-stabTemp}
+\left|\Delta \vartheta_{case}\right| &= \left|\Delta A(\vartheta_{case})\right| \cdot 
+\left|\left[\left.\frac{\text{d}A(\vartheta_{case})}{\text{d}\vartheta_{case}}\right|_{0}\right]^{-1}\right| \\
+ &= \SI{0.005}{\dB} \cdot \SI{133.33}{\kelvin\per\dB} = \SI{0.666}{\kelvin}
+\end{align}
+
+This would even be hard to achieve in climatized office spaces (like the IBPT RF lab), since aird conditioners can only keep the room temperature stable to about \SI{2}{\degreeCelsius} (depending on the distance to the air outlet, other heat sources in the room, open windows, etc.).
+
+\FloatBarrier
+\subsubsection{Conclusion}
+The results in \autoref{fig:atteneval-tempstab-influenceMean} and \autoref{eq:atteneval-stabTemp} suggest two solutions:
+\begin{itemize}
+\item Either mount the device in a temperature controlled cabinet to keep the temperature constant.
+\item Or since the plot in \autoref{fig:atteneval-tempstab-influenceMean} shows the slope becoming more flat towards higher temperatures, it could may be possible to operate the device on purpose at higher case temperatures (According to the data sheet\cite{mini-circuitsZX732500VoltageVariable}, the maximum operating temperature is \SI{85}{\degreeCelsius}).
+\end{itemize}
+
+\FloatBarrier
+\subsection{$V_{control}$ Frequency response}
+Using an non inverting adder with an \textit{TS912IN} operational amplifier, a sine wave with constant offset is made, which is then used to drive the control voltage $V_{control}$. The result for different sine wave frequencies is shown in \autoref{fig:atteneval-freqresp}.
+
+\begin{figure}[tb]
+	\centering
+	\includegraphics[width=\textwidth,height=0.6\textwidth]{chap/4-own-work/img/atteneval/holzworth/holzworth.tikz}
+	\caption{Spectrum (measured with Holzworth HA7062A (\autoref{app:holzworth-ha7062c})) showing the effect of modulating $V_{control}$ with different frequencies (Modulation amplitude: \SI{1}{\volt})}
+	\label{fig:atteneval-freqresp}
+\end{figure}
+
+\FloatBarrier
+\subsection{Influence of RF frequency variations}
+In this section the influence of a varying RF frequency on attenuation is examined. For that the set frequency of the R\&S SMC100 signal generator is varied while the attenuation is measured with the HP E4419B RF power meter. The result is shown in \autoref{fig:atteneval-rf}.
+\begin{figure}[tb]
+    \centering
+        \subfloat[$f_o=\SI{+-30}{\kHz}$]{\input{chap/4-own-work/img/atteneval/bunkerRF/influenceRFbunkerFull.tikz}}
+        \qquad
+        \subfloat[$f_o=\SI{+-1}{\kHz}$]{\input{chap/4-own-work/img/atteneval/bunkerRF/influenceRFbunkerZoomed.tikz}}
+       \caption{Attenuation vs. offset frequency $f_o=f-\SI{3}{\GHz}$}
+    \label{fig:atteneval-rf}
+\end{figure}
+
+\FloatBarrier
+\subsection{Testing the Attenuator in the RF cabinet at FLUTE}
+Without FLUTE being switched on, the attenuator is left in the RF cabinet in the bunker basement. Over the course of \SI{100}{\hour}, the case temperature is taken every two seconds and the deviation from the mean temperature \SI{25.4}{\degreeCelsius} is computed (see \autoref{fig:atteneval-tempInCabinet}). The figure also shows a power spectrum (calculated using Welch's method with a hanning window) of the temperature deviation.
+
+With a standard deviation of \SI{0.05522}{\kelvin}, a maximum positive swing of \SI{0.18}{\kelvin} and a maximum negative swing of \SI{0.17}{\kelvin} (a span of \SI{0.3559}{\kelvin}), the temperature stability is well inside the \SI{0.6}{\kelvin} tolerance.
+
+\begin{figure}[tb]
+		\hfill
+        \subfloat[Time]{\input{chap/4-own-work/img/atteneval/inCabinet/tempDeviation_time.tikz}}
+        
+        \hfill
+        \subfloat[Spectrum with peak at around \SI{8}{\minute}]{\input{chap/4-own-work/img/atteneval/inCabinet/tempDeviation_spect.tikz}}
+       \caption{Temperature of the attenuator inside the RF cabinet without a load}
+    \label{fig:atteneval-tempInCabinet}
+\end{figure}
+
+
+
+
+
+
+
+
+\FloatBarrier
+\newpage
 \section{Implementing control algorithm}

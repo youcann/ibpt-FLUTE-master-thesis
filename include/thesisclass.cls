@@ -43,16 +43,14 @@
                                                 % History_of_sentence_spacing# \
                                                 % French_and_English_spacing
 
-\usepackage[english,ngerman]{babel}             % babel language styles. you may
-                                                % add languages, if need to be.
-\usepackage[fixlanguage]{babelbib}              % use babel bibtex. fixlanguage 
-                                                % = don't switch language
-                                                % between bib items
-%\usepackage{cite}                              % for bibtex without babel
+\usepackage[english,ngerman]{babel}
+
+\usepackage[backend=biber,style=ieee]{biblatex}
+\addbibresource{lit.bib}
 
 \usepackage{amsmath}                            % lots of math packages
 \usepackage{amssymb}                            % ... even more math packages
-%\usepackage{mathtools}                         % ... (not necessary package)
+\usepackage{mathtools}                         % ... (not necessary package)
 %\usepackage{bbm}                               % blackboard style fonts.
                                                 % You may prefer the provided 
                                                 % \mathbbm{R} to ordinary 
@@ -99,10 +97,9 @@
 \usepackage[normal,
                 font={small,color=black},
                 labelfont=bf,
-                margin=2em]{caption}            % create graphics/
-                                                % tabular captions
-\usepackage{subcaption}                         % create subcaptions
-                                                % for subpictures
+                margin=2em]{caption}
+
+\usepackage{subfig}
 
 \usepackage[absolute,overlay]{textpos}          % used for titlepage
 \usepackage{tikz}                               % used for titlepage, 
@@ -142,11 +139,6 @@
             colorlinks=false,
             linkbordercolor=kitcolor,
             citebordercolor=kitcolor]{hyperref}
-
-\RequirePackage{scrlfile}                       % Prevent svg (<2.0) package 
-\PreventPackageFromLoading{subfig}              % from loading subfig.
-                                                % See also iss. #13
-\usepackage{svg}                                % include svg graphics
 
 \graphicspath{{./chap/}{./fig/}}                % To include graphics from the 
                                                 % following directories it will 
