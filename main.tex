@@ -12,33 +12,25 @@
 % amsmath, amssymb, mathtools, bbm, upgreek, nicefrac,
 % siunitx, varioref, booktabs, graphicx, tikz, multicol
 
-
-
-
-
 %% -------------------------
 %% |    Thesis Settings    |
 %% -------------------------
 % english or ngerman (new german für neue deutsche Rechtschreibung statt german)
 \SelectLanguage{english}
 % details on this thesis
-\newcommand{\thesisauthor}{Klara Fall}
-\newcommand{\thesistopic}{Name des Themas auf Deutsch}
-\newcommand{\thesisentopic}{Name of the Topic in English}
-\newcommand{\thesislongtopic}{Very long and very detailed description of the very interesting thesis topic (only necessary for pdfsubject tag).}
-\newcommand{\thesisinstitute}{Institut für Experimentelle Kernphysik}
-\newcommand{\thesisreviewerone}{Prof. Dr. D. Cay}
-\newcommand{\thesisreviewertwo}{Prof. Dr. E. Vil}
-\newcommand{\thesisadvisorone}{} % to use: enter names and uncomment in titlepg
+\newcommand{\thesisauthor}{Marvin-Dennis Noll}
+\newcommand{\thesistopic}{Stability Improvements at FLUTE}
+\newcommand{\thesisentopic}{Verbesserung der Stabilität von FLUTE}
+\newcommand{\thesislongtopic}{}
+\newcommand{\thesisinstitute}{Institute for Beam Physics and Technology}
+\newcommand{\thesisreviewerone}{Prof. Dr.-Ing. John Jelonnek}
+\newcommand{\thesisreviewertwo}{Prof. Dr.-Ing. Thomas Zwick}
+\newcommand{\thesisadvisorone}{Dr. Nigel Smale} % to use: enter names and uncomment in titlepg
 \newcommand{\thesisadvisortwo}{}
-\newcommand{\thesistimestart}{01.04.2015} % on titlepage
-\newcommand{\thesistimeend}{30.09.2015} % on titlepage
-\newcommand{\thesistimehandin}{30.09.2015} % on second page 'preamble'
-\newcommand{\thesispagehead}{Bachelor Thesis: \thesisentopic} % page heading
-
-
-
-
+\newcommand{\thesistimestart}{15.11.2020} % on titlepage
+\newcommand{\thesistimeend}{17.05.2021} % on titlepage
+\newcommand{\thesistimehandin}{17.05.2021} % on second page 'preamble'
+\newcommand{\thesispagehead}{Master Thesis: \thesisentopic} % page heading
 
 %% ---------------------
 %% |    PDF - Setup    |
@@ -48,14 +40,10 @@
 \hypersetup
 {
     pdfauthor={\thesisauthor},
-    pdftitle={Bachelorarbeit: \thesistopic},
+    pdftitle={Masterarbeit: \thesistopic},
     pdfsubject={\thesislongtopic},
-    pdfkeywords={kit,physik,bachelor,thesis,\thesisauthor}
+    pdfkeywords={kit,physics,master,thesis,\thesisauthor}
 }
-
-
-
-
 
 %% --------------------------------------
 %% |    Settings for Word Separation    |
@@ -69,20 +57,10 @@
 % "" = Separation without a hyphenation (e.g. und/""oder)
 
 % Describe separation hints here:
-\hyphenation
+%\hyphenation
 {
-    über-nom-me-nen an-ge-ge-be-nen
-    %Pro-to-koll-in-stan-zen
-    %Ma-na-ge-ment  Netz-werk-ele-men-ten
-    %Netz-werk Netz-werk-re-ser-vie-rung
-    %Netz-werk-adap-ter Fein-ju-stier-ung
-    %Da-ten-strom-spe-zi-fi-ka-tion Pa-ket-rumpf
-    %Kon-troll-in-stanz
+
 }
-
-
-
-
 
 %% -----------------------
 %% |    Main Document    |
@@ -102,34 +80,23 @@
     \endgroup
     \cleardoublepage
 
-
-
     % Contents
     \MainMatter
 
-    \chapter{Introduction}
-    \input{./chap/chapter1.tex}
-    \chapter{Theoretical Background}
-    \input{./chap/chapter2.tex}
-    \chapter{Experimental Investigations}
-    \input{./chap/chapter3.tex}
-
-    \emptychapter[3]{ROOT Routines}     % usage: \emptychapter[page displayed 
-                                        %        in toc]{name of the chapter}
-
-
-
-    \chapter{Conclusions}
-    \input{./chap/chapter4.tex}
+	\input{chap/0-Abstract/abstract.tex}
+	\input{chap/1-introduction/introduction.tex}
+	\input{chap/2-theoretical-background/theoretical-background.tex}
+	\input{chap/3-problem-and-previous-work/problem-and-previous-work.tex}
+	\input{chap/4-own-work/own-work.tex}
+	\input{chap/5-results/results.tex}
+	\input{chap/90-conclusion/conclusion-and-outlook.tex}
 
     % appendix for more or less interesting calculations
     \Appendix
     \chapter*{\appendixname} \addcontentsline{toc}{chapter}{\appendixname}
     % to make the appendix appear in ToC without number. \appendixname = 
     % Appendix or Anhang (depending on chosen language)
-    \input{./chap/appendix.tex} %\cleardoublepage
-
-
+    \input{./chap/99-appendix/appendix.tex} %\cleardoublepage
 
     % Bibliography
     \TheBibliography
@@ -140,9 +107,4 @@
     %\nocite{*}
     \bibliographystyle{babalpha}
     \bibliography{lit.bib}
-
-    % THEBIBLIOGRAPHY
-    %\begin{thebibliography}{000}
-    %    \bibitem{ident}Entry into Bibliography.
-    %\end{thebibliography}
 \end{document}

@@ -35,9 +35,7 @@
 \usepackage{lmodern}                            % the font used by T1 font enc
 \usepackage[protrusion=true,                    % microtype package for better 
             expansion,                          % line breaks, kerning, etc.
-            tracking,
-            kerning,
-            spacing]{microtype}
+            tracking]{microtype}
 \microtypecontext{spacing=nonfrench}            % option for scrbook to allow 
                                                 % microtype->nonfrenchspacing
                                                 % for info on nonfrenchspacing:
