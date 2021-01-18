@@ -9,7 +9,7 @@ legend style={fill opacity=0.8, draw opacity=1, text opacity=1, draw=white!80!bl
 tick align=outside,
 tick pos=left,
 x grid style={white!69.0196078431373!black},
-xlabel={Case temperature $\vartheta_{case}$ (in \si{degreeCelsius})},
+xlabel={Case temperature $\vartheta_{case}$ (in \si{\degreeCelsius})},
 ylabel={Attenuation $A$ (in \si{\dB})},
 xmin=20.339875, xmax=29.692625,
 xtick style={color=black},
