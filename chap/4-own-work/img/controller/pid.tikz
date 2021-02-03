@@ -1,0 +1,32 @@
+\begin{tikzpicture}
+\usetikzlibrary{shapes}
+\tikzset{
+    gain/.style     = {isosceles triangle, minimum height = 3em,
+        isosceles triangle apex angle=60}
+}
+
+\node[gain,draw,align=center,minimum width=1cm,minimum height=1cm] (kp) at (3,2) {$k_p$};
+\node[gain,draw,align=center,minimum width=1cm,minimum height=1cm] (ki) at (3,0) {$k_i$};
+\node[gain,draw,align=center,minimum width=1cm,minimum height=1cm] (kd) at (3,-2) {$k_d$};
+
+\node[rectangle,draw,align=center,minimum width=2.5cm,minimum height=1.5cm] (p) at (0,2) {\Large $1$};
+\node[rectangle,draw,align=center,minimum width=2.5cm,minimum height=1.5cm] (i) at (0,0) {\Large $\int$};
+\node[rectangle,draw,align=center,minimum width=2.5cm,minimum height=1.5cm] (d) at (0,-2) {\Large $\frac{\text{d}}{\text{d}t}$};
+
+\node[circle,draw,align=center,minimum width=1cm] (sum) at (5.5,0) {\Large $+$};
+
+
+\draw[-{Latex[length=3mm]}] (i)+(-4,0) -- node[pos=0.1,anchor=south] {$e(t)$} (i);
+\draw[-{Latex[length=3mm]}] (i)+(-3,0) |- (p);
+\draw[-{Latex[length=3mm]}] (i)+(-3,0)  |- node[fill,circle,minimum width=0.75ex,inner sep=0,pos=0] {} (d);
+
+\draw[-{Latex[length=3mm]}] (p) -- node[pos=0.5,anchor=south] {$e(t)$} (kp);
+\draw[-{Latex[length=3mm]}] (i) -- node[pos=0.5,anchor=south] {$e_i(t)$} (ki);
+\draw[-{Latex[length=3mm]}] (d) -- node[pos=0.5,anchor=south] {$e_d(t)$} (kd);
+\draw[-{Latex[length=3mm]}] (kp) -|  (sum);
+\draw[-{Latex[length=3mm]}] (ki) --  (sum);
+\draw[-{Latex[length=3mm]}] (kd) -|  (sum);
+\draw[{Latex[length=3mm]}-] (sum)+(2,0) -- node[pos=0.2,anchor=south] {$u(t)$} (sum);
+
+%\draw[-{Latex[length=3mm]}] (sum2)+(1,0) |-  node[fill,circle,minimum width=0.75ex,inner sep=0,pos=0] {} (f); %todo
+\end{tikzpicture}

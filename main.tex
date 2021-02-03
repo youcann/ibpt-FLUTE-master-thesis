@@ -23,13 +23,19 @@
     pdfkeywords={kit,physics,master,thesis,\thesisauthor}
 }
 
+%my imports
+\usepackage{hyperref}
+\usepackage{amsmath}
+\usepackage{siunitx}
 \usepackage{float}
 \usepackage{tabularx}
 \usepackage{tikzscale}
 \usepackage{pgfplots}
 \pgfplotsset{compat=newest}
 \usetikzlibrary{external}
+\usetikzlibrary{shapes,arrows.meta}
 \tikzexternalize[optimize=false,prefix=tikz/]
+\input{myListingsStyle.tex}
 
 
 \begin{document}
@@ -49,16 +55,18 @@
     % Contents
     \MainMatter
 
-	\input{chap/0-Abstract/abstract.tex}
-	\input{chap/1-introduction/introduction.tex}
-	\input{chap/2-theoretical-background/theoretical-background.tex}
-	\input{chap/3-problem-and-previous-work/problem-and-previous-work.tex}
-	\input{chap/4-own-work/own-work.tex}
-	\input{chap/5-results/results.tex}
-	\input{chap/90-conclusion/conclusion-and-outlook.tex}
+%	\input{chap/0-Abstract/abstract.tex}
+%	\input{chap/1-introduction/introduction.tex}
+%	\input{chap/2-theoretical-background/theoretical-background.tex}
+%	\input{chap/3-problem-and-previous-work/problem-and-previous-work.tex}
+%	\input{chap/4-own-work/own-work.tex}
+	\input{chap/4-own-work/own-work-control-system.tex}
+%	\input{chap/5-results/results.tex}
+%	\input{chap/90-conclusion/conclusion-and-outlook.tex}
 
     % appendix for more or less interesting calculations
     \Appendix
+    \addtocontents{toc}{\protect\setcounter{tocdepth}{1}}
     \chapter*{\appendixname} \addcontentsline{toc}{chapter}{\appendixname}
     % to make the appendix appear in ToC without number. \appendixname = 
     % Appendix or Anhang (depending on chosen language)

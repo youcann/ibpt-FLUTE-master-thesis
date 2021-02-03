@@ -1,0 +1,102 @@
+\usepackage{listings}
+\lstset{
+  literate={ö}{{\"o}}1
+           {ä}{{\"a}}1
+           {ü}{{\"u}}1
+           {Ü}{{\"U}}1
+           {Ö}{{\"O}}1
+           {Ä}{{\"A}}1
+}
+\definecolor{mygreen}{RGB}{28,172,0} % color values Red, Green, Blue
+\definecolor{mylilas}{RGB}{170,55,241}
+
+\lstdefinelanguage{AHDL}
+{
+	% list of keywords
+	morekeywords={
+		import,
+		if,
+		then,
+		while,
+		for,
+		table,
+		variable,
+		subdesign,
+		signal,
+		machine,
+		of,
+		bits,
+		with,
+		states,
+		begin,
+		end
+	},
+	sensitive=false, % keywords are not case-sensitive
+	morecomment=[l]{\%} % l is for line comment
+	tabsize=2
+}
+
+%common settings
+%\lstset{
+%    breaklines=true,%
+%    morekeywords={},
+%    keywordstyle=\color{blue},%
+%    morekeywords=[2]{1}, keywordstyle=[2]{\color{black}},
+%    identifierstyle=\color{black},%
+%    stringstyle=\color{mylilas},
+%    commentstyle=\color{mygreen},%
+%    showstringspaces=false,%without this there will be a symbol in the places where there is a space
+%    numbers=left,%
+%    numberstyle={\tiny \color{black}},% size of the numbers
+%    numbersep=9pt, % this defines how far the numbers are from the text
+%    tabsize=2,
+%    basicstyle=\footnotesize\ttfamily
+%}
+
+%prevent copying line numbers over from pdf
+\usepackage{accsupp}
+\newcommand{\noncopynumber}[1]{%
+    \BeginAccSupp{method=escape,ActualText={}}%
+    #1%
+    \EndAccSupp{}%
+}
+%common settings
+\lstset{columns=flexible}
+\lstset{keepspaces=false}
+\lstset{
+    breaklines=true,%
+    morekeywords={},%
+    frame=tb,
+    basicstyle={\footnotesize},
+    keywordstyle=\bfseries,%
+    showstringspaces=false,%without this there will be a symbol in the places where there is a space
+    numbers=left,%
+    numberstyle=\tiny\noncopynumber,% size of the numbers
+    numbersep=9pt, % this defines how far the numbers are from the text
+    tabsize=2%  
+}
+
+
+\lstdefinestyle{vhdl}
+{
+    language=VHDL,%
+}
+
+\lstdefinestyle{ahdl}
+{
+    language=AHDL,%
+}
+
+\lstdefinestyle{verilog}
+{
+    language=Verilog,%
+}
+
+\lstdefinestyle{python}
+{
+    language=Python,%
+}
+
+
+
+
