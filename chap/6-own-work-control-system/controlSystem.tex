@@ -27,10 +27,26 @@ Since the control algorithm should be implemented, tested and used online on the
 Following, ``input'' refers to the signal going into the control algorithm (i.e. the measured $y(t)$), while ``output'' is the output of the control algorithm $u(t)$.
 
 \subsection{Input}
-TODO
+Depending on which value is chosen to be controlled, filtering of the input signal could be mandatory.
+
+In the case of the cavity RF power the signal jumps to zero each time a breakdown occurs, shortening the RF supply. These outliners are not representative of the average RF power inside the cavity over multiple pulses and thus would greatly impair the controller performance. For that reason, before any further filtering to remove noise etc, a breakdown removal filter is used (\autoref{lst:control-system-breakdownremoval}). In principle the new power value is checked to be inside a band which size is determined by the mean deviation of the $N_{filt}$ previous values and a scaling $m$. The percentile differences are used here as they are robust against outliners (i.e. other breakdowns) in the $N_{filt}$ previous values opposed to a normal standard deviation. The scaling with $(2*1.2815)^{-1}$ is used to make the mean deviation comparable to a standard deviation.
+
+\begin{lstlisting}[style=python,caption = Breakdown removal, label = lst:control-system-breakdownremoval]
+#...
+if(abs(P[i]-np.median(P[i-3*Nfilt:i-Nfilt]))<
+m*(np.percentile(P[i-3*Nfilt:i-Nfilt],90)-np.percentile(P[i-3*Nfilt:i-Nfilt],10)/(2*1.2815))):
+   P_filt=np.append(P_filt,P[i])
+else:
+   breakdown_locations_predicted=np.append(breakdown_locations_predicted,i)
+   P_filt=np.append(P_filt,np.median(P[i-3*Nfilt:i-Nfilt]))
+#...
+\end{lstlisting}
+
+
+
 
 \subsection{Output}
-For the control system to work the controller needs some way of influencing the plant. For that the output of the FLUTE LLRF vector modulator is controlled by a RF attenuator (see TODO).
+For the control system to work the controller needs some way of influencing the plant. For that the output of the FLUTE LLRF vector modulator is controlled by a RF attenuator (see \autoref{chap:atten}).
 
 \section{Plant Identification}
 \subsection{Principle}
@@ -150,7 +166,9 @@ To log all relevant data from RAM to non-volatile memory (hard drive or network 
 To tune control parameters there are a multiple of analytical, empirical or hybrid approaches. Here the Ziegler-Nichols method is tested and fine tuning is done by hand.
 
 \FloatBarrier
+\newpage
 \section{Results}
+As \autoref{fig:own-work-pid-result} shows, with the control system activated, the standard deviation drops from about \SI{150}{\watt} to less than \SI{10}{\watt}, which shows the effectiveness of the system.
 
 \begin{figure}[tb]
 	\centering
