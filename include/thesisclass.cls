@@ -28,8 +28,9 @@
 %% ------------------
 %% |    Packages    |
 %% ------------------
-\usepackage[utf8]{inputenc}                     % for using utf8 chars (äöüß)
-\usepackage[T1]{fontenc}                        % for correct font encoding (you
+\usepackage[utf8]{inputenc}
+%mymurks: lualatex                     % for using utf8 chars (äöüß)
+\usepackage[EU2]{fontenc}                        % for correct font encoding (you
                                                 % can't search for non-ascii 
                                                 % chars in pdf otherwise)
 \usepackage{lmodern}                            % the font used by T1 font enc
@@ -74,7 +75,18 @@
                                                 % (is used below).
 \usepackage{fancyhdr}                           % Define simple page headings 
                                                 % (is used below).
-\usepackage{placeins}                           % To use \FloatBarrier
+%\usepackage{placeins}                           % To use \FloatBarrier
+%mymurks
+\usepackage{placeins}
+
+\let\Oldsection\section
+\renewcommand{\section}{\FloatBarrier\Oldsection}
+
+\let\Oldsubsection\subsection
+\renewcommand{\subsection}{\FloatBarrier\Oldsubsection}
+
+\let\Oldsubsubsection\subsubsection
+\renewcommand{\subsubsection}{\FloatBarrier\Oldsubsubsection}
 
 \usepackage[nottoc,                             % So that the Bibliography will 
             notlot,                             % be added to the ToC

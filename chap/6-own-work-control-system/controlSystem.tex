@@ -1,5 +1,5 @@
-\chapter{Own Work - Control System}
-In this chapter stabilizing the power output of FLUTE by means of a control system is examined. This is different than previous attempts in that a control system tries to compensate short term disturbances and long term drifts \textit{actively} by interfering with some part of FLUTE that has influence of the output power.
+\chapter{Implementing a Feedback Control System}
+In this chapter stabilizing the power output of FLUTE by means of a control system is examined. This is different than previous attempts in that a feedback control system tries to compensate short term disturbances and long term drifts \textit{actively} by interfering with some part of FLUTE that has influence of the output power.
 
 The next sections describe the chosen architecture of a suitable control system as well as some implementation details and the tuning of necessary controller parameters.
 
@@ -16,30 +16,21 @@ the controller can react accordingly.
 
 \begin{figure}[tb]
 	\centering
-	\includegraphics[width=\textwidth]{chap/4-own-work/img/controller/architecture.tikz}
+	\includegraphics[width=\textwidth]{chap/6-own-work-control-system/img/controller/architecture.tikz}
 	\caption{General structure of a closed loop feedback control system}
 	\label{fig:own-work-architecture}
 \end{figure}
 
 
-\section{Interfacing with FLUTE: Inputs and Outputs}
+\section{Inputs and Outputs}
 Since the control algorithm should be implemented, tested and used online on the actual accelerator instead of only operate on simulated data, there is the need for fast and reliable interfaces to the machine.
 Following, ``input'' refers to the signal going into the control algorithm (i.e. the measured $y(t)$), while ``output'' is the output of the control algorithm $u(t)$.
 
 \subsection{Input}
-Most signals to be useful as controlled variable ($y(t)$ and its set point $x(t)$) are available in EPICS. Retrieving their current value is therefore trivial if the control PC is on the machine network.
-
-For example using the command line tool \texttt{caget} the last value of a PV can be obtained independent of the programming language used, however a syscall is needed which comes with a (slight) overhead and is inconvenient to use.
-
-At least for Python and C++ there are EPICS libraries directly providing useful EPICS commands. A Python example of how to get the current cavity power is shown in \autopageref{lst:own-work-epicscaget}.
-
-\begin{lstlisting}[style=python,caption = Get an EPICS PV with python, label = lst:own-work-epicscaget]
-from epics import caget
-cavity_power=caget("F:RF:LLRF:01:GunCav1:Power:Out")
-\end{lstlisting}
+TODO
 
 \subsection{Output}
-For the control system to work the controller needs some way of influencing the plant. For that the output of the FLUTE LLRF vector modulator is controlled by a RF attenuator (see ). %todo
+For the control system to work the controller needs some way of influencing the plant. For that the output of the FLUTE LLRF vector modulator is controlled by a RF attenuator (see TODO).
 
 \section{Plant Identification}
 \subsection{Principle}
@@ -67,7 +58,7 @@ In a test run over 6 hours (after FLUTE had stabilized), the attenuator was driv
 
 \begin{figure}[tb]
 	\centering
-	\includegraphics[width=\textwidth,height=0.5\textwidth]{chap/4-own-work/img/controller/time.tikz}
+	\includegraphics[width=\textwidth,height=0.5\textwidth]{chap/6-own-work-control-system/img/controller/time.tikz}
 	\caption{Small section of the input sequence (green) and the system response (blue)}
 	\label{fig:own-work-identify-input}
 \end{figure}
@@ -87,7 +78,7 @@ For these transfer functions, the (single) step responses are given in \autoref{
 
 \begin{figure}[tb]
 	\centering
-	\includegraphics[width=\textwidth,height=0.5\textwidth]{chap/4-own-work/img/controller/steps.tikz}
+	\includegraphics[width=\textwidth,height=0.5\textwidth]{chap/6-own-work-control-system/img/controller/steps.tikz}
 	\caption{Step responses of the systems $\hat{G}_1(s)$, $\hat{G}_2(s)$, $\hat{G}_3(s)$}
 	\label{fig:own-work-identify-step}
 \end{figure}
@@ -96,7 +87,7 @@ To check the accuracy of the estimations, the SIT is used to do a simulation wit
 
 \begin{figure}[tb]
 	\centering
-	\includegraphics[width=\textwidth,height=0.5\textwidth]{chap/4-own-work/img/controller/mo2.tikz}
+	\includegraphics[width=\textwidth,height=0.5\textwidth]{chap/6-own-work-control-system/img/controller/mo2.tikz}
 	\caption{Validating the estimations $\hat{G}_1(s)$, $\hat{G}_2(s)$, $\hat{G}_3(s)$ against real data from the validation data set}
 	\label{fig:own-work-identify-mo}
 \end{figure}
@@ -115,7 +106,7 @@ Often simplifications, such as a pure P (only $k_p \neq 0$) or a PI (only $k_p,\
 
 \begin{figure}[tb]
 	\centering
-	\includegraphics[width=\textwidth]{chap/4-own-work/img/controller/pid.tikz}
+	\includegraphics[width=0.8\textwidth]{chap/6-own-work-control-system/img/controller/pid.tikz}
 	\caption{Block diagram of a generic PID controller}
 	\label{fig:own-work-pid-block}
 \end{figure}
@@ -148,7 +139,7 @@ while the derivative is replaced by a difference
 \begin{equation}
 e_d[n]=\frac{e_i[n-1]-e[n]}{dt}.
 \end{equation}
- 
+
 For the GUI a common framework should be used. In Python Tk and wxwidgets are common ways to build a GUI. Another viable option is PyQt, which, as the name suggests, is a Python port of the Qt framework. One major advantage of using PyQt is the possibility to import \texttt{.ui} files describing the GUI directly from the Qt RAD designer called ``Qt designer'', removing the need to create the GUI programmatically. Furthermore using PyQt enables the usage of \textit{pyqtgraph}, a highspeed plotting library only compatible with Qt. This ensures plotting live data does not bottleneck performance, which is often the problem with naive \textit{matplotlib} based solutions.
 
 To log all relevant data from RAM to non-volatile memory (hard drive or network share), a simple approach with a line by line CSV writer is used.
@@ -163,7 +154,7 @@ To tune control parameters there are a multiple of analytical, empirical or hybr
 
 \begin{figure}[tb]
 	\centering
-	\includegraphics[width=\textwidth,height=0.5\textwidth]{chap/4-own-work/img/controller/result.tikz}
+	\includegraphics[width=\textwidth,height=0.5\textwidth]{chap/6-own-work-control-system/img/controller/result.tikz}
 	\caption{Cavity power with PID controller on (before the \SI{4.5}{\hour} mark) and off shows the stabilizing effect of the control system}
 	\label{fig:own-work-pid-result}
 \end{figure}
