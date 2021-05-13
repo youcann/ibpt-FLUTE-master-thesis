@@ -11,8 +11,8 @@
 \newcommand{\thesisadvisorone}{Dr. Nigel Smale (IBPT)} % to use: enter names and uncomment in titlepg
 \newcommand{\thesisadvisortwo}{}
 \newcommand{\thesistimestart}{15.11.2020} % on titlepage
-\newcommand{\thesistimeend}{12.05.2021} % on titlepage
-\newcommand{\thesistimehandin}{10.05.2021} % on second page 'preamble'
+\newcommand{\thesistimeend}{01.07.2021} % on titlepage
+\newcommand{\thesistimehandin}{01.07.2021} % on second page 'preamble'
 \newcommand{\thesispagehead}{Master Thesis: \thesisentopic} % page heading
 
 \hypersetup
@@ -35,7 +35,7 @@
 \usetikzlibrary{external}
 \usetikzlibrary{shapes,arrows.meta}
 \tikzexternalize[optimize=false,prefix=tikz/]
-\input{myListingsStyle.tex}
+\input{include/myListingsStyle.tex}
 
 
 \begin{document}
@@ -55,15 +55,13 @@
     % Contents
     \MainMatter
 
-	\input{chap/0-Abstract/abstract.tex}
-	\input{chap/1-introduction/introduction.tex}
-	\input{chap/2-theoretical-background/theoretical-background.tex}
-	\input{chap/3-problem-and-previous-work/problem-and-previous-work.tex}
-	\input{chap/4-own-work-sensors/sensors.tex}
-	\input{chap/5-own-work-actuators/actuators.tex}
-	\input{chap/6-own-work-control-system/controlSystem.tex}
-	\input{chap/9-results/results.tex}
-	\input{chap/90-conclusion/conclusion-and-outlook.tex}
+	\input{chap/Abstract/abstract.tex}
+	\input{chap/Introduction/introduction.tex}
+	\input{chap/Theoretical-Framework/theoretical-framework.tex}
+	\input{chap/Stability-Of-The-Electron-Gun/stability-of-the-electron-gun.tex}
+	\input{chap/Interfacing-FLUTE/interfacing-flute.tex}
+	\input{chap/Controller-Design-And-Evaluation/controller-design-and-evaluation.tex}
+	\input{chap/Summary-And-Outlook/summary-and-outlook.tex}
 
     % appendix for more or less interesting calculations
     \Appendix
@@ -71,7 +69,7 @@
     \chapter*{\appendixname} \addcontentsline{toc}{chapter}{\appendixname}
     % to make the appendix appear in ToC without number. \appendixname = 
     % Appendix or Anhang (depending on chosen language)
-    \input{./chap/99-appendix/Appendix1.tex} %\cleardoublepage
+    \input{./chap/Appendix/Appendix1.tex} %\cleardoublepage
 
     % Bibliography
     \TheBibliography

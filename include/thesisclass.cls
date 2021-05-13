@@ -47,7 +47,7 @@
 \usepackage[english,ngerman]{babel}
 
 \usepackage[backend=biber,style=ieee]{biblatex}
-\addbibresource{bib.bib}
+\addbibresource{lit.bib}
 
 \usepackage{amsmath}                            % lots of math packages
 \usepackage{amssymb}                            % ... even more math packages
