@@ -1,4 +1,5 @@
 /tikz/*.*
+*.bak
 *.auxlock
 
 # Created by https://www.gitignore.io
