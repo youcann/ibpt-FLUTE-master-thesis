@@ -1,4 +1,67 @@
-\documentclass{include/thesisclass}
+\documentclass[a4paper,11pt,titlepage]{scrbook}
+\usepackage[utf8]{inputenc}     
+\usepackage[EU2]{fontenc} %mymurks: lualatex                                       
+\usepackage{lmodern}
+\usepackage[protrusion=true,expansion,tracking]{microtype}
+\microtypecontext{spacing=nonfrench}
+\usepackage[english,ngerman]{babel}
+\usepackage[backend=biber,style=ieee]{biblatex}
+\addbibresource{lit.bib}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{mathtools}
+%\usepackage{bbm}
+\usepackage{upgreek}
+\usepackage{nicefrac}
+\usepackage[load-configurations=abbreviations]{siunitx}
+\sisetup{per-mode=fraction}
+\sisetup{separate-uncertainty=true}
+\usepackage[version=3]{mhchem}
+\usepackage{vmargin}
+\usepackage{fancyhdr}
+\usepackage{placeins}
+
+\let\Oldsection\section
+\renewcommand{\section}{\FloatBarrier\Oldsection}
+\let\Oldsubsection\subsection
+\renewcommand{\subsection}{\FloatBarrier\Oldsubsection}
+\let\Oldsubsubsection\subsubsection
+\renewcommand{\subsubsection}{\FloatBarrier\Oldsubsubsection}
+
+\usepackage[nottoc,notlot,notlof]{tocbibind}
+\usepackage{varioref}
+\usepackage{booktabs}
+\usepackage[table]{xcolor}
+\definecolor{kitcolor}{rgb}{0 0.61 0.50}
+\usepackage[pdftex]{graphicx}
+\usepackage[normal,font={small,color=black},labelfont=bf,margin=2em]{caption}
+\usepackage{subfig}
+\usepackage[absolute,overlay]{textpos}
+\usepackage{tikz}                               
+\usepackage{ifthen}
+\usepackage[fit,breakall]{truncate}
+\usepackage{etoolbox}
+\usepackage{xstring}
+\usepackage{multicol}
+\DeclareGraphicsRule{*}{mps}{*}{}
+\DeclareGraphicsExtensions{.eps,.pdf,.png,.jpg,.jpeg,.mps}
+\usepackage{epstopdf}
+\usepackage[raiselinks=true,bookmarks=true, bookmarksopenlevel=1,bookmarksopen=true,bookmarksnumbered=true,hyperindex=true,plainpages=false,pdfpagelabels=true,pdfborder={0 0 0.5},colorlinks=false,linkbordercolor=kitcolor,citebordercolor=kitcolor]{hyperref}
+\input{include/cmds}
+
+%myinputs
+\usepackage{hyperref}
+\usepackage{amsmath}
+\usepackage{siunitx}
+\usepackage{float}
+\usepackage{tabularx}
+\usepackage{tikzscale}
+\usepackage{pgfplots}
+\pgfplotsset{compat=newest}
+\usetikzlibrary{external}
+\usetikzlibrary{shapes,arrows.meta}
+\tikzexternalize[optimize=false,prefix=tikz/]
+\input{include/myListingsStyle.tex}
 
 \SelectLanguage{english}
 \newcommand{\thesisauthor}{Marvin-Dennis Noll}
@@ -23,21 +86,6 @@
     pdfkeywords={kit,physics,master,thesis,\thesisauthor}
 }
 
-%my imports
-\usepackage{hyperref}
-\usepackage{amsmath}
-\usepackage{siunitx}
-\usepackage{float}
-\usepackage{tabularx}
-\usepackage{tikzscale}
-\usepackage{pgfplots}
-\pgfplotsset{compat=newest}
-\usetikzlibrary{external}
-\usetikzlibrary{shapes,arrows.meta}
-\tikzexternalize[optimize=false,prefix=tikz/]
-\input{include/myListingsStyle.tex}
-
-
 \begin{document}
     % Titlepage and ToC
     \FrontMatter
@@ -56,12 +104,12 @@
     \MainMatter
 
 	\input{chap/Abstract/abstract.tex}
-	\input{chap/Introduction/introduction.tex}
+	%\input{chap/Introduction/introduction.tex}
 	\input{chap/Theoretical-Framework/theoretical-framework.tex}
-	\input{chap/Stability-Of-The-Electron-Gun/stability-of-the-electron-gun.tex}
-	\input{chap/Interfacing-FLUTE/interfacing-flute.tex}
-	\input{chap/Controller-Design-And-Evaluation/controller-design-and-evaluation.tex}
-	\input{chap/Summary-And-Outlook/summary-and-outlook.tex}
+	%\input{chap/Stability-Of-The-Electron-Gun/stability-of-the-electron-gun.tex}
+	%\input{chap/Interfacing-FLUTE/interfacing-flute.tex}
+	%\input{chap/Controller-Design-And-Evaluation/controller-design-and-evaluation.tex}
+	%\input{chap/Summary-And-Outlook/summary-and-outlook.tex}
 
     % appendix for more or less interesting calculations
     \Appendix
