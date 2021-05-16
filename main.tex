@@ -1,8 +1,7 @@
 \documentclass[a4paper,11pt,titlepage]{scrbook}
 \usepackage[utf8]{inputenc}     
 \usepackage[EU2]{fontenc} %mymurks: lualatex
-\usepackage{shellesc}
-                                
+                            
 \usepackage{lmodern}
 \usepackage[protrusion=true,expansion,tracking]{microtype}
 \microtypecontext{spacing=nonfrench}
@@ -39,9 +38,12 @@
 \usepackage[normal,font={small,color=black},labelfont=bf,margin=2em]{caption}
 \usepackage{subfig}
 \usepackage[absolute,overlay]{textpos}
+
 \usepackage{tikz}
+\usepackage{tikzscale}
 \usetikzlibrary{external}
-\tikzexternalize[optimize=false,prefix=tikz/]
+\tikzexternalize[prefix=tikz/]
+
 \usepackage{ifthen}
 \usepackage[fit,breakall]{truncate}
 \usepackage{etoolbox}
@@ -61,7 +63,7 @@
 \usepackage{tabularx}
 \usepackage{pgfplots}
 \pgfplotsset{compat=newest}
-\usepackage{tikzscale}
+
 
 
 \usetikzlibrary{shapes,arrows.meta}
@@ -93,8 +95,10 @@
 \begin{document}
     % Titlepage and ToC
     \FrontMatter
-
+	
+	\tikzset{external/export=false}
     \input{include/titlepage}
+    \tikzset{external/export=true}
     \input{include/preamble}
 
     \begingroup \let\clearpage\relax    % in order to avoid listoffigures and
