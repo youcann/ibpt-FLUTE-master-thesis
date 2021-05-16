@@ -1,1 +1,199 @@
 \chapter{Controller Design and Evaluation}
+In this chapter stabilizing the power output of FLUTE by means of a control system is examined. This is different than previous attempts in that a feedback control system tries to compensate short term disturbances and long term drifts \textit{actively} by interfering with some part of FLUTE that has influence of the output power.
+
+The next sections describe the chosen architecture of a suitable control system as well as some implementation details and the tuning of necessary controller parameters.
+
+\section{Architecture}
+The general structure of a closed loop control system is shown in \autoref{fig:own-work-architecture}.
+
+$y(t)$ is the physical quantity which should follow a certain time trajectory $x(t)$ or be kept constant (then $x(t)=x=const.$). If there are no disturbances $d(t)$ or the disturbances are deterministic (i.e. $d(t)$ is known $\forall t$), then an open loop system would be possible. In that case the role of the controller would be to merely to set its output $u(t)$ according to the system dynamics of the plant\footnote{Assuming $g(t)$ is a stable LTI system} (represented by its impulse response $g(t)$).
+
+In most real world scenarios, $d(t)$ originates from a stochastic process and thus is unknown. Too remedy the negative influences of $d(t)$, the output $y(t)$ is measured and feed back. Based on the error $e(t)$, which is the difference between the set value and the actual value defined by
+\begin{equation}
+e(t) = x(t) - y(t),
+\end{equation}
+the controller can react accordingly.
+
+\begin{figure}[tb]
+	\centering
+	\includegraphics[width=\textwidth]{chap/Controller-Design-And-Evaluation/img/controller/architecture.tikz}
+	\caption{General structure of a closed loop feedback control system}
+	\label{fig:own-work-architecture}
+\end{figure}
+
+
+\section{Inputs and Outputs}
+Since the control algorithm should be implemented, tested and used online on the actual accelerator instead of only operate on simulated data, there is the need for fast and reliable interfaces to the machine.
+Following, ``input'' refers to the signal going into the control algorithm (i.e. the measured $y(t)$), while ``output'' is the output of the control algorithm $u(t)$.
+
+\subsection{Input}
+Depending on which value is chosen to be controlled, filtering of the input signal could be mandatory.
+
+In the case of the cavity RF power the signal jumps to zero each time a breakdown occurs, shortening the RF supply. These outliners are not representative of the average RF power inside the cavity over multiple pulses and thus would greatly impair the controller performance. For that reason, before any further filtering to remove noise etc, a breakdown removal filter is used (\autoref{lst:control-system-breakdownremoval}). In principle the new power value is checked to be inside a band which size is determined by the mean deviation of the $N_{filt}$ previous values and a scaling $m$. The percentile differences are used here as they are robust against outliners (i.e. other breakdowns) in the $N_{filt}$ previous values opposed to a normal standard deviation. The scaling with $(2*1.2815)^{-1}$ is used to make the mean deviation comparable to a standard deviation.
+
+\begin{lstlisting}[style=python,caption = Breakdown removal, label = lst:control-system-breakdownremoval]
+#...
+if(abs(P[i]-np.median(P[i-3*Nfilt:i-Nfilt]))<
+m*(np.percentile(P[i-3*Nfilt:i-Nfilt],90)-np.percentile(P[i-3*Nfilt:i-Nfilt],10)/(2*1.2815))):
+   P_filt=np.append(P_filt,P[i])
+else:
+   breakdown_locations_predicted=np.append(breakdown_locations_predicted,i)
+   P_filt=np.append(P_filt,np.median(P[i-3*Nfilt:i-Nfilt]))
+#...
+\end{lstlisting}
+
+
+
+
+\subsection{Output}
+For the control system to work the controller needs some way of influencing the plant. For that the output of the FLUTE LLRF vector modulator is controlled by a RF attenuator (see \autoref{chap:atten}).
+
+\section{Plant Identification}
+\subsection{Principle}
+Before choosing an appropriate controller, some insight of the system response has to be obtained. For that reason, next the plant transfer function is obtained. In the time domain, the transfer function is the response of the system to an impulse on the input. So per definition, in the special case here, this would mean changing the RF attenuator quickly from a big attenuation to a small attenuation and then back. This is not easy to measure and a single measurement is very susceptible to noise. Therefore it is more common to measure the step response instead and to average over several step responses.
+
+When there is no prior knowledge over the system, the identification is sometimes done with a (pseudo) random binary sequence to excite the system with step functions of different lengths. Then it is necessary that some of the steps last longer than a few dominant time constants of the system. To get the transfer function of the system from its step response, several methods are common, including correlation based and frequency response based algorithms.
+
+\subsection{Identifying the system response of the FLUTE LLRF}
+The input sequence is generated by modulating the RF attenuator around a base attenuation. As a trade off between high SNR and driving the LLRF in a ``save'' region, the control voltage span is chosen to be \SI{4}{\volt} in total (\SIrange{7}{11}{\volt} around the base control voltage of \SI{9}{\volt}).
+
+To get a random binary sequence, depending on the outcome of a binomial random process, the voltage is toggled between \SI{7}{\volt} and \SI{11}{\volt} according to \autoref{lst:own-work-randomSequence}. With the parameter \texttt{toggleP}, the average length of one constant voltage level can be controlled.
+
+\begin{lstlisting}[style=python,caption = Function to get a random binary sequence, label = lst:own-work-randomSequence]
+def randomBinarySequence(N,toggleP):
+    u=[False]*N
+    for i in range(1,len(u)):
+        if(np.random.binomial(1,toggleP,1)[0]):
+            u[i]=not u[i-1]
+        else:
+            u[i]=u[i-1]
+    return list(map(lambda x: 7 if x==False else 11,u))
+\end{lstlisting}
+
+In a test run over 6 hours (after FLUTE had stabilized), the attenuator was driven with such a random sequence. The result is shown in \autoref{fig:own-work-identify-input}.
+
+\begin{figure}[tb]
+	\centering
+	\includegraphics[width=\textwidth,height=0.5\textwidth]{chap/Controller-Design-And-Evaluation/img/controller/time.tikz}
+	\caption{Small section of the input sequence (green) and the system response (blue)}
+	\label{fig:own-work-identify-input}
+\end{figure}
+
+The time signals are then split into a estimation data set (about \SI{80}{\percent} of samples) and a validation data set (the remaining $\approx$ \SI{20}{\percent}).
+
+The two data sets are then loaded into the \textsc{Matlab} \textit{System Identification Toolbox} (SIT). With the SIT, first the means of both sets and both the input and output are removed, which is required by the estimators used. Then with different numbers of poles and zeros, the transfer function is estimated. After trying several settings, three promising candidates
+
+\begin{align}
+\hat{G}_1(s) &= \frac{71.37\,s + 0.5966}{s^3 + 0.8208\,s^2 + 0.328\,s + 0.002733} \\[1em]
+\hat{G}_2(s) &= \frac{-0.2125\,s + 70.85}{s^2 + 0.8022\,s + 0.3202} \\[1em]
+\hat{G}_3(s) &= \frac{79.12}{s + 0.3502}
+\end{align}
+emerge.
+
+For these transfer functions, the (single) step responses are given in \autoref{fig:own-work-identify-step}.
+
+\begin{figure}[tb]
+	\centering
+	\includegraphics[width=\textwidth,height=0.5\textwidth]{chap/Controller-Design-And-Evaluation/img/controller/steps.tikz}
+	\caption{Step responses of the systems $\hat{G}_1(s)$, $\hat{G}_2(s)$, $\hat{G}_3(s)$}
+	\label{fig:own-work-identify-step}
+\end{figure}
+
+To check the accuracy of the estimations, the SIT is used to do a simulation with the $\hat{G}_i(s)$ and the validation data set (see \autoref{fig:own-work-identify-mo}).
+
+\begin{figure}[tb]
+	\centering
+	\includegraphics[width=\textwidth,height=0.5\textwidth]{chap/Controller-Design-And-Evaluation/img/controller/mo2.tikz}
+	\caption{Validating the estimations $\hat{G}_1(s)$, $\hat{G}_2(s)$, $\hat{G}_3(s)$ against real data from the validation data set}
+	\label{fig:own-work-identify-mo}
+\end{figure}
+
+\autoref{fig:own-work-identify-mo} shows that a first order system with one pole and no zeros is not a sufficient approximation as there is no overshoot, since it is not possible in a first order system. The second and third order systems $\hat{G}_2(s)$ and $\hat{G}_3(s)$ show much better fits.
+
+The important conclusion of this section is that the plant can be modeled as a \textbf{second order system}. This info is needed when choosing a controller in the next section.
+
+\FloatBarrier
+\section{Controller design}
+For many control problems, especially if the plant behaves approximately as an LTI system and the system is of low order, a simple PID (proportional, integral and derivative) controller is a good starting point (visualized in \autoref{fig:own-work-pid-block}). 
+
+A PID controller uses the error $e(t)$, the temporal integral of the error $e_i(t)$ and the temporal derivative of the error $e_d(t)$ as an input and outputs a weighed sum of them. While the unmodified error signal represents the current error, the integrated and derived error signals allow to controller to ``see'' in the past and predict the future.
+
+Often simplifications, such as a pure P (only $k_p \neq 0$) or a PI (only $k_p,\,k_i \neq 0$) controller are valid as well. Since the plant has been identified to be a second order system, a simple P controller is not enough to bring the steady state error to zero (see ). So at least a PI controller is needed.
+
+\begin{figure}[tb]
+	\centering
+	\includegraphics[width=0.8\textwidth]{chap/Controller-Design-And-Evaluation/img/controller/pid.tikz}
+	\caption{Block diagram of a generic PID controller}
+	\label{fig:own-work-pid-block}
+\end{figure}
+
+As a starting point for software development and parameter tuning, the parameters $k_p=0.00001$ and $k_i=k_d=0$ are chosen. This ensures during development the system basically does nothing but still shows changing values at the controller output.
+
+\FloatBarrier
+\section{Software Design}
+As integrating a new subsystem into EPICS takes some time and effort and the control system is designated a temporary solution, it is more viable to operate it as an independent system.
+
+Before choosing a programming language, software frameworks, etc. the key requirements for the software are discussed:
+\begin{itemize}
+\item Communication with EPICS to get values and with the RF attenuator
+\item Efficient and lightweight to achieve clock cycles times of a most \SI{0.1}{\second}
+\item Easy implementation of a (time discrete) PID controller
+\item GUI to show input, output and error signals
+\item Possibility to log signals to file for documentation
+\end{itemize}
+
+With these in mind first programming languages are regarded. As there are EPICS libraries for both C++ and Python, these two languages are examined in more detail.\\
+While C++ as a compile language promises speed, all other requirements are possible but would take much greater effort in C++ compared to Python. For that reason, in the following a small test program is written to evaluate the fastest clock cycle possible with a simple Python program.
+
+ shows that retrieving one value of an EPICS channel and setting a new attenuator voltage takes only about \SI{20}{\milli\second}, thus using C++ is not necessary and Python can be utilized instead.
+ 
+To create a PID controller in software instead of a continuous time system, only discrete time implementations are possible. Choosing a high clock cycle frequency however approximates the continuous time system. To get the error signals for the integral and derivative part, the integral is replaced with a cumulative recursive sum as
+\begin{equation}
+e_i[n]=e_i[n-1]+e[n] \cdot dt,
+\end{equation}
+while the derivative is replaced by a difference
+\begin{equation}
+e_d[n]=\frac{e_i[n-1]-e[n]}{dt}.
+\end{equation}
+
+For the GUI a common framework should be used. In Python Tk and wxwidgets are common ways to build a GUI. Another viable option is PyQt, which, as the name suggests, is a Python port of the Qt framework. One major advantage of using PyQt is the possibility to import \texttt{.ui} files describing the GUI directly from the Qt RAD designer called ``Qt designer'', removing the need to create the GUI programmatically. Furthermore using PyQt enables the usage of \textit{pyqtgraph}, a highspeed plotting library only compatible with Qt. This ensures plotting live data does not bottleneck performance, which is often the problem with naive \textit{matplotlib} based solutions.
+
+To log all relevant data from RAM to non-volatile memory (hard drive or network share), a simple approach with a line by line CSV writer is used.
+
+
+\FloatBarrier
+\section{Control Parameter Tuning and Tests}
+To tune control parameters there are a multiple of analytical, empirical or hybrid approaches. Here the Ziegler-Nichols method is tested and fine tuning is done by hand.
+
+\FloatBarrier
+\newpage
+\section{Results}
+As \autoref{fig:own-work-pid-result} shows, with the control system activated, the standard deviation drops from about \SI{150}{\watt} to less than \SI{10}{\watt}, which shows the effectiveness of the system.
+
+\begin{figure}[b]
+	\centering
+	\includegraphics[width=\textwidth,height=0.5\textwidth]{chap/Controller-Design-And-Evaluation/img/controller/result.tikz}
+	\caption{Cavity power with PID controller on (before the \SI{4.5}{\hour} mark) and off shows the stabilizing effect of the control system}
+	\label{fig:own-work-pid-result}
+\end{figure}
+
+\begin{figure}[b]
+	\centering
+	\includegraphics[width=\textwidth,height=0.5\textwidth]{chap/Controller-Design-And-Evaluation/img/spectrogram.tikz}
+	\caption{}
+	\label{fig:controller-spectogram}
+\end{figure}
+
+
+
+
+
+
+
+
+
+
+
+
+
+

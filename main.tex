@@ -1,6 +1,8 @@
 \documentclass[a4paper,11pt,titlepage]{scrbook}
 \usepackage[utf8]{inputenc}     
-\usepackage[EU2]{fontenc} %mymurks: lualatex                                       
+\usepackage[EU2]{fontenc} %mymurks: lualatex
+\usepackage{shellesc}
+                                
 \usepackage{lmodern}
 \usepackage[protrusion=true,expansion,tracking]{microtype}
 \microtypecontext{spacing=nonfrench}
@@ -37,7 +39,9 @@
 \usepackage[normal,font={small,color=black},labelfont=bf,margin=2em]{caption}
 \usepackage{subfig}
 \usepackage[absolute,overlay]{textpos}
-\usepackage{tikz}                               
+\usepackage{tikz}
+\usetikzlibrary{external}
+\tikzexternalize[optimize=false,prefix=tikz/]
 \usepackage{ifthen}
 \usepackage[fit,breakall]{truncate}
 \usepackage{etoolbox}
@@ -55,12 +59,12 @@
 \usepackage{siunitx}
 \usepackage{float}
 \usepackage{tabularx}
-\usepackage{tikzscale}
 \usepackage{pgfplots}
 \pgfplotsset{compat=newest}
-\usetikzlibrary{external}
+\usepackage{tikzscale}
+
+
 \usetikzlibrary{shapes,arrows.meta}
-\tikzexternalize[optimize=false,prefix=tikz/]
 \input{include/myListingsStyle.tex}
 
 \SelectLanguage{english}
@@ -103,12 +107,12 @@
     % Contents
     \MainMatter
 
-	\input{chap/Abstract/abstract.tex}
+	%\input{chap/Abstract/abstract.tex}
 	%\input{chap/Introduction/introduction.tex}
-	\input{chap/Theoretical-Framework/theoretical-framework.tex}
+	%\input{chap/Theoretical-Framework/theoretical-framework.tex}
 	%\input{chap/Stability-Of-The-Electron-Gun/stability-of-the-electron-gun.tex}
 	%\input{chap/Interfacing-FLUTE/interfacing-flute.tex}
-	%\input{chap/Controller-Design-And-Evaluation/controller-design-and-evaluation.tex}
+	\input{chap/Controller-Design-And-Evaluation/controller-design-and-evaluation.tex}
 	%\input{chap/Summary-And-Outlook/summary-and-outlook.tex}
 
     % appendix for more or less interesting calculations
