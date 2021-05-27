@@ -1,0 +1,39 @@
+% This file was created by tikzplotlib v0.9.5.
+\begin{tikzpicture}
+
+\begin{axis}[
+tick align=outside,
+tick pos=left,
+x grid style={white!69.0196078431373!black},
+xlabel={difference between consecutive samples \(\displaystyle t_{n+1}-t_n\) (in \si{\milli\second})},
+xmin=-9.9969955488632, xmax=210.01839454475,
+xtick style={color=black},
+xticklabel style={/pgf/number format/precision=3,/pgf/number format/fixed},yticklabel style={/pgf/number format/precision=3,/pgf/number format/fixed},,
+y grid style={white!69.0196078431373!black},
+ylabel={Relative Frequency},
+ymin=0, ymax=0.617632514129545,
+ytick style={color=black}
+]
+\draw[draw=none,fill=white!49.8039215686275!black] (axis cs:0.00370400084648281,0) rectangle (axis cs:10.0044035505562,0.588221442028138);
+\draw[draw=none,fill=white!49.8039215686275!black] (axis cs:10.0044035505562,0) rectangle (axis cs:20.0051031002658,0.0100402466175715);
+\draw[draw=none,fill=white!49.8039215686275!black] (axis cs:20.0051031002658,0) rectangle (axis cs:30.0058026499755,0.0101686932693955);
+\draw[draw=none,fill=white!49.8039215686275!black] (axis cs:30.0058026499755,0) rectangle (axis cs:40.0065021996852,0.0106610721013873);
+\draw[draw=none,fill=white!49.8039215686275!black] (axis cs:40.0065021996852,0) rectangle (axis cs:50.0072017493949,0.0262031169720835);
+\draw[draw=none,fill=white!49.8039215686275!black] (axis cs:50.0072017493949,0) rectangle (axis cs:60.0079012991046,0.0321758862818963);
+\draw[draw=none,fill=white!49.8039215686275!black] (axis cs:60.0079012991046,0) rectangle (axis cs:70.0086008488142,0.0394973454358605);
+\draw[draw=none,fill=white!49.8039215686275!black] (axis cs:70.0086008488142,0) rectangle (axis cs:80.0093003985239,0.0371210823771177);
+\draw[draw=none,fill=white!49.8039215686275!black] (axis cs:80.0093003985239,0) rectangle (axis cs:90.0099999482336,0.0368213735228619);
+\draw[draw=none,fill=white!49.8039215686275!black] (axis cs:90.0099999482336,0) rectangle (axis cs:100.010699497943,0.040503510875148);
+\draw[draw=none,fill=white!49.8039215686275!black] (axis cs:100.010699497943,0) rectangle (axis cs:110.011399047653,0.0379988011645813);
+\draw[draw=none,fill=white!49.8039215686275!black] (axis cs:110.011399047653,0) rectangle (axis cs:120.012098597363,0.0296925843466336);
+\draw[draw=none,fill=white!49.8039215686275!black] (axis cs:120.012098597363,0) rectangle (axis cs:130.012798147072,0.0300565165268015);
+\draw[draw=none,fill=white!49.8039215686275!black] (axis cs:130.012798147072,0) rectangle (axis cs:140.013497696782,0.0282796711765704);
+\draw[draw=none,fill=white!49.8039215686275!black] (axis cs:140.013497696782,0) rectangle (axis cs:150.014197246492,0.0201233087857507);
+\draw[draw=none,fill=white!49.8039215686275!black] (axis cs:150.014197246492,0) rectangle (axis cs:160.014896796201,0.0109821887309471);
+\draw[draw=none,fill=white!49.8039215686275!black] (axis cs:160.014896796201,0) rectangle (axis cs:170.015596345911,0.00293286521664669);
+\draw[draw=none,fill=white!49.8039215686275!black] (axis cs:170.015596345911,0) rectangle (axis cs:180.016295895621,0.00261174858708683);
+\draw[draw=none,fill=white!49.8039215686275!black] (axis cs:180.016295895621,0) rectangle (axis cs:190.01699544533,0.00104898098989553);
+\draw[draw=none,fill=white!49.8039215686275!black] (axis cs:190.01699544533,0) rectangle (axis cs:200.01769499504,0.00483815721870184);
+\end{axis}
+
+\end{tikzpicture}

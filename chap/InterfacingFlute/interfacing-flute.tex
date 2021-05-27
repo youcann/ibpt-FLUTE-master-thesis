@@ -1,1 +1,97 @@
-\chapter{Interfacing the FLUTE RF System}
+\chapter{Interfacing FLUTE}
+This chapter covers methods on interfacing the FLUTE accelerator, that is how to read diagnostic measurements into the control system from FLUTE and how to influence the electron acceleration appropriately to achieve stabilization.\\
+In this chapter \textit{input} and \textit{output} refer to the view from the control system.
+
+\section{Inputs}
+FLUTE uses the \textit{Experimental Physics and Industrial Control System (EPICS)}\cite{Dalesio1991} for control of various parts of the accelerator, to send real time data to be archived and to build user interfaces via \textit{Control System Studio (CSS)}\cite{CSS2021}, a JAVA based integrated development environment (IDE).
+
+EPICS offers client/server and publish/subscribe paradigms to access data in so called process variables (PV) through channels. Modules are usually written in the C programming language. To ease the access to EPICS channels in programs written with the Python language, the package \textit{PyEpics}\cite{Newville2019} can be used. Since all data of interest as input for the control system can be extracted through an EPICS channel, the next section deals with using PyEpics to obtain the data.
+
+\subsection{Accessing EPICS channels in Python with PyEpics}
+Before usage PyEpics needs to be installed, e.g. with \texttt{pip3 install pyepics} from the \textit{PyPi} repository. If the computer running the Python code can reach the EPICS CA repeater on the machine network, the connection is established automatically in the background. To get a channel value asynchronously, i.e. at an arbitrary time, the function \texttt{caget(pvname)} can be used with the name of the desired process value, see \autoref{lst:caget}.
+
+\begin{lstlisting}[style=python,caption = Using \texttt{caget()} to get the value of an EPICS process value, label = lst:lst-caget]
+from epics import caget
+print(f"Cavity RF power: {caget('F:RF:LLRF:01:GunCav1:Power:Out')}")
+\end{lstlisting}
+
+Another way is to setup a channel object and create a subscription with an user defined callback function that is executed each time the process variable changes. This implements synchronous access to the PV and can be compared to an interrupt rather than polling the variable as in \autoref{lst:lst-caget}.\\
+For a non trivial example see \autoref{lst:create_subscription}. In this program, the time differences between new values and their statistics are printed to the console.
+
+\begin{lstlisting}[style=python,caption = Using a user defined callback function to access an EPICS process value, label = lst:create_subscription]
+from epics import ca
+import time
+import numpy as np
+
+dts=np.array([])
+lastCalled=time.time()
+
+def call(pvname, value, **kwargs):
+	global lastCalled, dts
+	now=time.time()
+	dt=now-lastCalled
+	lastCalled=now
+	dts=np.append(dts, dt)
+
+chid=ca.create_channel("F:RF:LLRF:01:GunCav1:Power:Out")
+_ , _ , eventID=ca.create_subscription(chid, callback=call, use_time=True)
+
+while(True):
+	time.sleep(2)
+	print(f"N:{len(dts)},mean:{np.mean(dts)},min:{np.min(dts)},max:{np.max(dts)},std:{np.std(dts)}")
+\end{lstlisting}
+
+
+
+
+\subsection{Properties of the Available Process Variables}
+In this section some process variables that may be used as inputs for the control system are analyzed. These are:
+\begin{itemize}
+\item \texttt{F:RF:LLRF:01:GunCav1:Power:Out Value}: The RF power measured immediately before the cavity
+\item \texttt{F:AX:DAQDT:01:1:Wave:05:Sample Value}: The charge measured with the Faraday cup and amplified with a charge sensitive amplifier
+\item \texttt{F:INJ-1:Gun:01:Temperature:Body Value}: The body temperature of the cavity
+\end{itemize}
+
+In \autoref{fig:quantNoise} all three are plotted for a duration of \SI{15}{\minute} without any interference to the system and the system being in steady state operation.
+
+\begin{figure}[tb]
+		\hfill
+        \subfloat[Cavity RF power \texttt{F:RF:LLRF:01:GunCav1:Power:Out Value}]{\input{chap/InterfacingFlute/img/Inputs/RF.tikz}}
+        
+        \hfill
+        \subfloat[Faraday cup charge \texttt{F:AX:DAQDT:01:1:Wave:05:Sample Value}]{\input{chap/InterfacingFlute/img/Inputs/FaradayCup.tikz}}
+        
+        \hfill
+        \subfloat[Cavity body temperature \texttt{F:INJ-1:Gun:01:Temperature:Body Value}]{\input{chap/InterfacingFlute/img/Inputs/BodyTemp.tikz}}
+       \caption{Comparing the quantization noise of three process variables}
+    \label{fig:quantNoise}
+\end{figure}
+
+\begin{table}[tb]
+\caption{Comparing quantization steps}\label{tab:quantSteps}
+\begin{tabular}{lSSS}
+\toprule
+PV & {$N_{unique}$} & {$q_{avg}$} & {$q_{norm}$}\\
+\midrule
+F:RF:LLRF:01:GunCav1:Power:Out Value  & 84 & 0.6935 & 0.011904\\
+F:AX:DAQDT:01:1:Wave:05:Sample Value  & 22 & 0.015  & 0.04545\\
+F:INJ-1:Gun:01:Temperature:Body Value & 18 & 0.1294 & 0.05555\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+
+In addition the sample times of the process variables is examined if the method with a custom callback is used (see \autoref{lst:create_subscription}) or the data is extracted from the archive. The differences in the sample times are calculated according to
+\begin{equation}
+\Delta=t_{n+1}-t_n.
+\end{equation}
+Then a histogram with the relative frequency on the y axis is used as an estimator for the probability density function of the sample time intervals (see \autoref{fig:sampleTimesHist}). The histogram shows that the time series resulting from recording process variables out of the EPICS system are highly unevenly spaced. Thus the data needs to be converted to posses evenly spaced sample times to use common signal processing methods like the DFT or digital LTI filters. For offline analysis of prerecorded data, it can easily be resampled to a fixed time grid. But for online operation of a filter or a whole control system it is not possible to use an arbitrary resample method because they are often non causal or introduce significant group delay when made causal. Instead calling \texttt{caget()} with a (software-) timer can be used to get evenly spaced samples online.
+
+\begin{figure}[tb]
+\centering
+\includegraphics[width=\textwidth,height=0.5\textwidth]{chap/InterfacingFlute/img/Inputs/dtHistogram.tikz}
+\caption{Histogram of the sample time intervals $\Delta$ of the plots in \autoref{fig:quantNoise}}
+\label{fig:sampleTimesHist}
+\end{figure}
+
+\section{Output: Controllable RF Attenuator}
