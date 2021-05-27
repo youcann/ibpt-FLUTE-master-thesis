@@ -1,4 +1,4 @@
-\documentclass[a4paper,11pt,titlepage]{scrbook}
+\documentclass[a4paper,11pt,titlepage,numbers=noenddot]{scrbook}
 \usepackage[utf8]{inputenc}     
 \usepackage[EU2]{fontenc} %mymurks: lualatex
                             
@@ -20,7 +20,7 @@
 \usepackage[version=3]{mhchem}
 \usepackage{vmargin}
 \usepackage{fancyhdr}
-\usepackage{placeins}
+\usepackage[section]{placeins}
 
 \let\Oldsection\section
 \renewcommand{\section}{\FloatBarrier\Oldsection}
@@ -64,8 +64,6 @@
 \usepackage{pgfplots}
 \pgfplotsset{compat=newest}
 \usepgfplotslibrary{fillbetween}
-\usepackage{makecell}
-
 
 
 \usetikzlibrary{shapes,arrows.meta}

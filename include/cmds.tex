@@ -326,3 +326,15 @@
     \addtocontents{toc}{\protect\contentsline
         {chapter}{\protect\numberline {\thechapter}#2}{#1}{}}
 }
+
+
+%mystuff
+%floatbarriers also for subsections
+%https://tex.stackexchange.com/questions/118662/use-placeins-for-subsections
+\makeatletter
+\AtBeginDocument{%
+  \expandafter\renewcommand\expandafter\subsection\expandafter{%
+    \expandafter\@fb@secFB\subsection
+  }%
+}
+\makeatother
