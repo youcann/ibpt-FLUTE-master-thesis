@@ -48,7 +48,7 @@ while(True):
 In this section some process variables that may be used as inputs for the control system are analyzed. These are:
 \begin{itemize}
 \item \texttt{F:RF:LLRF:01:GunCav1:Power:Out Value}: The RF power measured immediately before the cavity
-\item \texttt{F:AX:DAQDT:01:1:Wave:05:Sample Value}: The charge measured with the Faraday cup and amplified with a charge sensitive amplifier
+\item \texttt{F:AX:DAQDT:01:1:Wave:05:Sample Value}: The charge measured with a Faraday cup (RadiaBeam Technologies FARC-04 \cite{radiabeamFaradayCups}) and amplified with a charge sensitive amplifier (PCB 421A25 \cite{pcbsynotechPCB421A25Charge})
 \item \texttt{F:INJ-1:Gun:01:Temperature:Body Value}: The body temperature of the cavity
 \end{itemize}
 
@@ -69,6 +69,7 @@ In \autoref{fig:quantNoise} all three are plotted for a duration of \SI{15}{\min
 
 \begin{table}[tb]
 \caption{Comparing quantization steps}\label{tab:quantSteps}
+\centering
 \begin{tabular}{lSSS}
 \toprule
 PV & {$N_{unique}$} & {$q_{avg}$} & {$q_{norm}$}\\
@@ -94,4 +95,40 @@ Then a histogram with the relative frequency on the y axis is used as an estimat
 \label{fig:sampleTimesHist}
 \end{figure}
 
+
+
+
+
+
 \section{Output: Controllable RF Attenuator}
+The output signal computed by the control systems has to have a way of influencing the RF power send to the cavity. This could be done over an EPICS channel (e.g. with the PyEpics function \texttt{caput()} to set the value of a process variable via a channel access). However to make it possible to move the control system from a general purpose personal computer to a dedicated digital signal processor, FPGA or similar in the future, using a physical device in the signal path is preferred.\\
+
+\subsection{Defining Requirements}
+
+
+\begin{table}[tb]
+\caption{Requirements for the controllable RF attenuator}
+\label{tab:interfacing-flute_rfattenrequirements}
+\centering
+\begin{tabular}{lS}
+\toprule
+Requirement & {Value/Range}\\
+\midrule
+minimum attenuation & \\
+maximum attenuation & \\
+attenuation resolution & \\
+setup time & \\
+operating temperature range & \\
+supply voltage & \\
+control voltage & \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Evaluation of the ZX73-2500-S+ Controllable RF Attenuator}
+\subsection{Conclusion}
+
+
+
+
+
