@@ -1,41 +1,14 @@
-\chapter{Influencing the LLRF with a RF Attenuator}\label{chap:atten}
-A RF attenuator provides a fast and simple way of influencing the RF power delivery without interfering too much with existing subsystems, such as the LLRF MTCA system from DESY.
 
-\FloatBarrier
-\section{Requirements}
-In order for the attenuator to be useful for its application, some requirements are formulated first (\autoref{tab:atteneval-reqs}).
-
-\begin{table}[tbh!]
-	\centering
-	\caption{Requirements against the attenuator is evaluated}
-	\label{tab:atteneval-reqs}
-	\begin{tabular}{ll}
-		\toprule
-		\textbf{Requirement} & \textbf{Value}\\
-		\midrule
-		attenuation set point resolution & \SI{0.1}{\dB}\\
-		attenuation repeatability  & \SI{0.01}{\dB}\\
-		\midrule
-		temperature range & TODO \\
-		voltage supply range & TODO\\
-		\bottomrule
-	\end{tabular}
-\end{table}
 
 \FloatBarrier
 \section{Selection and Overview of the selected Device}
-The ZX73-2500-S+ is a voltage controllable RF attenuator with coaxial SMA connectors by Mini-Circuits. As it is the only offering from Mini-Circuits of a RF attenuator with SMA connectors and is similar to devices from other manufactures, it is bought for evaluation.
 
-Internally the ZX73-2500-S+ is based on the Mini Circuits RVA-2500+, a variable SMD attenuator in the DV874 case form factor. According to equivalent circuit in the data sheet in \cite{mini-circuitsZX732500VoltageVariable} it can be assumed it is based on the common quad-$\pi$ pin diode design\cite{waughLowCostSurfaceMount1992}.
 
-To get a first impression of the device capabilities, the attenuation over frequency measurements from the data sheet are repeated but with a higher maximum frequency of \SI{4}{\GHz} instead of \SI{2.5}{\GHz} (the highest frequency for which the attenuator is specified). \autoref{fig:atteneval-overview-NA} shows the result.
 
-\begin{figure}[tb]
-	\centering
-	\includegraphics[width=\textwidth,height=0.5\textwidth]{chap/5-own-work-actuators/img/atteneval/NA/attenuationOverFrequencyParamVctrl.tikz}
-	\caption{Device attenuation vs. RF frequency over DC control voltage;\\ measured with network analyzer (see \ref{app:agilent-e5071c}, parameters: $\#AVG$: 16, $IF\text{-}BW$: \SI{10}{\kHz})}
-	\label{fig:atteneval-overview-NA}
-\end{figure}
+
+
+
+
 
 In the next sections an operating point is chosen (only relative changes in attenuation are relevant) and then the influences of environment changes on the attenuation are examined.
 

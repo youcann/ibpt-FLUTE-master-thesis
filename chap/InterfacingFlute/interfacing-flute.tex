@@ -126,6 +126,29 @@ control voltage & \\
 \end{table}
 
 \subsection{Evaluation of the ZX73-2500-S+ Controllable RF Attenuator}
+The \textit{ZX73-2500-S+} is a voltage controllable RF attenuator with coaxial SMA connectors by the company Mini-Circuits. As there is no alternative model from Mini-Circuits and devices from other manufactures are offered with similar specifications, only the ZX73-2500-S+ is evaluated in detail in this section.
+
+The ZX73-2500-S+ attenuator consists of a brass housing/shielding containing the Mini-Circuits RVA-2500+, a variable SMD attenuator in the DV874 case form factor. The RF input and output are connected with female SMA screw connectors. The power supply and control voltage are connected with solder pins. In order to use shielded cables and a reliable connection, for all measurements SMA connectors are soldered to the supply and control pins. According to equivalent circuit in the data sheet\cite{mini-circuitsZX732500VoltageVariable} it can be assumed it is based on the common quad-$\pi$ pin diode design\cite{waughLowCostSurfaceMount1992}.
+
+The attenuation versus frequency measurements from the manufactures data sheet are redone to both get a first impression of the device and verify it is generally operational and also as a sanity check for the used laboratory test equipment.
+Because the signal used by the FLUTE RF system is a \SI{3}{\GHz} single harmonic, the frequency measurement range is augmented over the maximum of \SI{2.5}{\GHz} in the data sheet to \SI{4}{\GHz}.
+Between the measurement of each network analyzer trace, the control voltage $V_{control}$ of the attenuator is set to \SI{0}{\volt}, \SI{2}{\volt}, \SI{4}{\volt}, \SI{6}{\volt} or \SI{12}{\volt}.
+The result is shown in \autoref{fig:atteneval-overview-NA}\footnote{A through calibration of the network analyzer reduces the influence of the cables and connectors on the measurement. Change in attenuation due to play in the connectors and slight bend changes in the cables exceed the trace noise (\SI{0.004}{\dB rms}) and cause an uncertainty of about \SI{0.5}{\dB}}.
+When comparing the measured plots to the plots in the data sheet, there are obvious discrepancies. For $V_{control}=\SI{0}{\volt}$ the attenuator is very susceptible to noise on the control input, which could explain the differences for this curve. In the case of \SI{2}{\volt} and \SI{4}{\volt}, the almost constant offset scales with a similar logarithmic fashion as the attenuation does, which suggests device tolerances causing the deviations.
+
+\begin{figure}[tb]
+	\centering
+	\includegraphics[width=\textwidth,height=0.5\textwidth]{chap/InterfacingFlute/img/Output/attenuationOverFrequency_Vctrl.tikz}
+	\caption{attenuation vs. frequency over DC control voltage; measured with network analyzer (see \ref{app:agilent-e5071c}, parameters: $\#AVG$: 16, $IF\text{-}BW$: \SI{10}{\kHz})}; dashed the measurements from Mini-Circuit (see \cite{mini-circuitsZX732500VoltageVariable})
+	\label{fig:atteneval-overview-NA}
+\end{figure}
+
+From this quick examination it is not possible to predict how the attenuator behaves for small changes in $V_{control}$ and how changes in the environment, such as the body temperature or the supply voltage, cause unwanted variations in the attenuation. 
+
+For this reason in the next sections, the attenuator is operated in a narrow region around a fixed operating point and
+
+
+
 \subsection{Conclusion}
 
 
