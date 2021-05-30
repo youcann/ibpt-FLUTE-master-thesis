@@ -2,7 +2,7 @@
 \begin{tikzpicture}
 %\draw (-7.5,8) -- (7.5,8);
 \node[fill=red!30,draw,minimum height=2cm,minimum width=4cm,align=center] (att) at (0,0) {ZX73-2500-S+};
-\node[fill=blue!30,draw,minimum height=2cm,minimum width=1.5cm,align=center,label={[anchor=north]below:\tiny RF signal generator}] (smc) at (-6.25,0) {R\&S \\SMC\\100A};
+\node[fill=blue!30,draw,minimum height=2cm,minimum width=1.5cm,align=center,label={[anchor=north,align=center]below:\tiny RF signal generator}] (smc) at (-6.25,0) {R\&S \\SMC\\100A};
 \node[fill=blue!30,draw,minimum height=2cm,minimum width=0.5cm,align=center,label={[anchor=north]below:\tiny Power splitter}] (ps) at (-4.25,0) {S};
 \node[fill=blue!30,draw,minimum height=2cm,minimum width=3cm,align=center,label={[anchor=north]below:\tiny RF power meter}] (hp) at (+5.5,0) {HP E4419B};
 \draw[-Latex] (smc) -- (ps);

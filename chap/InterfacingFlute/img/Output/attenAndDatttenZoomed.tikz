@@ -1,0 +1,114 @@
+% This file was created by tikzplotlib v0.9.5.
+\begin{tikzpicture}
+
+\definecolor{color0}{rgb}{0.12156862745098,0.466666666666667,0.705882352941177}
+\definecolor{color1}{rgb}{1,0.498039215686275,0.0549019607843137}
+
+\begin{axis}[
+axis line style={-},
+tick align=outside,
+tick pos=left,
+legend style={fill opacity=0.8, draw opacity=1, text opacity=1, at={(0.30,0.96)}, draw=white!80!black},
+x grid style={white!69.0196078431373!black},
+xlabel={Control Voltage \(\displaystyle V_{control}\) (in \si{\volt})},
+xmin=9, xmax=12,
+xtick distance=0.5,
+xtick style={color=black},
+y grid style={white!69.0196078431373!black},
+ylabel={Attenuation \(\displaystyle A(V_{control},f)\) (in \si{\dB})},
+ymin=6, ymax=7,
+ytick style={color=black}
+]
+\addplot [semithick, color0, mark=*, mark size=2, mark options={solid},error bars/y dir=both,error bars/y fixed=0.015]
+table {%
+9 6.64584567591666
+9.1 6.6280997845
+9.2 6.61093997516667
+9.3 6.59418080075
+9.4 6.57777113908334
+9.5 6.56154005966666
+9.6 6.54572160958333
+9.7 6.5302192655
+9.8 6.515072201
+9.9 6.50041906841667
+10 6.48591777333333
+10.1 6.47178354441667
+10.2 6.45792561958333
+10.3 6.44432426166667
+10.4 6.43099284441667
+10.5 6.41790107066667
+10.6 6.40508262008333
+10.7 6.39244178125
+10.8 6.38005442483333
+10.9 6.36788153116666
+11 6.35594542125
+11.1 6.34411918966667
+11.2 6.33266202366667
+11.3 6.32135199825
+11.4 6.31025259508333
+11.5 6.29936562791667
+11.6 6.28878245866667
+11.7 6.27828505625
+11.8 6.2679933405
+11.9 6.25773387825
+12 6.2480937065
+};
+\addlegendentry{$A(V_{control},f)$}
+\end{axis}
+
+\begin{axis}[
+axis y line=right,
+legend cell align={left},
+legend style={fill opacity=0.8, draw opacity=1, text opacity=1, at={(0.98,0.96)}, draw=white!80!black},
+tick align=outside,
+x grid style={white!69.0196078431373!black},
+xmin=9, xmax=12,
+xtick pos=left,
+xtick style={color=black},
+xtick distance=0.5,
+yticklabel style={/pgf/number format/precision=3,/pgf/number format/fixed},
+y grid style={white!69.0196078431373!black},
+axis line style={-},
+ylabel={Sensitivity \(\displaystyle S(V_{control},f)\) (in \si{\dB\per\volt})},
+ymin=-0.2, ymax=-0.08,
+ytick pos=right,
+ytick style={color=black}
+]
+\addplot [semithick, color1, mark=*, mark size=2, mark options={solid},error bars/y dir=both,error bars/y fixed=0.005]
+table {%
+9 -0.187728985240664
+9.1 -0.184914988633042
+9.2 -0.178807920848617
+9.3 -0.174633241802022
+9.4 -0.170991263798327
+9.5 -0.169130408575473
+9.6 -0.164830745814497
+9.7 -0.161536871417075
+9.8 -0.157834802100252
+9.9 -0.152687953592598
+10 -0.151105782884594
+10.1 -0.147280895509584
+10.2 -0.144401763364081
+10.3 -0.141728295609474
+10.4 -0.138915471269691
+10.5 -0.136418348187041
+10.6 -0.133570277663533
+10.7 -0.131719535203714
+10.8 -0.129078208425785
+10.9 -0.126843472731385
+11 -0.124376148694906
+11.1 -0.123231199124253
+11.2 -0.119385477512138
+11.3 -0.117852249417002
+11.4 -0.115657532338478
+11.5 -0.113443915698806
+11.6 -0.110278293471825
+11.7 -0.109384589535581
+11.8 -0.107241302014216
+11.9 -0.106905215455035
+12 -0.100452110729052
+};
+\addlegendentry{$S(V_{control},f)$}
+\end{axis}
+
+\end{tikzpicture}

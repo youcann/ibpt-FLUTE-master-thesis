@@ -338,3 +338,11 @@
   }%
 }
 \makeatother
+
+\makeatletter
+\AtBeginDocument{%
+  \expandafter\renewcommand\expandafter\subsubsection\expandafter{%
+    \expandafter\@fb@secFB\subsubsection
+  }%
+}
+\makeatother
