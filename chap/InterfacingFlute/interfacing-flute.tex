@@ -145,16 +145,34 @@ When comparing the measured plots to the plots in the data sheet, there are obvi
 
 From this quick examination it is not possible to predict how the attenuator behaves for small changes in $V_{control}$ and how changes in the environment, such as the body temperature or the supply voltage, cause unwanted variations in the attenuation. 
 
-For this reason, the ZX73-2500-S+ is examined in greater detail with different measurement setups in the next sections.
+For this reason, with different measurement setups, the ZX73-2500-S+ is examined in greater detail in the next sections.
 
-%todo what is measured?
+To compare desired and spurious influences on the attenuation, the following model is used.\\
+The attenuation of the ZX73-2500-S+ $A$ depends on the control voltage $V_{control}$ but also on the supply voltage $V+$, the case temperature $\vartheta_{case}$ and the RF frequency $f$:
+\begin{equation}
+A=A(\underbrace{V_{control},\,V_+,\,\vartheta_{case},\,f}_{\vec{x}}) = A\left(\vec{x}\right)
+\end{equation}
+Other influences are not modeled as they are difficult to control, such as the manufacturing tolerances between different devices, or assumed to be negligible, such as component degradation or humidity.
+
+In the next sections, the influence of each component of the parameter vector $\vec{x}$ on $A$ is measured. As a coarse approximation, all influences are assumed to have linear effect. Then the total derivative of $A$, $\Delta A$ can be written as
+\begin{equation}
+\underbrace{A(\vec{x}-\vec{x_o})-A(\vec{x_o})}_{\Delta A} = \sum_{j=0}^{3} \frac{\Delta A}{\Delta x_j} \Delta x_j
+\end{equation}
+where the $\nicefrac{\Delta A}{\Delta x_j}$ approximate the partial derivatives $\nicefrac{\d{A}}{\d{x_j}}$.
+
+If not specified otherwise, the operating point
+\begin{align}\label{eq:interfacingFlute_operatingpoint}
+A(\vec{x_o}) =: A_o &= A(V_{control},\,V_+,\,\vartheta_{case},\,f)\\
+A_o                 &= A\left(\SI{10}{\volt},\,\SI{3}{\volt},\,\SI{20}{\celsius},\,\SI{3}{\GHz}\right)
+\end{align}
+is used.
 
 \subsubsection{Common Measurement Setup}
 For the following measurements a common setup is used to ease the recording of data and the sequential control for parameter studies. The needed tasks are:
 \begin{itemize}
 \item Supply the attenuator with the supply voltage $V_+$
-\item Supply the attenuator with the adjustable control voltage $V_control$
-\item Supply the RF input power
+\item Supply the attenuator with the adjustable control voltage $V_{control}$
+\item Supply the RF input power with variable frequency $f$
 \item Measure the RF output power
 \item Record all data as time series to a computers storage device
 \end{itemize}
@@ -182,33 +200,143 @@ All measurements are performed in the ``RF lab'' in building 348 (KARA hall on K
 \end{figure}
 
 \subsubsection{Relation between Control Voltage and Attenuation}
-The measured spectra in \autoref{fig:interfacingFlute_atteneval-overview-NA} already suggest that there is a non linear relationship between the control voltage $V_{control}$ and the attenuation $A$ of the attenuator:
+In this section the relation between the control voltage and the attenuation is examined. All other parameters are kept constant:
 \begin{equation}
-A=A(V_{control},f) \neq const. \cdot V_{control} \cdot A(f).
+A(\vec{x}) := A(V_{control})
+\end{equation}
+
+The measured spectra in \autoref{fig:interfacingFlute_atteneval-overview-NA} already suggest that there is a non linear relationship between the control voltage $V_{control}$ and the attenuation $A(V_{control})$ of the attenuator:
+\begin{equation}
+A(V_{control}) \neq const. \cdot V_{control} + A_0.
 \end{equation}
 This also means the sensitivity
 \begin{equation}
-S(V_{control},f)=\frac{\d{A(V_{control},f)}}{\d{V_{control}}}
+S(V_{control}) := \frac{\Delta A(V_{control})}{\Delta V_{control}}
 \end{equation}
-(for a fixed frequency) is not constant.
-In other words, for a desired relative change in attenuation, the needed adjustment in $V_{control}$ depends on the chosen operating point $A_0:=A(V_{control,0},f_0)$.
+is not a constant.
+In other words, for a desired relative change in attenuation, the needed adjustment in $V_{control}$ depends on the chosen operating point $A_o=A(V_{control,o})$.
+
+With all other variables being at the operating point in \autoref{eq:interfacingFlute_operatingpoint}, $A(V_{control})$ is measured by stepping $V_{control}$ in \SI{0.1}{\volt} increments up and down between \SI{0}{\volt} and \SI{12}{\volt} several times with each valued held constant for \SI{30}{\second}. $A(V_{control})$ is then calculated as the mean of all measurements $A_j(V_{control})$ with the same $V_{control}$ with
+
+\begin{equation}\label{eq:interfacingFlute_avg}
+A(V_{control}) = \frac{1}{N} \sum_{j=0}^{N-1} A_j(V_{control}).
+\end{equation}
+
+With the averaging done in \autoref{eq:interfacingFlute_avg} and $N=120$, the resulting mean standard deviation is $\sigma_A=\SI{0.00574}{\dB}$.
+\autoref{fig:interfacingFlute_attenDatten} shows the resulting plot.
+
+The plot shows the attenuation can be varied over more than \SI{30}{\dB} and the magnitude of the sensitivity being large for small control voltages (\SIrange{1}{3}{\volt}).
+Since the required change in attenuation of less than \SI{1}{\dB} is much smaller, it is only necessary to vary $V_{control}$ around the operating point.
+
+The optimal operating point for $V_{control}$ is selected by considering the following three aspects.
+First, the absolute attenuation at the operating point should be as low as possible to not worsen the SNR of the signal path. Second the control voltage has to fit in the possible output voltage range of the voltage source and still allow for adjustment towards both lower and higher voltages. 
+In case of the Keysight 34972A/34907A the maximum possible output voltage is \SI{12}{\volt}.
+Third, the sensitivity should be as low as feasible to make the attenuation less susceptible to noise on the $V_{control}$ input.
+
+
+For these reasons, $V_{control,o}=\SI{10}{\volt}$ (as already used in \autoref{eq:interfacingFlute_operatingpoint}) is chosen as the operating point, which allows $V_{control}$ to be varied in \SIrange{8}{12}{\volt}.
+At the operating point $\vec{x_o}$ (with $V_{control,o}=\SI{10}{\volt}$), the measured attenuation is
+\begin{equation}
+A(V_{control})=\SI{6.4859}{\dB}
+\end{equation}
+\autoref{fig:interfacingFlute_attenDattenZoomed} shows the attenuation and sensitivity around the operating point.
+
+The sensitivity at the operating point is determined with discrete forward differentiation as
+\begin{equation}
+S(V_{control})=S(\SI{10}{\volt})=\frac{\Delta A}{\Delta V_{control}} = \SI{-0.151}{\dB\per\volt}.
+\end{equation}
 
 \begin{figure}[tb]
 	\centering
 	\includegraphics[width=\textwidth,height=0.5\textwidth]{chap/InterfacingFlute/img/Output/attenAndDattten.tikz}
-	\caption{}
+	\caption{Measured attenuation $A(V_{control},f=\SI{3}{\GHz})$ of the ZX73-2500-S+ as a function of the control voltage input $V_{control}$ along with the sensitivity $S(V_{control},f=\SI{3}{\GHz})$}
 	\label{fig:interfacingFlute_attenDatten}
 \end{figure}
 
 \begin{figure}[tb]
 	\centering
 	\includegraphics[width=\textwidth,height=0.5\textwidth]{chap/InterfacingFlute/img/Output/attenAndDatttenZoomed.tikz}
-	\caption{}
+	\caption{Zoomed in version of \autoref{fig:interfacingFlute_attenDatten} shows the attenuation and sensitivity around the operating point $V_{control,o}=\SI{10}{\volt}$}
 	\label{fig:interfacingFlute_attenDattenZoomed}
 \end{figure}
 
+\paragraph{Required Stability of the Control Voltage Source}
+Next the required minimum stability, or maximum allowed noise/drift on $V_{control}$ is identified.
+To get a lower bound on the allowed $\Delta V_{control}$, 
+\begin{equation}
+\left|\Delta A_{V_{control}}\right| > \underbrace{\left|\underset{V_{control}}{\text{max}}\left[\frac{\Delta A}{\Delta V_{control} }(V_{control})\right]\right|}_{\left|S_\text{max}(V_{control})\right|} \cdot \left|\Delta V_{control}\right|
+\end{equation}
+is used and rearranged to
+\begin{equation}
+\left|\Delta V_{control}\right| < \frac{\left|\Delta A_{V_{control}}\right|}{\left|S_\text{max}(V_{control})\right|}.
+\end{equation}
+With a minimum of the sensitivity (maximum magnitude) at the lower edge of the $V_{control}$ range of $S(\SI{8}{\volt})=\SI{-0.242}{\dB\per\volt}$ and $\left|\Delta A_{V_{control}}\right|=\SI{0.01}{\dB}$, the allowed $V_{control}$ deviation becomes
+\begin{equation}\label{eq:interfacingFlute_allowedDevVcontrol}
+\left|\Delta V_{control}\right| < \frac{\SI{0.01}{\dB}}{\SI{0.242}{\dB\per\volt}} = \SI{41.3}{\milli\volt}.
+\end{equation}
+
+\paragraph{Measured Stability of the Control Voltage Source}
+To asses the actual stability of $V_{control}$, delivered from the Keysight 34972A (see \autoref{app:keysight-34972A}) DAC, first its long term stability over the course of one day is measured. For that the voltage is taken once every 2 seconds with a Keysight 34470A multimeter (see \autoref{app:keysight-34470A}). The result is shown in \autoref{fig:interfacingFlute_vcontrolstab_longterm}.
+
+\begin{figure}[tb]
+	\centering
+	\includegraphics[width=\textwidth,height=0.5\textwidth]{chap/InterfacingFlute/img/Output/Vcontrolstab.tikz}
+	\caption{Long term stability of $V_{control}$ as delivered by the Keysight 34972A DAC (ch. 205); measured with Keysight 34470A;\\room temperature during measurement: $\mu_\vartheta=\SI{19.12}{\degreeCelsius}$, $\sigma_\vartheta=\SI{0.28}{\degreeCelsius}$}
+	\label{fig:interfacingFlute_vcontrolstab_longterm}
+\end{figure}
+
+This measurement shows the stability of $V_{control}$ to be
+\begin{equation}
+\sigma_{V,control,longterm} = \SI{0.173}{\micro\volt}
+\end{equation}
+
+Since the Keysight 34470A has a limited bandwidth of \SI{15}{\kHz}, higher frequency noise is not captured in \autoref{fig:interfacingFlute_vcontrolstab_longterm}. Therefore for short term stability the DAC channel is measured again with a Tektronix MSO64 oscilloscope (\autoref{app:tektronix-MSO64},on the \SI{500}{\MHz} bandwidth setting). The resulting time signal is shown in \autoref{fig:interfacingFlute_atteneval-vcontrolstab-shorttermTime}, the spectrum shows \autoref{fig:interfacingFlute_atteneval-vcontrolstab-shorttermSpec}.
+
+\begin{figure}[tb]
+	\centering
+	\includegraphics[width=\textwidth,height=0.5\textwidth]{chap/InterfacingFlute/img/Output/spec/vctrl_time.tikz}
+	\caption{Short term stability of $V_{control}$ as delivered by the Keysight 34972A DAC (ch. 205); measured with Tektronix MSO64}
+	\label{fig:interfacingFlute_atteneval-vcontrolstab-shorttermTime}
+\end{figure}
+
+\begin{figure}[tb]
+	\centering
+	\includegraphics[width=\textwidth,height=0.5\textwidth]{chap/InterfacingFlute/img/Output/spec/vctrl_spec.tikz}
+	\caption{Power spectrum of $V_{control}$}
+	\label{fig:interfacingFlute_atteneval-vcontrolstab-shorttermSpec}
+\end{figure}
+
+This measurement shows the stability of $V_{control}$ to be
+\begin{equation}
+\sigma_{V,control,shortterm} = \SI{7}{\milli\volt}
+\end{equation}
+
+With an allowed deviation of \SI{41.3}{\mV}, the output resolution of the Keysight 34972A DAC ($\nicefrac{\SI{24}{\volt}}{2^{16}-1}=\SI{366.22}{\micro\volt}$) and its stability (\SI{0.173}{\micro\volt} long term, \SI{7}{\mV} short term) pose no problems on the device operation (if the other parameters are to be assumed error free).
 
 \subsubsection{Influence of Supply Voltage Noise on Attenuation}
+To get the required stability for the power supply voltage, the effect of the supply voltage $V_+$ on the attenuation has to be examined first. To do that $V+$ is varied \SI{\pm0.2}{\volt} around the nominal supply voltage at the operating point $V_{+_o}=\SI{3}{\volt}$, all other parameters are kept constant and the attenuation is measured. To make the measurement more robust against fluctuations of the room temperature and drift of the devices, the procedure of stepping through the voltages is repeated in a similar fashion as for the influence of $V_{control}$ and the means for each set $V_+$ are computed. The result is shown in \autoref{fig:interfacingFlute_atteneval-vsupp-influence}.
+
+\begin{figure}[tb]
+	\centering
+	\includegraphics[width=\textwidth,height=0.5\textwidth]{chap/InterfacingFlute/img/Output/VsuppStab/influenceVsupp.tikz}
+	\caption{Influence of the supply voltage on the attenuation}
+	\label{fig:interfacingFlute_atteneval-vsupp-influence}
+\end{figure}
+
+This leads to:
+\begin{align}
+\Delta A(V_+) &= \left.\frac{\text{d}A(V_+)}{\text{d}V+}\right|_{o} \cdot \Delta V+ \\
+\Delta A(V_+) &= \SI{0.00375}{\dB\per\volt} \cdot \Delta V+
+\end{align}
+
+which means the allowed deviation of $V+$ from $V+_0$ becomes
+\begin{align}\label{eq:interfacingFlute_atteneval-stabVsupp}
+\left|\Delta V_{+}\right| &= \left|\Delta A(V+)\right| \cdot 
+\left|\left[\left.\frac{\text{d}A(V_{+})}{\text{d}V_{+}}\right|_{0}\right]^{-1}\right| \\
+ &= \SI{0.005}{\dB} \cdot \SI{266.67}{\volt\per\dB} = \SI{1.33}{\volt}
+\end{align}
+
+
 \subsubsection{Influence of Body Temperature Variations on Attenuation}
 \subsubsection{Influence of Small Changes in RF Frequency on Attenuation}
 \subsubsection{Final Test of the Attenuator in the FLUTE LLRF Cabinet}

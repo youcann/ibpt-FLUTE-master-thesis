@@ -11,16 +11,25 @@ tick pos=left,
 legend style={fill opacity=0.8, draw opacity=1, text opacity=1, at={(0.30,0.96)}, draw=white!80!black},
 x grid style={white!69.0196078431373!black},
 xlabel={Control Voltage \(\displaystyle V_{control}\) (in \si{\volt})},
-xmin=9, xmax=12,
-xtick distance=0.5,
+xmin=8, xmax=12,
 xtick style={color=black},
 y grid style={white!69.0196078431373!black},
 ylabel={Attenuation \(\displaystyle A(V_{control},f)\) (in \si{\dB})},
-ymin=6, ymax=7,
+ymin=6.2, ymax=7,
 ytick style={color=black}
 ]
 \addplot [semithick, color0, mark=*, mark size=2, mark options={solid},error bars/y dir=both,error bars/y fixed=0.015]
 table {%
+8 6.84830468958334
+8.1 6.82551016783333
+8.2 6.80342559725
+8.3 6.78209767716667
+8.4 6.76117838008334
+8.5 6.74076058341667
+8.6 6.72078275366667
+8.7 6.70133425075
+8.8 6.68236698683333
+8.9 6.6638616205
 9 6.64584567591666
 9.1 6.6280997845
 9.2 6.61093997516667
@@ -62,7 +71,7 @@ legend cell align={left},
 legend style={fill opacity=0.8, draw opacity=1, text opacity=1, at={(0.98,0.96)}, draw=white!80!black},
 tick align=outside,
 x grid style={white!69.0196078431373!black},
-xmin=9, xmax=12,
+xmin=8, xmax=12,
 xtick pos=left,
 xtick style={color=black},
 xtick distance=0.5,
@@ -70,12 +79,22 @@ yticklabel style={/pgf/number format/precision=3,/pgf/number format/fixed},
 y grid style={white!69.0196078431373!black},
 axis line style={-},
 ylabel={Sensitivity \(\displaystyle S(V_{control},f)\) (in \si{\dB\per\volt})},
-ymin=-0.2, ymax=-0.08,
+ymin=-0.27, ymax=-0.05,
 ytick pos=right,
 ytick style={color=black}
 ]
 \addplot [semithick, color1, mark=*, mark size=2, mark options={solid},error bars/y dir=both,error bars/y fixed=0.005]
 table {%
+8 -0.242863639585984
+8.1 -0.237522513314845
+8.2 -0.230124710137029
+8.3 -0.222240292537428
+8.4 -0.217982376401981
+8.5 -0.212756662930088
+8.6 -0.208172138237357
+8.7 -0.202656469113129
+8.8 -0.197641882799813
+8.9 -0.192828837100087
 9 -0.187728985240664
 9.1 -0.184914988633042
 9.2 -0.178807920848617
@@ -108,7 +127,7 @@ table {%
 11.9 -0.106905215455035
 12 -0.100452110729052
 };
-\addlegendentry{$S(V_{control},f)$}
+\addlegendentry{Sensitivity $S(V_{control},f)$}
 \end{axis}
 
 \end{tikzpicture}
