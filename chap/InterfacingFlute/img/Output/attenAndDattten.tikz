@@ -14,7 +14,7 @@ xlabel={Control Voltage \(\displaystyle V_{control}\) (in \si{\volt})},
 xmin=0.5, xmax=12,
 xtick style={color=black},
 y grid style={white!69.0196078431373!black},
-ylabel={Attenuation \(\displaystyle A(V_{control},f)\) (in \si{\dB})},
+ylabel={Attenuation \(\displaystyle A(V_{control})\) (in \si{\dB})},
 ymin=4.73645668148202, ymax=43,
 ytick style={color=black}
 ]
@@ -146,7 +146,7 @@ table {%
 12.3 6.25754343533333
 12.4 6.25728492866666
 };
-\addlegendentry{$A(V_{control},f)$}
+\addlegendentry{$A(V_{control})$}
 \end{axis}
 
 \begin{axis}[
@@ -159,7 +159,7 @@ xtick pos=left,
 xtick style={color=black},
 y grid style={white!69.0196078431373!black},
 axis line style={-},
-ylabel={Sensitivity \(\displaystyle S(V_{control},f)\) (in \si{\dB\per\volt})},
+ylabel={Sensitivity \(\displaystyle S(V_{control})\) (in \si{\dB\per\volt})},
 ymin=-30, ymax=10,
 ytick pos=right,
 ytick style={color=black}
@@ -292,7 +292,7 @@ table {%
 12.3 -0.00356849418250516
 12.4 -0.00269368025569079
 };
-\addlegendentry{$S(V_{control},f)$}
+\addlegendentry{$S(V_{control})$}
 \end{axis}
 
 \end{tikzpicture}

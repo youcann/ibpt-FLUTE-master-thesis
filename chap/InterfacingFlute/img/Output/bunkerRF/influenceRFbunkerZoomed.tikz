@@ -1,0 +1,41 @@
+% This file was created by tikzplotlib v0.9.5.
+\begin{tikzpicture}[
+baseline
+]
+
+\definecolor{color0}{rgb}{0.12156862745098,0.466666666666667,0.705882352941177}
+
+\begin{axis}[
+height=0.43\textwidth,
+ytick distance=0.0025,
+tick align=outside,
+tick pos=left,
+width=0.43\textwidth,
+x grid style={white!69.0196078431373!black},
+xlabel={$f_o$ (in \si{\kHz})},
+xmin=-1.10734669900456, xmax=1.10734669900456,
+xtick style={color=black},
+y grid style={white!69.0196078431373!black},
+ylabel style={align=center},
+ylabel={Attenuation (in \si{\dB})},
+ymin=6.918, ymax=6.93,
+ytick style={color=black},
+yticklabel pos=lower,
+y tick label style={
+        /pgf/number format/.cd,
+            fixed,
+            fixed zerofill,
+            precision=4,
+        /tikz/.cd
+    }
+]
+\addplot [mark=x, draw=color0,]
+table{%
+x                      y
+-1.00000000013978 6.91995292566434
+0 6.92509045190909
+1.00000000013978 6.92927676035294
+};
+\end{axis}
+
+\end{tikzpicture}
