@@ -1,5 +1,26 @@
 \chapter{Theoretical Framework}
-\section{Accelerator Physics}
+\section{Linear Accelerators}
+In a linear particle accelerator (LINAC), charged particles such as electrons are accelerated to increase their total energy over their energy at rest.
+
+Compared to heavier particles, such as protons ($m_p=\SI{938.27}{\mega\eV\per c\squared}$), electrons are fairly light ($m_p=\SI{0.511}{\mega\eV\per c\squared}$). Therefore they need to be brought to speeds comparable to the speed of light to achieve an useful energy increase. For this reason relativistic mechanics are needed to describe their movements\footnote{As relativistic mechanics are a super set of classical mechanics, the equations also apply for slower particles.}. \cite{Hinterberger1997}
+
+With the speed of light $c=\SI{2.998e8}{\m\per\s}$ and the particle velocity $v$, it is common to define \cite{Wangler2008}:
+\begin{align}\label{eq:theoreticalFramework_gammabeta}
+\text{(normalized velocity)}\qquad\beta &= \frac{v}{c}\\
+\text{(relativistic mass factor)}\qquad\gamma &= \frac{1}{\sqrt{1-\beta^2}}
+\end{align}
+
+The total energy of a particle is
+\begin{equation}
+U=\underbrace{\left(\gamma-1\right)mc^2}_{\text{kinetic engery } W} + \underbrace{mc^2}_{\text{rest energy}} = \gamma mc^2.
+\end{equation}
+
+With the kinetic electron energy out of the FLUTE electron gun of $W=\SI{7}{\mega\eV}$, rearranging \autoref{eq:theoreticalFramework_gammabeta} and using in $W=\left(\gamma-1\right)mc^2$ yield
+\begin{align}
+\gamma &= \frac{W}{m_e\,c^2}+1=\num{14.699}\\
+\beta &= \sqrt{1-\nicefrac{1}{\gamma^2}}=\num{0.99768}.
+\end{align}
+
 
 \subsection{Some Beam Diagnostic Devices}
 
