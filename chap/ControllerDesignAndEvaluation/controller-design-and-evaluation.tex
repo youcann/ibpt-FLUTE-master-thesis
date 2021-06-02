@@ -3,7 +3,7 @@ In this chapter stabilizing the power output of FLUTE by means of a control syst
 
 The next sections describe the chosen architecture of a suitable control system as well as some implementation details and the tuning of necessary controller parameters.
 
-\section{Architecture}
+\section{Concept and Architecture}
 The general structure of a closed loop control system is shown in \autoref{fig:own-work-architecture}.
 
 $y(t)$ is the physical quantity which should follow a certain time trajectory $x(t)$ or be kept constant (then $x(t)=x=const.$). If there are no disturbances $d(t)$ or the disturbances are deterministic (i.e. $d(t)$ is known $\forall t$), then an open loop system would be possible. In that case the role of the controller would be to merely to set its output $u(t)$ according to the system dynamics of the plant\footnote{Assuming $g(t)$ is a stable LTI system} (represented by its impulse response $g(t)$).
@@ -20,33 +20,6 @@ the controller can react accordingly.
 	\caption{General structure of a closed loop feedback control system}
 	\label{fig:own-work-architecture}
 \end{figure}
-
-
-\section{Inputs and Outputs}
-Since the control algorithm should be implemented, tested and used online on the actual accelerator instead of only operate on simulated data, there is the need for fast and reliable interfaces to the machine.
-Following, ``input'' refers to the signal going into the control algorithm (i.e. the measured $y(t)$), while ``output'' is the output of the control algorithm $u(t)$.
-
-\subsection{Input}
-Depending on which value is chosen to be controlled, filtering of the input signal could be mandatory.
-
-In the case of the cavity RF power the signal jumps to zero each time a breakdown occurs, shortening the RF supply. These outliners are not representative of the average RF power inside the cavity over multiple pulses and thus would greatly impair the controller performance. For that reason, before any further filtering to remove noise etc, a breakdown removal filter is used (\autoref{lst:control-system-breakdownremoval}). In principle the new power value is checked to be inside a band which size is determined by the mean deviation of the $N_{filt}$ previous values and a scaling $m$. The percentile differences are used here as they are robust against outliners (i.e. other breakdowns) in the $N_{filt}$ previous values opposed to a normal standard deviation. The scaling with $(2*1.2815)^{-1}$ is used to make the mean deviation comparable to a standard deviation.
-
-\begin{lstlisting}[style=python,caption = Breakdown removal, label = lst:control-system-breakdownremoval]
-#...
-if(abs(P[i]-np.median(P[i-3*Nfilt:i-Nfilt]))<
-m*(np.percentile(P[i-3*Nfilt:i-Nfilt],90)-np.percentile(P[i-3*Nfilt:i-Nfilt],10)/(2*1.2815))):
-   P_filt=np.append(P_filt,P[i])
-else:
-   breakdown_locations_predicted=np.append(breakdown_locations_predicted,i)
-   P_filt=np.append(P_filt,np.median(P[i-3*Nfilt:i-Nfilt]))
-#...
-\end{lstlisting}
-
-
-
-
-\subsection{Output}
-For the control system to work the controller needs some way of influencing the plant. For that the output of the FLUTE LLRF vector modulator is controlled by a RF attenuator (see \autoref{chap:atten}).
 
 \section{Plant Identification}
 \subsection{Principle}
@@ -112,7 +85,6 @@ To check the accuracy of the estimations, the SIT is used to do a simulation wit
 
 The important conclusion of this section is that the plant can be modeled as a \textbf{second order system}. This info is needed when choosing a controller in the next section.
 
-\FloatBarrier
 \section{Controller design}
 For many control problems, especially if the plant behaves approximately as an LTI system and the system is of low order, a simple PID (proportional, integral and derivative) controller is a good starting point (visualized in \autoref{fig:own-work-pid-block}). 
 
@@ -129,7 +101,32 @@ Often simplifications, such as a pure P (only $k_p \neq 0$) or a PI (only $k_p,\
 
 As a starting point for software development and parameter tuning, the parameters $k_p=0.00001$ and $k_i=k_d=0$ are chosen. This ensures during development the system basically does nothing but still shows changing values at the controller output.
 
-\FloatBarrier
+\section{Inputs and Outputs}
+Since the control algorithm should be implemented, tested and used online on the actual accelerator instead of only operate on simulated data, there is the need for fast and reliable interfaces to the machine.
+Following, ``input'' refers to the signal going into the control algorithm (i.e. the measured $y(t)$), while ``output'' is the output of the control algorithm $u(t)$.
+
+\subsection{Input}
+Depending on which value is chosen to be controlled, filtering of the input signal could be mandatory.
+
+In the case of the cavity RF power the signal jumps to zero each time a breakdown occurs, shortening the RF supply. These outliners are not representative of the average RF power inside the cavity over multiple pulses and thus would greatly impair the controller performance. For that reason, before any further filtering to remove noise etc, a breakdown removal filter is used (\autoref{lst:control-system-breakdownremoval}). In principle the new power value is checked to be inside a band which size is determined by the mean deviation of the $N_{filt}$ previous values and a scaling $m$. The percentile differences are used here as they are robust against outliners (i.e. other breakdowns) in the $N_{filt}$ previous values opposed to a normal standard deviation. The scaling with $(2*1.2815)^{-1}$ is used to make the mean deviation comparable to a standard deviation.
+
+\begin{lstlisting}[style=python,caption = Breakdown removal, label = lst:control-system-breakdownremoval]
+#...
+if(abs(P[i]-np.median(P[i-3*Nfilt:i-Nfilt]))<
+m*(np.percentile(P[i-3*Nfilt:i-Nfilt],90)-np.percentile(P[i-3*Nfilt:i-Nfilt],10)/(2*1.2815))):
+   P_filt=np.append(P_filt,P[i])
+else:
+   breakdown_locations_predicted=np.append(breakdown_locations_predicted,i)
+   P_filt=np.append(P_filt,np.median(P[i-3*Nfilt:i-Nfilt]))
+#...
+\end{lstlisting}
+
+
+
+
+\subsection{Output}
+For the control system to work the controller needs some way of influencing the plant. For that the output of the FLUTE LLRF vector modulator is controlled by a RF attenuator (see \autoref{chap:atten}).
+
 \section{Software Design}
 As integrating a new subsystem into EPICS takes some time and effort and the control system is designated a temporary solution, it is more viable to operate it as an independent system.
 
@@ -161,43 +158,66 @@ For the GUI a common framework should be used. In Python Tk and wxwidgets are co
 To log all relevant data from RAM to non-volatile memory (hard drive or network share), a simple approach with a line by line CSV writer is used.
 
 
-\FloatBarrier
 \section{Control Parameter Tuning and Tests}
 To tune control parameters there are a multiple of analytical, empirical or hybrid approaches. Here the Ziegler-Nichols method is tested and fine tuning is done by hand.
 
-\FloatBarrier
+\section{Improving the Control System}
+
+\subsection{Adding Disturbance Feed Forward}
+
+
 \newpage
 \section{Results}
-As \autoref{fig:own-work-pid-result} shows, with the control system activated, the standard deviation drops from about \SI{150}{\watt} to less than \SI{10}{\watt}, which shows the effectiveness of the system.
+To evaluate the performance of the control system, FLUTE is operated with and without the control system switched on for \SI{6}{\hour} each.
+Before the test, FLUTE is allowed to run a few hours for all components to reach operating temperatures.
+The result of the test is shown in \autoref{fig:controllerDesignAndEvaluation_resultTime}.
+Note, that in this test about \SI{7}{\hour} into the experiment there was an unintentional shutdown of FLUTE and the corresponding block of data is removed before further processing.
 
-\begin{figure}[b]
+\begin{figure}[tbh]
 	\centering
-	\includegraphics[width=\textwidth,height=0.5\textwidth]{chap/ControllerDesignAndEvaluation/img/controller/result.tikz}
-	\caption{Cavity power with PID controller on (before the \SI{4.5}{\hour} mark) and off shows the stabilizing effect of the control system}
-	\label{fig:own-work-pid-result}
+	\includegraphics[width=\textwidth,height=0.5\textwidth]{chap/ControllerDesignAndEvaluation/img/results/result_timesignal.tikz}
+	\caption{Cavity power over about \SI{15}{\hour} (about three hours of downtime removed for clarity around the \SI{7}{\hour} mark); control system switched off at \SI{6}{\hour} (recording started 2021/05/01 20:00)}
+	\label{fig:controllerDesignAndEvaluation_resultTime}
 \end{figure}
 
-\begin{figure}[b]
+\begin{figure}[tbh]
 	\centering
-	\includegraphics[width=\textwidth,height=0.5\textwidth]{chap/ControllerDesignAndEvaluation/img/spectrogram.tikz}
-	\caption{}
-	\label{fig:controller-spectogram}
+	\includegraphics[width=\textwidth,height=0.5\textwidth]{chap/ControllerDesignAndEvaluation/img/results/result_spectrogram.tikz}
+	\caption{Spectrogram of the cavity power in \autoref{fig:controllerDesignAndEvaluation_resultTime}}
+	\label{fig:controllerDesignAndEvaluation_resultSpectg}
 \end{figure}
 
+The time plot and also the spectogram in \autoref{fig:controllerDesignAndEvaluation_resultSpectg} shows the cavity RF power approximately reaches stationarity in $[0,\,2] \si{hour}$ respectivaley $[6,\,12] \si{hour}$. This allows the spectrum for these two blocks to be estimated using a periodogram method. In \autoref{fig:controllerDesignAndEvaluation_resultSpectg} the spectra for each case are shown.
 
-\begin{figure}[tb]
+\begin{figure}[tbh]
 	\centering
-	\includegraphics[width=\textwidth,height=0.5\textwidth]{chap/ControllerDesignAndEvaluation/img/results/controllerOnVsOff.tikz}
-	\caption{}
-	\label{fig:controller-time}
+	\includegraphics[width=\textwidth,height=0.7\textwidth]{chap/ControllerDesignAndEvaluation/img/results/controllerOnVsOff.tikz}
+	\caption{Comparison between the control system on and off}
+	\label{fig:controllerDesignAndEvaluation_resultComp}
 \end{figure}
 
-\begin{figure}[tb]
+\begin{figure}[tbh]
 	\centering
 	\includegraphics[width=\textwidth,height=0.7\textwidth]{chap/ControllerDesignAndEvaluation/img/results/controllerOnVsOffSpectrumErrorBand.tikz}
-	\caption{}
-	\label{fig:controller-specterr}
+	\caption{Power spectrum of the plots in \autoref{fig:controllerDesignAndEvaluation_resultTime} computed with Welch's method; shaded areas show the uncertainty according to \autoref{eq:varWelch}}
+	\label{fig:controllerDesignAndEvaluation_resultPeriodo}
 \end{figure}
+
+With the metrics from \autoref{sec:metrics}, the success of the control system is assessed in \autoref{tab:controllerDesignAndEvaluation_metrics}.
+
+This shows for example the mean squared error is improved by a factor of about \num{371} by using the control system.
+
+\begin{table}[tbh]
+\centering
+\caption{Quantitative assessment of the controllers performance}\label{tab:controllerDesignAndEvaluation_metrics}
+\begin{tabular}{lccc}
+	\toprule
+	Metric  &   Controller off   &   Controller on    & Controller off/Controller on \\ \midrule
+	$\%STD$ &   \num{0.00115}    & \num{5.99225e-05}  &      \num{9.289178256}       \\
+	$MSE$   &   \num{37.63910}   &   \num{0.10133}    &       \num{371.44002}        \\
+	$MPN$   & \SI{56.87805}{\dB} & \SI{41.57948}{\dB} &       \SI{15.298}{\dB}       \\ \bottomrule
+\end{tabular}
+\end{table}
 
 
 

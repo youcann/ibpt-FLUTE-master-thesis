@@ -22,7 +22,11 @@ With the kinetic electron energy out of the FLUTE electron gun of $W=\SI{7}{\meg
 \end{align}
 
 
-\subsection{Some Beam Diagnostic Devices}
+\section{Beam Diagnostic Devices for Linear Accelerators}
+All (linear) particle accelerators need diagnostic devices to monitor the beam sizes, shapes, positions, length or charge.
+
+\paragraph{Beam Position Monitor (BPM)}
+\paragraph{Faraday Cup}
 
 \section{Signal Analysis}
 \subsection{Auto correlation and Cross correlation}
@@ -134,7 +138,7 @@ The variance of the estimation scales with $Q$ \cite[p.~6]{Rowell2008}:
 \hat{\Phi}_{W,\,xx}[k] &= \frac{1}{Q} \sum_{s=1}^{Q} \hat{\Phi}_{s,\,xx}[k].
 \end{align}
 Compared to the Barlett method, the overlapping of up to \SI{50}{\percent} (see \cite{Welch1967}) allows increasing $Q$, thus reducing the variance.
-\begin{equation}
+\begin{equation}\label{eq:varWelch}
 \text{Var}\left\{\hat{\Phi}_{W,\,xx}[k]\right\} = \frac{1}{Q}\Phi_{xx}^2[k]
 \end{equation}
 

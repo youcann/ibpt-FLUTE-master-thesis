@@ -1,1 +1,33 @@
 \chapter{Current and Needed Stability of the Electron Gun}
+In this chapter the current stability of the RF system powering the electron gun is analyzed and the needed stability is defined.
+
+\section{Metrics to quantify stability}\label{sec:metrics}
+``Stability'' can have different meanings depending on the context. In case of signal processing, a signal is usually said to be \textit{stable} if it has only little variation around its mean or some target value, i.e. the mean has to be constant and the variance stays below some threshold. 
+Stability is not to be confused with stationarity, which requires the mean and the variance and the autocorrelation stay constant over time \cite{Guthrie2020}. To express stability as a single numerical value, there are several possibilities, some are described in the following.
+
+\paragraph{Relative Standard Deviation}
+This measures the stability as the standard deviation but related to the mean value to make it comparable to other quantities with different scaling or units.
+
+The relative, or percentual, standard deviation of $x$ is defined using the mean $\mu_x$ and the standard deviation $\sigma_x$ as
+\begin{equation}
+\%STD_x := \frac{\sigma_x}{\mu_x}
+\end{equation}
+
+\paragraph{Mean Squared Error}
+The mean squared error sums up the squared errors $\left(x[n] - x_t[n]\right)^2$ of $x[n]$ from a set value $x_t[n]$. To remove the effect of the length of the data sequence, the sum is devided by the length of the sequence $N$:
+\begin{equation}
+MSE_x := \frac{1}{N} \sum_{n=0}^{N-1} \left(x[n] - x_t[n]\right)^2
+\end{equation}
+
+\paragraph{Relative Power of Most Prominent Noise}
+This novel approach compares the power of the most prominent noise power source $P_{noise,\,max}$ of the signal $x$ with the total power $P_x$:
+\begin{equation}
+MPN_x := \frac{P_{noise,\,max}}{P_x}
+\end{equation}
+
+\section{Determine the Needed Stability for FLUTE Operation}
+
+
+\section{Analyzing the Current Stability}
+
+
