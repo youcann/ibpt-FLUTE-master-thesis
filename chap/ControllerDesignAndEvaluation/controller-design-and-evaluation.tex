@@ -197,6 +197,23 @@ The time plot and also the spectogram in \autoref{fig:controllerDesignAndEvaluat
 \end{figure}
 
 \begin{figure}[tbh]
+    \centering
+        \subfloat[Controller off]{\includegraphics[width=\textwidth,height=0.4\textwidth]{chap/ControllerDesignAndEvaluation/img/stdp_off.tikz}}
+        \\
+        \subfloat[Controller on]{\includegraphics[width=\textwidth,height=0.4\textwidth]{chap/ControllerDesignAndEvaluation/img/stdp_on.tikz}}
+       \caption{Relative standard deviation $STD\%(t,T)$}
+    \label{fig:controllerDesignAndEvaluation_resultSTDp}
+\end{figure}
+
+\begin{figure}[tbh]
+	\centering
+	\includegraphics[width=\textwidth,height=0.5\textwidth]{chap/ControllerDesignAndEvaluation/img/stdp_means.tikz}
+	\caption{Relative standard deviation $STD\%(T)$, shaded areas show $\operatorname{min}\{STD\%(t,T_0)\}$ and $\operatorname{max}\{STD\%(t,T_0)\}$, solid lines show $\operatorname{mean}\{STD\%(t,T_0)\}$ for a fixed window size $T=T_0$}
+	\label{fig:controllerDesignAndEvaluation_resultSTDp_means}
+\end{figure}
+
+
+\begin{figure}[tbh]
 	\centering
 	\includegraphics[width=\textwidth,height=0.7\textwidth]{chap/ControllerDesignAndEvaluation/img/results/controllerOnVsOffSpectrumErrorBand.tikz}
 	\caption{Power spectrum of the plots in \autoref{fig:controllerDesignAndEvaluation_resultTime} computed with Welch's method; shaded areas show the uncertainty according to \autoref{eq:varWelch}}
@@ -210,12 +227,12 @@ This shows for example the mean squared error is improved by a factor of about \
 \begin{table}[tbh]
 \centering
 \caption{Quantitative assessment of the controllers performance}\label{tab:controllerDesignAndEvaluation_metrics}
-\begin{tabular}{lccc}
+\begin{tabular}{lSSS}
 	\toprule
-	Metric  &   Controller off   &   Controller on    & Controller off/Controller on \\ \midrule
-	$\%STD$ &   \num{0.00115}    & \num{5.99225e-05}  &      \num{9.289178256}       \\
-	$MSE$   &   \num{37.63910}   &   \num{0.10133}    &       \num{371.44002}        \\
-	$MPN$   & \SI{56.87805}{\dB} & \SI{41.57948}{\dB} &       \SI{15.298}{\dB}       \\ \bottomrule
+	Metric  & {Controller off} & {Controller on} & {Controller off/Controller on} \\ \midrule
+	$\%STD$ & 0.0011559        & 5.99225e-05     & 9.2891                         \\
+	$MSE$   & 37.639           & 0.10133         & 371.44                         \\
+	$MPN$   & 487309.29        & 14386.25        & 33.873                         \\ \bottomrule
 \end{tabular}
 \end{table}
 

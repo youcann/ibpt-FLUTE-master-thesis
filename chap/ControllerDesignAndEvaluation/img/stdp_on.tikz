@@ -1,0 +1,24 @@
+% This file was created by tikzplotlib v0.9.5.
+\begin{tikzpicture}
+
+\begin{axis}[
+colorbar,
+colorbar style={ylabel={Relative STD (in \si{\percent})}},
+colormap/viridis,
+point meta max=0.225734891490216,
+point meta min=0.0951637202638252,
+tick align=outside,
+tick pos=left,
+x grid style={white!69.0196078431373!black},
+xlabel={Absolut time \(\displaystyle t\) (in \si{\hour})},
+xmin=1, xmax=4,
+xtick style={color=black},
+y grid style={white!69.0196078431373!black},
+ylabel={Window size \(\displaystyle T\) (in \si{\minute})},
+ymin=0.5, ymax=60,
+ytick style={color=black}
+]
+\addplot graphics [includegraphics cmd=\pgfimage,xmin=1, xmax=4, ymin=0.5, ymax=60] {chap/ControllerDesignAndEvaluation/img/stdp_on-000.png};
+\end{axis}
+
+\end{tikzpicture}
