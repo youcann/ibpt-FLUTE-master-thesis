@@ -15,7 +15,7 @@
 \usepackage{upgreek}
 \usepackage{nicefrac}
 \usepackage[load-configurations=abbreviations]{siunitx}
-\sisetup{per-mode=fraction}
+\sisetup{per-mode=reciprocal}
 \sisetup{separate-uncertainty=true}
 \usepackage[version=3]{mhchem}
 \usepackage{vmargin}
@@ -93,9 +93,7 @@
 }
 
 \begin{document}
-    % Titlepage and ToC
     \FrontMatter
-	
 	\tikzset{external/export=false}
     \input{include/titlepage}
     \tikzset{external/export=true}
@@ -119,7 +117,6 @@
 	\input{chap/ControllerDesignAndEvaluation/controller-design-and-evaluation.tex}
 	\input{chap/SummaryAndOutlook/summary-and-outlook.tex}
 
-    % appendix for more or less interesting calculations
     \Appendix
     \addtocontents{toc}{\protect\setcounter{tocdepth}{1}}
     \chapter*{\appendixname} \addcontentsline{toc}{chapter}{\appendixname}
@@ -127,7 +124,6 @@
     % Appendix or Anhang (depending on chosen language)
     \input{./chap/Appendix/Appendix1.tex} %\cleardoublepage
 
-    % Bibliography
     \TheBibliography
     \printbibliography
 \end{document}
