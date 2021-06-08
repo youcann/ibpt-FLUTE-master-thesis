@@ -65,6 +65,10 @@
 \pgfplotsset{compat=newest}
 \usepgfplotslibrary{fillbetween}
 
+\usepackage[acronym,nomain]{glossaries}
+\makeglossaries
+\input{include/glossaries.tex}
+
 
 \usetikzlibrary{shapes,arrows.meta}
 \input{include/myListingsStyle.tex}
@@ -103,6 +107,7 @@
     \tableofcontents                    % listoftables on new pages
     \listoffigures
     \listoftables
+    \printglossaries
     \endgroup
     \cleardoublepage
 
@@ -123,7 +128,7 @@
     % to make the appendix appear in ToC without number. \appendixname = 
     % Appendix or Anhang (depending on chosen language)
     \input{./chap/Appendix/Appendix1.tex} %\cleardoublepage
-
+	\input{./include/acknowledgements.tex}
     \TheBibliography
     \printbibliography
 \end{document}
