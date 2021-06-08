@@ -16,6 +16,7 @@ xtick style={color=black},
 y grid style={white!69.0196078431373!black},
 ylabel={Window size \(\displaystyle T\) (in \si{\minute})},
 ymin=0.5, ymax=60,
+ytick distance=10,
 ytick style={color=black}
 ]
 \addplot graphics [includegraphics cmd=\pgfimage,xmin=1, xmax=4, ymin=0.5, ymax=60] {chap/ControllerDesignAndEvaluation/img/stdp_off-000.png};
