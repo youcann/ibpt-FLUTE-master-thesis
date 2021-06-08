@@ -8,9 +8,17 @@ Stability is not to be confused with stationarity, which requires the mean and t
 \paragraph{Relative Standard Deviation}
 This measures the stability as the standard deviation but related to the mean value to make it comparable to other quantities with different scaling or units.
 
-The relative, or percentual, standard deviation of $x$ is defined using the mean $\mu_x$ and the standard deviation $\sigma_x$ as
+The relative, or percentual, standard deviation of the stationary stoachastic process $X$ is defined using the mean $\mu_X$ and the standard deviation $\sigma_X$ as
 \begin{equation}
-\%STD_x := \frac{\sigma_x}{\mu_x}
+\op{\%STD_X} := \frac{\sigma_X}{\mu_X}.
+\end{equation}
+Is the process $X$ non stationary, $\op{\%STD_X}$ depends on the absolute time $t$ and the window size $T$ for which the process is assumed to be stationary:
+\begin{equation}
+\op{\%STD_X} = \op{\%STD_X}(t,T)
+\end{equation}
+In that case, for a fixed window size $T=T_0$, a mean percentual standard deviation can be computed with (assuming discrete time steps $t_n$, $n\in[0,N-1]$)
+\begin{equation}
+\op{\%STD_X}(T=T_0) = \frac{1}{N} \sum_{n=0}^{N-1} \op{\%STD_X}(t_n,T_0)
 \end{equation}
 
 \paragraph{Mean Squared Error}
