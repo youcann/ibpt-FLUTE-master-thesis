@@ -10,7 +10,7 @@ EPICS offers client/server and publish/subscribe paradigms to access data in so 
 \subsection{Accessing EPICS channels in Python with PyEpics}
 Before usage PyEpics needs to be installed, e.g. with \texttt{pip3 install pyepics} from the \textit{PyPi} repository. If the computer running the Python code can reach the EPICS CA repeater on the machine network, the connection is established automatically in the background. To get a channel value asynchronously, i.e. at an arbitrary time, the function \texttt{caget(pvname)} can be used with the name of the desired process value, see \autoref{lst:caget}.
 
-\begin{lstlisting}[style=python,caption = Using \texttt{caget()} to get the value of an EPICS process value, label = lst:lst-caget]
+\begin{lstlisting}[style=python,caption = Using \texttt{caget()} to get the value of an EPICS process value, label = lst:caget]
 from epics import caget
 print(f"Cavity RF power: {caget('F:RF:LLRF:01:GunCav1:Power:Out')}")
 \end{lstlisting}
@@ -167,7 +167,8 @@ where the $\nicefrac{\Delta A}{\Delta x_j}$ approximate the partial derivatives 
 
 With \autoref{eq:interfacingFlute_linearApprox}, the maximum error on the attenuation, that is the variation around the operating point with a fixed $V_{control}$, can be approximated with
 \begin{equation}\label{eq:interfacingFlute_maxerror}
-\Delta A_{\text{max}} = \sum_{j=0}^{3} \left|\frac{\Delta A}{\Delta x_j} \cdot \Delta x_j\right|.
+\Delta A_{\text{max}} = \sum_{j=0}^{3} \left|\frac{\Delta A}{\Delta x_j} \cdot \Delta x_j\right| 
+= \sum_{j=0}^{3} \left|\frac{\Delta A}{\Delta x_j}\right| \cdot \left|\Delta x_j\right|.
 \end{equation}
 
 If not specified otherwise, the operating point
@@ -197,7 +198,7 @@ The body temperature of the device is monitored with a PT100 temperature sensor 
 Each of the lab devices used is compatible with VXI11, which is a widely adopted standard that is used to send ASCII SCPI commands over an ethernet network (called LXI) or GPIB \cite{lxi2021}.
 This enables remote and programatically control of the devices over the network.
 With the library \textit{python-vxi11}, it is now possible to write a custom script, that sets the measurement devices to known initial conditions, drives the inputs of the attenuator and records the generated data.
-The whole setup of the hardware in \autoref{fig:atteneval-setup} and the Python software, a measurement frequency of about \SI{0.5}{\Hz} to \SI{1}{\Hz} can be achieved, which is enough because most measurements taken are of a static nature and in the case of the temperature influence measurement, the thermal time constant is in the order of a few seconds.
+The whole setup of the hardware in \autoref{fig:interfacingFlute_atteneval-setup} and the Python software, a measurement frequency of about \SI{0.5}{\Hz} to \SI{1}{\Hz} can be achieved, which is enough because most measurements taken are of a static nature and in the case of the temperature influence measurement, the thermal time constant is in the order of a few seconds.
 The limiting device is the HP E4419B which takes the longest to perform one measurement. Without it, measurement frequencies of over \SI{4}{\Hz} are possible.
 
 All measurements are performed in the ``RF lab'' in building 348 (KARA hall on KIT Campus North) which is air conditioned to about \SI{20(2)}{\celsius}.
