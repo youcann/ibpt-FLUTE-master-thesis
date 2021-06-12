@@ -1,0 +1,4 @@
+\begin{tikzpicture}
+\node[] at (-2.5,0) {\includegraphics[width=0.3\textwidth]{chap/InterfacingFlute/img/Output/attenuatorOverview/attenClosed}};
+\node[] at (2.5,0) {\includegraphics[width=0.3\textwidth]{chap/InterfacingFlute/img/Output/attenuatorOverview/attenOpen}};
+\end{tikzpicture}

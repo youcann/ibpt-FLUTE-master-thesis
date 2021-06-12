@@ -1,0 +1,10 @@
+\begin{tikzpicture}
+\draw (-4.5,0) node[anchor=north,yshift=-0.2cm] {$RF_\text{in}$} to[short, *-] (-2,0) to [full diode,invert] (0,0);
+\draw (4.5,0) node[anchor=north,yshift=-0.2cm] {$RF_\text{out}$} to[short, *-] (2,0) to [full diode,invert] (0,0);
+\draw (0,2.5) node[anchor=west] {$V_+$} to [short,o-*] ++(0,-1) -- ++(-1.75,0) to [full diode,-*] ++(0,-1.5);
+\draw (0,2.5) to [short,o-*] ++(0,-1) -- ++(1.75,0) to [full diode,-*] ++(0,-1.5);
+\draw (0,0) to [short,*-o] ++(0,-1) node[anchor=west] {$V_\text{control}$};
+
+\node[fill=white,draw] at (-3,0) {matching};
+\node[fill=white,draw] at (3,0) {matching};
+\end{tikzpicture}
