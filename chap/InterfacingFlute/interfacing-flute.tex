@@ -133,6 +133,27 @@ control voltage & \SIrange{3}{12}{\volt}\\
 \subsection{Evaluation of the ZX73-2500-S+ Controllable RF Attenuator}
 The \textit{ZX73-2500-S+} is a voltage controllable RF attenuator with coaxial SMA connectors by the company Mini-Circuits. As there is no alternative model from Mini-Circuits and devices from other manufactures are offered with similar specifications, only the ZX73-2500-S+ is evaluated in detail in this section.
 
+
+
+\begin{figure}[tb]
+    \centering
+		\subfloat[left: ZX73-2500-S+ with cover; right: cover removed showing RVA-2500+ and a buffer capacitor ]{\input{chap/InterfacingFlute/img/Output/attenuatorOverview/attenPhoto.tikz}}
+		\\
+		\subfloat[equivalent circuit from the manufacturer (redrawn from  \cite{mini-circuitsZX732500VoltageVariable})]{\input{chap/InterfacingFlute/img/Output/attenuatorOverview/attenCequi.tikz}}
+		\caption{caption}
+    \label{fig:attenPhotoAndEquiC}
+\end{figure}
+
+\begin{figure}[tb]
+    \centering
+	\input{chap/InterfacingFlute/img/Output/attenuatorOverview/quadPiCequi.tikz}
+	\caption{Controllable attenuator design around the HP HSMP-3814 RF PIN diodes (redrawn and simplified from \cite{waughLowCostSurfaceMount1992})}
+    \label{fig:quadPiequiC}
+\end{figure}
+
+
+
+
 The ZX73-2500-S+ attenuator consists of a brass housing/shielding containing the Mini-Circuits RVA-2500+, a variable SMD attenuator in the DV874 case form factor. The RF input and output are connected with female SMA screw connectors. The power supply and control voltage are connected with solder pins. In order to use shielded cables and a reliable connection, for all measurements SMA connectors are soldered to the supply and control pins. According to equivalent circuit in the data sheet\cite{mini-circuitsZX732500VoltageVariable} it can be assumed it is based on the common quad-$\pi$ pin diode design\cite{waughLowCostSurfaceMount1992}.
 
 The attenuation versus frequency measurements from the manufactures data sheet are redone to both get a first impression of the device and verify it is generally operational and also as a sanity check for the used laboratory test equipment.
@@ -462,6 +483,16 @@ The other requirements from \autoref{tab:interfacingFlute_rfattenrequirements} a
 	control voltage                        &   \SIrange{3}{12}{\volt}    & \SIrange{8}{12}{\volt}  & pass    \\ \bottomrule
 \end{tabular}
 \end{table}
+
+\subsection{Test of the Attenuator with FLUTE}
+
+
+\begin{figure}[tb]
+	\centering
+	\includegraphics[width=\textwidth,height=0.5\textwidth]{chap/InterfacingFlute/img/Output/attenFluteErrorbars.tikz}
+	\caption{}
+	\label{fig:aaaa}
+\end{figure}
 
 
 

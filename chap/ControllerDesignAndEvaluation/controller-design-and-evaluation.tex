@@ -85,6 +85,105 @@ To check the accuracy of the estimations, the SIT is used to do a simulation wit
 
 The important conclusion of this section is that the plant can be modeled as a \textbf{second order system}. This info is needed when choosing a controller in the next section.
 
+
+
+\section{Measurement Filter}
+Like all measurements of physical quantities, the measuring of the system output of the control system is subjected to noise.
+In addition to these disturbances of thermal or electrical origins, also high frequency variations of the system output has detrimental effects on the control systems performance.
+For example the magnitudes of the bunch-by-bunch changes of the measured cavity power are often in the same order as the long-term drifts.
+Trying to correct for them instead of the long term drifts often leads to overcompensating and can even make the system unstable.
+
+To remove the high frequency components a low pass filter is used as the measurement block $XX$.
+
+In pre-tests the incoming signal was simply filtered with a moving average filter.
+Commonly, the moving average is defined as the mean of a signal $x$ inside a window of length $L$, centered around the current time or sample index $n$, that is shifted along the signal. This smooths out small variations thus the moving average acts as a low pass filter.
+This \textit{non-causal} version of the moving average can only be used with already measured data as to compute the moving average at $n$, future values at $n+i$ are needed:
+\begin{equation}
+\operatorname{MA}_{x,\text{non-causal},L}[n] = \frac{1}{L} \sum_{i=n-\frac{L-1}{2}}^{n+\frac{L-1}{2}} x[i]
+\end{equation}
+When filtering real-time data, future values are not available and a shifted, \textit{causal} version, of the moving average
+\begin{equation}\label{eq:causalMA}
+\operatorname{MA}_{x,\text{causal},L}[n] = \frac{1}{L} \sum_{i=n-(L-1)}^{n} x[i]
+\end{equation}
+is used.
+
+In case of the cavity RF power, experiments show a window length of about $L=100$ or more is necessary to sufficiently smooth the measured power signal.
+When comparing the original signal with the filtered one, it is apparent that in addition to the desired smoothing effect, the filtered signal also is delayed in time, with the delay being dependent on the window size.
+To quantify the delay, the alternative definition of the moving average as a digital FIR filter is used.
+One possibility to describe a FIR filter is by giving its impulse response, i.e. the output signal when the input of the filter is an impulse with unity height. In case of the moving average filter, the coefficient sequence of the corresponding FIR filter has the length $N=L$ and is equal to the the impulse response $h[n]$:
+\begin{equation}
+h[n] = \frac{1}{N} [\underbrace{1,\,1,\,...,\,1}_N]
+\end{equation}
+
+The delay introduced by a digital filter can be quantified with the filters group delay
+\begin{equation}
+\frac{\tau_g(f)}{T_s} = \frac{\d{\phi(f)}}{\d{f}}
+\end{equation}
+which is given normalized to the sampling time $T_s$ \cite[p.~70]{Kammeyer2002}. In case of a FIR filter with linear phase (with a symmetrical impulse response), the group delay is always constant over all frequencies and is only dependent on the filter length $N$\cite[p.~165]{Kammeyer2002}:
+\begin{equation}\label{eq:groupD}
+\frac{\tau_g(f)}{T_s} = \frac{\d{\phi(f)}}{\d{f}} = \frac{\d{\phi}}{\d{f}} = \frac{N}{2}
+\end{equation}
+
+With a sampling time of $T_s=\nicefrac{1}{\SI{5}{\hertz}}=\SI{200}{\milli\second}$ and $N=100$ the group delay is \SI{10}{\second}. In case of a steady operation this is acceptable, as the disturbances to compensate happen on a timescale in the order of several minutes.
+But in case of ongoing transients in case of user changes to the control system parameters, or short error bursts on the measured signal, this long delay causes problems and therefore should be reduced.
+
+Therefore a more sophisticated digital filter is designed to replace the simple moving average.
+
+On the one hand, a FIR filter is designed with the Kaiser window method.
+This method starts with the desired frequency response, which is usually given piece-wise. 
+In case of the low pass filter it is a step function at a cutoff frequency $f_c$.
+Then the IDFT is used to compute the corresponding impulse response $h_\text{IIR}[n]$, which is in general infinitely long.
+Windowing and then truncating the impulse response then yields the impulse response of the desired FIR filter $h_\text{FIR}[n]$.\cite[p.~533]{Oppenheim2010}.
+
+On the other hand, an IIR filter is designed with the impulse invariance method and an analogue Butterworth filter.
+This method could be interpreted as sampling the infinitely long analogue impulse response.\cite[p.~497]{Oppenheim2010}
+For an IIR filter, the group delay cannot be calculated with \autoref{eq:groupD} and it is in general frequency depend.
+
+\autoref{fig:controllerDesignAndEvaluation-impulseresponses} shows the impulse responses of the moving average, the FIR lowpass and the IIR lowpass (truncated to $N=100$).
+
+\begin{figure}[tb]
+	\centering
+	\includegraphics[width=\textwidth,height=0.5\textwidth]{chap/ControllerDesignAndEvaluation/img/measurementFilter/firVsMa_impulseresponses.tikz}
+	\caption{}
+	\label{fig:controllerDesignAndEvaluation-impulseresponses}
+\end{figure}
+
+In \autoref{fig:controllerDesignAndEvaluation-filterResults}, the three filter types described above are compared by filtering a ten minute long segment of pre-recorded data. The filtering is done with the SciPy function \texttt{signal.lfilter()} which does causal filtering and does not compensate group delay\footnote{In contrast to \texttt{signal.filtfilt()}, which applies the filter both forward and backward achieving zero phase/group delay, but this cannot be done for incoming real-time data.}, so the results are the same as they would be for real-time data.
+
+\begin{figure}[tb]
+	\centering
+	\includegraphics[width=\textwidth,height=0.5\textwidth]{chap/ControllerDesignAndEvaluation/img/measurementFilter/firVsMa.tikz}
+	\caption{}
+	\label{fig:controllerDesignAndEvaluation-filterResults}
+\end{figure}
+
+The plot shows the FIR lowpass filter requiring ten times the number of coefficients to achieve about the same result as the IIR lowpass filter.
+Also the moving average filter has double the number of coefficients as the FIR lowpass filter, but there is still high frequency noise in the output (caused by the $\text{sinc}(\cdot)$ shape of its frequency response $H[f]=\operatorname{DFT}\{h[n]\}$).
+
+Compared to the FIR lowpass, the moving average offers no benefit besides its easy implementation.
+When comparing the FIR with the IIR approach, the IIR has the advantage of needing less coefficients, thus occupying less memory, which is not really an advantage when the control system is implemented on a personal computer, which typically has enough free memory to hold millions of floating point numbers.
+Also the IIR filter has a non-constant group delay and is not guaranteed to be stable like all FIR filters are.
+
+For these reasons, in the following an FIR filter is used.
+
+\paragraph{Real-time implementation of an FIR Filter in Python}
+Similar to \autoref{eq:causalMA}, a FIR filter designed with the SciPy function \texttt{sigal.firwin()} can be used in a causal manner to filter real-time data.
+
+Applying the filter on pre-recorded data, like in \autoref{fig:controllerDesignAndEvaluation-filterResults} can be done with \texttt{signal.lfilter()}. To use \texttt{signal.lfilter()} on sample-wise incoming real-time data, the ``initial in'' input and ``final out'' output of \texttt{signal.lfilter()} can be used to keep the filters state. This is demonstrated in \autoref{lst:controllerDesignAndEvaluation-zizf} by looping through pre-recorded data point-by-point.
+
+\begin{lstlisting}[style=python,caption = Demonstration of the \texttt{zi} and \texttt{zf} variables when using \texttt{signal.lfilter()}, label = lst:controllerDesignAndEvaluation-zizf]
+#...
+x=df2["F:RF:LLRF:01:GunCav1:Power:Out Value"].to_numpy()
+y=np.array([])
+zf=signal.lfilter_zi(b, 1)
+for i in range(len(x)):
+    y0,zf=signal.lfilter(b, 1, [x[i]],zi=zf)
+    y=np.append(y,y0[0])
+#...
+\end{lstlisting}
+
+
+
 \section{Controller design}
 For many control problems, especially if the plant behaves approximately as an LTI system and the system is of low order, a simple PID (proportional, integral and derivative) controller is a good starting point (visualized in \autoref{fig:own-work-pid-block}). 
 
