@@ -164,7 +164,7 @@ The error is defined as
 \begin{equation}
 e(t)=x(t)-r(t) = x(t)-[y(t)\ast h(t)]
 \end{equation}
-with $h(t)$ being the inverse Fourier transform of the filters transfer function $H(s)$.
+with $h(t)$ being the inverse Laplace transform of the filters transfer function $H(s)$.
 
 \begin{figure}[tb]
 	\centering
@@ -176,14 +176,36 @@ with $h(t)$ being the inverse Fourier transform of the filters transfer function
 Feedback control systems, or closed-loop systems are to be differentiated from open-loop systems, in which there is no return path, so they cannot compensate for \textit{un}known disturbances. If $d(t)$ is known $\forall t$, then an open loop system would be possible and any errors could simply be compensated.
 
 \subsection{Disturbance Rejection and Input Tracking}
+Disturbance rejection and input tracking are two important characteristics to evaluate a stable controller. To calculate them, the block diagram in \autoref{fig:theoreticalFramework-feedback-architecture} and the Laplace transform of the inputs/outputs is used.\footnote{The Laplace transform of a function in time $f(t)$ is written as $F(s)=\mathcal{L}\left\{f(t)\right\}$.} 
+
+To calculate how the output $y(t)$ depend on the input $x(t)$, the input tracking transfer function can be used.\cite[p.~88]{Foellinger2016} It is calculated as the transfer function $F_T=\nicefrac{Y(s)}{X(s)}$ by setting $d(t)=0$:
+\begin{align}
+Y(s)&=G(s)P(s)E(s)\quad\text{and}\quad E(s)=X(s)-H(s)Y(s)\\
+\Leftrightarrow Y(s)\left[1+G(s)P(s)H(s)\right]&=G(s)P(s)X(s)\\
+\Leftrightarrow F_T:=\frac{Y(s)}{X(s)} &= \frac{G(s)P(s)}{1+G(s)P(s)H(s)}.
+\end{align}
+
+On the other hand, the transfer function $F_{DR}=\nicefrac{Y(s)}{D(s)}$ can be used to describe the systems response to a disturbance.\cite[p.~88]{Foellinger2016} It is defined by letting $x(t)=0$ and calculating
+\begin{align}
+Y(s)&=G(s)P(s)E(s)+D(s)\quad\text{and}\quad E(s)=-H(s)Y(s)\\
+\Leftrightarrow Y(s)\left[1+G(s)P(s)H(s)\right]&=D(s)\\
+\Leftrightarrow F_{DR}:=\frac{Y(s)}{D(s)}&=\frac{1}{1+G(s)P(s)H(s)}.
+\end{align}
+
 \subsection{Stability}
+The application of a controller to a system is only useful if the resulting system has a stable behavior.
+One possible definition of stability is the bounded input bounded output (BIBO) criterion\cite[p.~82]{Foellinger2016}:
+\begin{definition}
+(\textit{BIBO stability}) A LTI system is said to be BIBO stable if for some $M,N \in \mathbb{R}^+$, the response to a bounded input $|u(t)| \le M$ results in a bonded output $|y(t)| \le N$.
+\end{definition}
 
-
-
-
-
-
-
-
-
+For a given control system, one way to analyze its stability is to plot the locus $z=F_o(s=j2\pi f)$ of the open loop frequency response
+\begin{equation}
+F_o(s) = G(s)P(s)H(s)
+\end{equation}
+from $f=0$ to $f=\infty$ and using the Nyquist stability criterion.
+For the special case of a stable open loop $F_o(s)$ \footnote{The stability of $F_o(s)$ can often easily be determined from the block diagram.} the Nyquist stability criterion can be stated as\cite[p.~111]{Foellinger2016}
+\begin{definition}
+(\textit{Nyquist stability criterion}) If the open loop $F_o(s)$ is stable, then the closed loop is stable if $z=F_o(s=j2\pi f)$ does not go through or encircles $z=-1$.
+\end{definition}
 
