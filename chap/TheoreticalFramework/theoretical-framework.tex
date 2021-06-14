@@ -150,7 +150,36 @@ To calculate the spectrogram, the signal is split into segments with the sliding
 \hat{\Phi}_{xx}[k,m] = \frac{1}{N} \left| \sum_{n=0}^{N-1} w[n-m] x[n]\,\text{e}^{-j\frac{2\pi}{N}k\,n}\right|^2.
 \end{equation}
 
+
+
+
+
+
+
+
+
 \section{Feedback Control Systems}
+Feedback control systems are used to control a dynamic system (plant) in such a way that its output $y(t)$ follows a certain input $x(t)$ and disturbances on the output $d(t)$ are rejected. The general structure of a closed loop control system is shown in \autoref{fig:theoreticalFramework-feedback-architecture}. To achieve the tracking of the input and the stabilization of the output, a controller $G(s)$ uses the error $e(t)$ to control the plant $P(s)$ accordingly.
+The error is defined as
+\begin{equation}
+e(t)=x(t)-r(t) = x(t)-[y(t)\ast h(t)]
+\end{equation}
+with $h(t)$ being the inverse Fourier transform of the filters transfer function $H(s)$.
+
+\begin{figure}[tb]
+	\centering
+	\includegraphics[width=\textwidth]{chap/TheoreticalFramework/img/feedbackControl/architecture.tikz}
+	\caption{General structure of a time continuous feedback control system}
+	\label{fig:theoreticalFramework-feedback-architecture}
+\end{figure}
+
+Feedback control systems, or closed-loop systems are to be differentiated from open-loop systems, in which there is no return path, so they cannot compensate for \textit{un}known disturbances. If $d(t)$ is known $\forall t$, then an open loop system would be possible and any errors could simply be compensated.
+
+\subsection{Disturbance Rejection and Input Tracking}
+\subsection{Stability}
+
+
+
 
 
 

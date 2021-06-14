@@ -1,25 +1,5 @@
 \chapter{Controller Design and Evaluation}
-In this chapter stabilizing the power output of FLUTE by means of a control system is examined. This is different than previous attempts in that a feedback control system tries to compensate short term disturbances and long term drifts \textit{actively} by interfering with some part of FLUTE that has influence of the output power.
 
-The next sections describe the chosen architecture of a suitable control system as well as some implementation details and the tuning of necessary controller parameters.
-
-\section{Concept and Architecture}
-The general structure of a closed loop control system is shown in \autoref{fig:own-work-architecture}.
-
-$y(t)$ is the physical quantity which should follow a certain time trajectory $x(t)$ or be kept constant (then $x(t)=x=const.$). If there are no disturbances $d(t)$ or the disturbances are deterministic (i.e. $d(t)$ is known $\forall t$), then an open loop system would be possible. In that case the role of the controller would be to merely to set its output $u(t)$ according to the system dynamics of the plant\footnote{Assuming $g(t)$ is a stable LTI system} (represented by its impulse response $g(t)$).
-
-In most real world scenarios, $d(t)$ originates from a stochastic process and thus is unknown. Too remedy the negative influences of $d(t)$, the output $y(t)$ is measured and feed back. Based on the error $e(t)$, which is the difference between the set value and the actual value defined by
-\begin{equation}
-e(t) = x(t) - y(t),
-\end{equation}
-the controller can react accordingly.
-
-\begin{figure}[tb]
-	\centering
-	\includegraphics[width=\textwidth]{chap/ControllerDesignAndEvaluation/img/controller/architecture.tikz}
-	\caption{General structure of a closed loop feedback control system}
-	\label{fig:own-work-architecture}
-\end{figure}
 
 \section{Plant Identification}
 \subsection{Principle}
