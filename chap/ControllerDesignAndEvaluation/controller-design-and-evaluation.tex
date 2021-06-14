@@ -133,10 +133,12 @@ On the one hand, a FIR filter is designed with the Kaiser window method.
 This method starts with the desired frequency response, which is usually given piece-wise. 
 In case of the low pass filter it is a step function at a cutoff frequency $f_c$.
 Then the IDFT is used to compute the corresponding impulse response $h_\text{IIR}[n]$, which is in general infinitely long.
-Windowing and then truncating the impulse response then yields the impulse response of the desired FIR filter $h_\text{FIR}[n]$.\cite[p.~533]{Oppenheim2010}.
+Windowing with e.g. a Kaiser window and then truncating the impulse response then yields the impulse response of the desired FIR filter $h_\text{FIR}[n]$.\cite[p.~533]{Oppenheim2010}.
+With SciPy using \texttt{b=signal.firwin(N, fc,fs)}, the coefficients of a FIR with this method can be calculated.
 
 On the other hand, an IIR filter is designed with the impulse invariance method and an analogue Butterworth filter.
 This method could be interpreted as sampling the infinitely long analogue impulse response.\cite[p.~497]{Oppenheim2010}
+With SciPy using \texttt{b,a=signal.butter(N,fc,'lowpass',fs,)}, the coefficients of an IIR with this method can be calculated.
 For an IIR filter, the group delay cannot be calculated with \autoref{eq:groupD} and it is in general frequency depend.
 
 \autoref{fig:controllerDesignAndEvaluation-impulseresponses} shows the impulse responses of the moving average, the FIR lowpass and the IIR lowpass (truncated to $N=100$).
@@ -144,7 +146,7 @@ For an IIR filter, the group delay cannot be calculated with \autoref{eq:groupD}
 \begin{figure}[tb]
 	\centering
 	\includegraphics[width=\textwidth,height=0.5\textwidth]{chap/ControllerDesignAndEvaluation/img/measurementFilter/firVsMa_impulseresponses.tikz}
-	\caption{}
+	\caption{Impulse responses of a moving average filter ($N=100$), a FIR lowpass ($N=50$, $f_c=\SI{0.1}{\hertz}$) and a IIR Butterworth lowpass ($N=50$, $f_c=\SI{0.1}{\hertz}$)}
 	\label{fig:controllerDesignAndEvaluation-impulseresponses}
 \end{figure}
 
@@ -153,7 +155,7 @@ In \autoref{fig:controllerDesignAndEvaluation-filterResults}, the three filter t
 \begin{figure}[tb]
 	\centering
 	\includegraphics[width=\textwidth,height=0.5\textwidth]{chap/ControllerDesignAndEvaluation/img/measurementFilter/firVsMa.tikz}
-	\caption{}
+	\caption{Effects of the three different lowpass filters in \autoref{fig:controllerDesignAndEvaluation-impulseresponses} on noisy data}
 	\label{fig:controllerDesignAndEvaluation-filterResults}
 \end{figure}
 
@@ -164,7 +166,7 @@ Compared to the FIR lowpass, the moving average offers no benefit besides its ea
 When comparing the FIR with the IIR approach, the IIR has the advantage of needing less coefficients, thus occupying less memory, which is not really an advantage when the control system is implemented on a personal computer, which typically has enough free memory to hold millions of floating point numbers.
 Also the IIR filter has a non-constant group delay and is not guaranteed to be stable like all FIR filters are.
 
-For these reasons, in the following an FIR filter is used.
+For these reasons, in the following an FIR lowpass filter is used.
 
 \paragraph{Real-time implementation of an FIR Filter in Python}
 Similar to \autoref{eq:causalMA}, a FIR filter designed with the SciPy function \texttt{sigal.firwin()} can be used in a causal manner to filter real-time data.
@@ -172,14 +174,12 @@ Similar to \autoref{eq:causalMA}, a FIR filter designed with the SciPy function 
 Applying the filter on pre-recorded data, like in \autoref{fig:controllerDesignAndEvaluation-filterResults} can be done with \texttt{signal.lfilter()}. To use \texttt{signal.lfilter()} on sample-wise incoming real-time data, the ``initial in'' input and ``final out'' output of \texttt{signal.lfilter()} can be used to keep the filters state. This is demonstrated in \autoref{lst:controllerDesignAndEvaluation-zizf} by looping through pre-recorded data point-by-point.
 
 \begin{lstlisting}[style=python,caption = Demonstration of the \texttt{zi} and \texttt{zf} variables when using \texttt{signal.lfilter()}, label = lst:controllerDesignAndEvaluation-zizf]
-#...
 x=df2["F:RF:LLRF:01:GunCav1:Power:Out Value"].to_numpy()
 y=np.array([])
 zf=signal.lfilter_zi(b, 1)
 for i in range(len(x)):
     y0,zf=signal.lfilter(b, 1, [x[i]],zi=zf)
     y=np.append(y,y0[0])
-#...
 \end{lstlisting}
 
 
