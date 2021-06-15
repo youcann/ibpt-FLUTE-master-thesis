@@ -82,7 +82,7 @@ P(s) = \frac{0.6352s - 1808}{3.13 s^2 + 2.508 s + 1}.
 \end{equation}
 Using the Matlab function \texttt{c2d()}\footnote{Without specifying a different method, \texttt{c2d()}  discretizes the continuous-time model zero-order hold on the input.} and the sample time $T_s=\SI{0.2}{\second}$, $G(s)$ can be converted to the time discrete transfer function
 \begin{equation}
-P(z) = \frac{-10.91 z^{-1} - 10.41 z^{-2}}{1 - 1.84 z^{-1} + 0.8519 z^{-2}}.
+P[z] = \frac{-10.91 z^{-1} - 10.41 z^{-2}}{1 - 1.84 z^{-1} + 0.8519 z^{-2}}.
 \end{equation}
 
 
@@ -174,8 +174,38 @@ Compared to the FIR lowpass, the moving average offers no benefit besides its ea
 When comparing the FIR with the IIR approach, the IIR has the advantage of needing less coefficients, thus occupying less memory, which is not really an advantage when the control system is implemented on a personal computer, which typically has enough free memory to hold millions of floating point numbers.
 Also the IIR filter has a non-constant group delay and is not guaranteed to be stable like all FIR filters are.
 
-For these reasons, in the following an FIR lowpass filter is used.
+For these reasons, in the following a FIR lowpass filter is used.
 
+One example filter generated with \texttt{signal.firwin()} with a cutoff frequency $f_c=\SI{10}{\milli\hertz}$ and order $N=10$ has the transfer function
+\begin{equation}
+H[z]=\frac{1}{b_{10} z^{10} + b_{9} z^9 + b_{8} z^8 + b_{7} z^7 + b_{6} z^6 + b_{5} z^5 + b_{4} z^4 + b_{3} z^3  + b_{2} z^2 + b_{1} z + b_{0}}
+\end{equation}
+with the coefficient vector $\vec{b}=[b_{10},\,...,\,b_0]$
+\begin{equation}
+\vec{b}=[0.0876,0.0896,0.0911,0.0922,0.0929,0.0931,0.0929,0.0922,0.0911,0.0896,0.0876]
+\end{equation}
+
+Instead of stating the transfer function, a plot of the poles and zeros is a more intuitive representation. In \autoref{fig:controllerDesignAndEvaluation-zplane}, the poles and zeros of the FIR filter with $N=10$ are compared to one with $N=40$. In addition, \autoref{fig:controllerDesignAndEvaluation-magn} shows the magnitude responses of such filters.
+
+For the controller design in the next section and the later implemented real-time system, the cutoff frequency and the filter order are kept variable to leave room for improvement.
+
+\begin{figure}[tb]
+    \centering
+        \subfloat[$N=10$]{\input{chap/ControllerDesignAndEvaluation/img/measurementFilter/lpFiltZPplane10.tikz}}
+        \qquad
+        \subfloat[$N=40$]{\input{chap/ControllerDesignAndEvaluation/img/measurementFilter/lpFiltZPplane40.tikz}}
+       \caption{Pole-Zero maps for two FIR filters with a common cutoff frequency $f_c=\SI{10}{\milli\hertz}$ but different filter orders $N$;\\ $\circ$ denotes zeros, $\times$ denotes poles, $(n)$ is a $n$-times pole}
+    \label{fig:controllerDesignAndEvaluation-zplane}
+\end{figure}
+
+\begin{figure}[tb]
+	\centering
+	\includegraphics[width=\textwidth,height=0.6\textwidth]{chap/ControllerDesignAndEvaluation/img/measurementFilter/lpFiltMagnitude.tikz}
+	\caption{Magnitude response of two FIR filters with a common cutoff frequency $f_c=\SI{10}{\milli\hertz}$ but different filter orders $N$}
+	\label{fig:controllerDesignAndEvaluation-magn}
+\end{figure}
+
+\FloatBarrier
 \paragraph{Real-time implementation of a FIR Filter in Python}
 Similar to \autoref{eq:causalMA}, a FIR filter designed with the SciPy function \texttt{sigal.firwin()} can be used in a causal manner to filter real-time data.
 
@@ -198,24 +228,40 @@ for i in range(len(x)):
 
 
 
+
+
 \newpage
 \section{Controller Design}
-For many control problems, especially if the plant behaves approximately as an LTI system and the system is of low order, a simple PID (proportional, integral and derivative) controller is a good starting point (visualized in \autoref{fig:own-work-pid-block}). 
-
-A PID controller uses the error $e(t)$, the temporal integral of the error $e_i(t)$ and the temporal derivative of the error $e_d(t)$ as an input and outputs a weighed sum of them. While the unmodified error signal represents the current error, the integrated and derived error signals allow to controller to ``see'' in the past and predict the future.
-
-Often simplifications, such as a pure P (only $k_p \neq 0$) or a PI (only $k_p,\,k_i \neq 0$) controller are valid as well. Since the plant has been identified to be a second order system, a simple P controller is not enough to bring the steady state error to zero (see ). So at least a PI controller is needed.
-
-\begin{figure}[tb]
-	\centering
-	\includegraphics[width=0.8\textwidth]{chap/ControllerDesignAndEvaluation/img/controller/pid.tikz}
-	\caption{Block diagram of a generic PID controller}
-	\label{fig:own-work-pid-block}
-\end{figure}
-
-As a starting point for software development and parameter tuning, the parameters $k_p=0.00001$ and $k_i=k_d=0$ are chosen. This ensures during development the system basically does nothing but still shows changing values at the controller output.
+Based on the estimated model of the plant $P(s)$ (or $P(z)$) in \autoref{} and the type of 
 
 
+\subsection{Choosing a Controller Type}
+\subsection{Designing a Discrete Time PID Controller}
+\subsection{Analyzing the Stability and Disturbance Rejection}
+\subsection{Offline Evaluation with Measured Data}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\newpage
 \section{Software Design}
 As integrating a new subsystem into EPICS takes some time and effort and the control system is designated a temporary solution, it is more viable to operate it as an independent system.
 
@@ -252,29 +298,10 @@ To log all relevant data from RAM to non-volatile memory (hard drive or network 
 
 
 
-\section{Control Parameter Tuning and Tests}
-To tune control parameters there are a multiple of analytical, empirical or hybrid approaches. Here the Ziegler-Nichols method is tested and fine tuning is done by hand.
-
-\section{Improving the Control System}
-
-\subsection{Adding Disturbance Feed Forward}
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 \newpage
-\section{Results}
+\section{Online Evaluation of the Control System}
 To evaluate the performance of the control system, FLUTE is operated with and without the control system switched on for \SI{6}{\hour} each.
 Before the test, FLUTE is allowed to run a few hours for all components to reach operating temperatures.
 The result of the test is shown in \autoref{fig:controllerDesignAndEvaluation_resultTime}.

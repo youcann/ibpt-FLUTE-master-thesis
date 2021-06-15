@@ -1,0 +1,45 @@
+% This file was created by matlab2tikz.
+%
+%The latest updates can be retrieved from
+%  http://www.mathworks.com/matlabcentral/fileexchange/22022-matlab2tikz-matlab2tikz
+%where you can also make suggestions and rate matlab2tikz.
+%
+\definecolor{mycolor1}{rgb}{0.00000,0.44700,0.74100}%
+%
+\begin{tikzpicture}
+
+\begin{axis}[%
+height=5cm,
+width=5cm,
+scale only axis,
+xmin=-1.2,
+xmax=1.2,
+xlabel={Real Part},
+ymin=-1.2,
+ymax=1.2,
+ylabel={Imaginary Part},
+axis background/.style={fill=white},
+title style={font=\bfseries},
+]
+\addplot [color=mycolor1, only marks, mark size=3, mark=o, mark options={solid, mycolor1}, forget plot]
+  table[row sep=crcr]{%
+0.836621499079625	0.547781404647655\\
+0.836621499079625	-0.547781404647655\\
+0.41185407563496	0.911249812281391\\
+0.41185407563496	-0.911249812281391\\
+-0.959594883641788	0.281385250659135\\
+-0.959594883641788	-0.281385250659135\\
+-0.655729055242191	0.75499629542878\\
+-0.655729055242191	-0.75499629542878\\
+-0.144472645356607	0.98950879467727\\
+-0.144472645356607	-0.98950879467727\\
+};
+\addplot [color=mycolor1, only marks, mark size=3, mark=x, mark options={solid, mycolor1}, forget plot]
+  table[row sep=crcr]{%
+0	0\\
+};
+\draw[color=gray, dotted] (axis cs:0,0) circle[radius=1];
+\node[above right, align=left]
+at (axis cs:0.034,0) {(10)};
+\end{axis}
+\end{tikzpicture}
