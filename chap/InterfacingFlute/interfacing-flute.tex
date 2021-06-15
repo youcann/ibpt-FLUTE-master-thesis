@@ -95,6 +95,23 @@ Then a histogram with the relative frequency on the y axis is used as an estimat
 \label{fig:interfacingFlute_sampleTimesHist}
 \end{figure}
 
+\subsection{Filtering the RF power Signals}
+In case of the klystron output RF power or the power at the cavity, filtering of the signal is needed to remove zero outliers.
+These outliers occur if a high voltage arc occurs inside the cavity, it is detected and the LLRF control system shuts of the RF power for the current pulse (called a ``breakdown'').
+These outliners are not representative of the average RF power inside the cavity over multiple pulses and thus would greatly impair the controller performance.
+For that reason, before any further filtering to remove noise etc, a breakdown removal filter is used (\autoref{lst:control-system-breakdownremoval}).
+In principle the new power value is checked to be inside a band which size is determined by the mean deviation of the $N_{filt}$ previous values and a scaling $m$.
+The percentile differences are used here as they are robust against outliers (i.e. other breakdowns) in the $N_{filt}$ previous values opposed to a normal standard deviation.
+The scaling with $(2*1.2815)^{-1}$ is used to make the mean deviation comparable to a standard deviation.
+
+\begin{lstlisting}[style=python,caption = Breakdown removal filtering, label = lst:control-system-breakdownremoval]
+if(abs(P[i]-np.median(P[i-3*Nfilt:i-Nfilt])) <
+m*(np.percentile(P[i-3*Nfilt:i-Nfilt],90)-np.percentile(P[i-3*Nfilt:i-Nfilt],10)/(2*1.2815))):
+   P_filt=np.append(P_filt,P[i])
+else:
+   breakdown_locations_predicted=np.append(breakdown_locations_predicted,i)
+   P_filt=np.append(P_filt,np.median(P[i-3*Nfilt:i-Nfilt]))
+\end{lstlisting}
 
 
 
