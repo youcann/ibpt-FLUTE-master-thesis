@@ -1,0 +1,13 @@
+\begin{tikzpicture}
+\node[circle,draw,align=center,minimum width=1cm] (sum1) at (0,0) {\Large $+$};
+\node[rectangle,draw,align=center,minimum width=2.5cm,minimum height=1.5cm,fill=blue!30] (c) at (3,0) {Controller\\$G[z]$};
+\node[rectangle,draw,align=center,minimum width=2.5cm,minimum height=1.5cm,fill=green!30] (g) at (7,0) {$\text{Sys}[z]$\\$P[z] \cdot H[z]$};
+
+\draw[{Latex[length=3mm]}-] (sum1) -- node[pos=0.8,anchor=south] {$x[n]$} +(-1.75,0);
+\draw[-{Latex[length=3mm]}] (sum1) -- node[pos=0.5,anchor=south] {$e[n]$} (c);
+\draw[-{Latex[length=3mm]}] (c) -- node[pos=0.5,anchor=south] {$u[n]$} (g);
+\draw[-{Latex[length=3mm]}] (g) -- node[pos=0.8,anchor=south] {$y'[n]$} +(2.75,0);
+
+\draw[-{Latex[length=3mm]}] (g)+(2,0)  --  node[fill,circle,minimum width=0.75ex,inner sep=0,pos=0] {}  +(2,-2) -| (sum1); %todo
+
+\end{tikzpicture}

@@ -175,7 +175,7 @@ with $h(t)$ being the inverse Laplace transform of the filters transfer function
 
 Feedback control systems, or closed-loop systems are to be differentiated from open-loop systems, in which there is no return path, so they cannot compensate for \textit{un}known disturbances. If $d(t)$ is known $\forall t$, then an open loop system would be possible and any errors could simply be compensated.
 
-\subsection{Disturbance Rejection and Input Tracking}
+\subsection{Disturbance Rejection and Input Tracking}\label{sec:drandtrack}
 Disturbance rejection and input tracking are two important characteristics to evaluate a stable controller. To calculate them, the block diagram in \autoref{fig:theoreticalFramework-feedback-architecture} and the Laplace transform of the inputs/outputs is used.\footnote{The Laplace transform of a function in time $f(t)$ is written as $F(s)=\mathcal{L}\left\{f(t)\right\}$.} 
 
 To calculate how the output $y(t)$ depend on the input $x(t)$, the input tracking transfer function can be used.\cite[p.~88]{Foellinger2016} It is calculated as the transfer function $F_T=\nicefrac{Y(s)}{X(s)}$ by setting $d(t)=0$:
@@ -195,7 +195,7 @@ Y(s)&=G(s)P(s)E(s)+D(s)\quad\text{and}\quad E(s)=-H(s)Y(s)\\
 \subsection{Stability}
 The application of a controller to a system is only useful if the resulting system has a stable behavior.
 One possible definition of stability is the bounded input bounded output (BIBO) criterion\cite[p.~82]{Foellinger2016}:
-\begin{definition}
+\begin{definition}\label{def:bibo}
 (\textit{BIBO stability}) A LTI system is said to be BIBO stable if for some $M,N \in \mathbb{R}^+$, the response to a bounded input $|u(t)| \le M$ results in a bonded output $|y(t)| \le N$.
 \end{definition}
 

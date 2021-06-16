@@ -5,13 +5,13 @@ First the plant transfer function, which describes the system that is to be cont
 Second, based on the plant, an appropriate controller type is chosen and its parameters are calculated.
 Third a measurement filter is used to improve the quality of the feedback signal path. As the choice of the measurement filter influences the controller design, its design is treated before the controller.
 
-\section{Plant Identification}
+\section{Plant Identification}\label{sec:plantIdenti}
 \subsection{Principle}
 Before choosing an appropriate controller, some insight of the system response has to be obtained. Therefore in this section the plants transfer function is estimated. In the context of this chapter ``plant'' refers to everything from the attenuation set at the controllable attenuator to the system output, e.g. the cavity RF power.
 
 In the time domain, a LTI system is described by its impulse response $h(t)$, that is the reaction of the plant to an impulse at the input.
 Using this definition directly, the plants impulse response $p(t)$ could be measured by applying a short peak in the attenuation setting on the attenuator. The effect on the output is not easy to measure and a single measurement of this kind is very susceptible to noise.
-Therefore it is more common to measure the step response, which is the output of a system, when a step function is applied to its input. As the step function is the time integral of the impulse function, the step response can be converted to the impulse response by differentiation in time.
+Therefore it is more common to measure the step response\cite{Wang2000}, which is the output of a system, when a step function is applied to its input. As the step function is the time integral of the impulse function, the step response can be converted to the impulse response by differentiation in time.
 
 Instead of measuring a single step response, often several step responses are measured and their average is computed to reduce the variance of the estimation. When measuring a step response the minimum needed measuring time depends on the systems time constants, but they are often not known beforehand.
 
@@ -20,7 +20,7 @@ That is why when there is no prior knowledge of the system, the identification i
 To get the transfer function $P(s)=\mathcal{L}\left\{p(t)\right\}$ of the plant from its step response(s), several methods are common, including correlation based and frequency response based algorithms.
 
 \subsection{Identifying the Plant Attenuator+RF}
-The input PRBS signal is generated with the Python script in \autoref{fig:controllerDesignAndEvaluation-randomSequence}.
+The input PRBS signal is generated with the Python script in \autoref{lst:controllerDesignAndEvaluation-randomSequence}.
 Based on the value of a pseudo random number generator, the sequence toggles the attenuator between $V_\text{control}=\SI{7}{\volt}$ and $V_\text{control}=\SI{7}{\volt}$.
 Using \autoref{fig:interfacingFlute_attenDatten}, this equals a span in attenuation of \SIrange{6.892}{6.4026}{\dB}.
 With the parameter \texttt{toggleP}, the average length of one constant voltage level can be controlled. 
@@ -48,7 +48,7 @@ In a test run over six hours (after all FLUTE subsystems had stabilized), the at
 The time signals $A(t)$ and $P_\text{cavity}(t)$ are then split into a \textit{estimation} data set (about \SI{80}{\percent} of the samples) and a \textit{validation} data set (the remaining $\approx$ \SI{20}{\percent}). This is done so the bulk of the available information is used to estimate the model, but there is data left that the model hasn't seen before. This smaller portion is used to validate the models performance, hence it is called the validation data set.
 
 The two data sets are then loaded into the \textsc{Matlab} \textit{System Identification Toolbox}. With the toolboxes pre-processing tools, first the means of both the input and output are removed, which is required by the estimators used.
-Then, using the ``process model'' estimator, continuous time transfer functions with different numbers of zeros and poles are estimated. After that, to check the accuracy of the estimations, the System Identification Toolbox is used to simulate the output of the estimated systems (see \autoref{fig:controllerDesignAndEvaluation-identify-mo}). For that the aforementioned validation data set is used: The measured output is compared with the outputs predicted by the models.
+Then, using the ``process model'' estimator, linear, continuous time transfer functions with different numbers of zeros and poles are estimated. After that, to check the accuracy of the estimations, the System Identification Toolbox is used to simulate the output of the estimated systems (see \autoref{fig:controllerDesignAndEvaluation-identify-mo}). For that the aforementioned validation data set is used: The measured output is compared with the outputs predicted by the models.
 
 Using the Matlab function \texttt{zpk()} the models are converted into the zero-pole-gain representation. In
 \autoref{tab:controllerDesignAndEvaluation-identify-models} the estimated models are listed with their zeros, poles, gains and the model fit, as it is computed by the System Identification Toolbox. \texttt{P1}, \texttt{P2} and \texttt{P3} are models with one, two and three poles and a gain as free parameters. \texttt{P2ZU} consists of a complex pole pair, a zero and a gain. 
@@ -85,6 +85,12 @@ Using the Matlab function \texttt{c2d()}\footnote{Without specifying a different
 P[z] = \frac{-10.91 z^{-1} - 10.41 z^{-2}}{1 - 1.84 z^{-1} + 0.8519 z^{-2}}.
 \end{equation}
 
+The high model fit percentage of \SI{96.26}{\percent} justifies the choice of a linear model with few parameters and further estimation attempts using other (non-) linear models are not needed.
+Considering the accuracy of the model, it is important to note this estimation is only valid at the time the measurements are taken. With FLUTE being a large experimental setup being still under commission, it is always possible that small changes to certain (sub-) systems can lead to minor or major influences to others.
+For the time being, the estimation is redone a day later and for both measurements days, different parts of the about six hour measurements each are used as the estimation and validation data sets. Doing so shows no significant change in the estimated coefficients and the resulting model fits, indicating the estimated models are at least plausible.
+
+To account for errors in the estimated model (and possible other errors), when designing the controller, sufficient gain and phase margins are set to ensure stable operation.
+
 
 
 
@@ -95,7 +101,7 @@ P[z] = \frac{-10.91 z^{-1} - 10.41 z^{-2}}{1 - 1.84 z^{-1} + 0.8519 z^{-2}}.
 
 
 \newpage
-\section{Measurement Filter}
+\section{Measurement Filter}\label{sec:measurementFilter}
 Like all measurements of physical quantities, the measuring of the system output of the control system is subjected to noise.
 In addition to these disturbances of thermal or electrical origins, also high frequency variations of the system output has detrimental effects on the control systems performance.
 For example the magnitudes of the bunch-by-bunch changes of the measured cavity power are often in the same order as the long-term drifts.
@@ -180,9 +186,9 @@ One example filter generated with \texttt{signal.firwin()} with a cutoff frequen
 \begin{equation}
 H[z]=\frac{1}{b_{10} z^{10} + b_{9} z^9 + b_{8} z^8 + b_{7} z^7 + b_{6} z^6 + b_{5} z^5 + b_{4} z^4 + b_{3} z^3  + b_{2} z^2 + b_{1} z + b_{0}}
 \end{equation}
-with the coefficient vector $\vec{b}=[b_{10},\,...,\,b_0]$
+with the coefficient vector $\vec{b}=[b_{10},\,...,\,b_0]$, with
 \begin{equation}
-\vec{b}=[0.0876,0.0896,0.0911,0.0922,0.0929,0.0931,0.0929,0.0922,0.0911,0.0896,0.0876]
+\vec{b}=[0.0876,0.0896,0.0911,0.0922,0.0929,0.0931,0.0929,0.0922,0.0911,0.0896,0.0876].
 \end{equation}
 
 Instead of stating the transfer function, a plot of the poles and zeros is a more intuitive representation. In \autoref{fig:controllerDesignAndEvaluation-zplane}, the poles and zeros of the FIR filter with $N=10$ are compared to one with $N=40$. In addition, \autoref{fig:controllerDesignAndEvaluation-magn} shows the magnitude responses of such filters.
@@ -194,7 +200,7 @@ For the controller design in the next section and the later implemented real-tim
         \subfloat[$N=10$]{\input{chap/ControllerDesignAndEvaluation/img/measurementFilter/lpFiltZPplane10.tikz}}
         \qquad
         \subfloat[$N=40$]{\input{chap/ControllerDesignAndEvaluation/img/measurementFilter/lpFiltZPplane40.tikz}}
-       \caption{Pole-Zero maps for two FIR filters with a common cutoff frequency $f_c=\SI{10}{\milli\hertz}$ but different filter orders $N$;\\ $\circ$ denotes zeros, $\times$ denotes poles, $(n)$ is a $n$-times pole}
+       \caption{Pole-Zero maps for two FIR filters with a common cutoff frequency $f_c=\SI{10}{\milli\hertz}$ but different filter orders $N$;\\ $\circ$ denotes zeros, $\times$ denotes poles, $(k)$ is a $k$-times pole}
     \label{fig:controllerDesignAndEvaluation-zplane}
 \end{figure}
 
@@ -232,12 +238,155 @@ for i in range(len(x)):
 
 \newpage
 \section{Controller Design}
-Based on the estimated model of the plant $P(s)$ (or $P(z)$) in \autoref{} and the type of 
+Based on the estimated model of the plant $P(s)$ (or $P[z]$) in \autoref{sec:plantIdenti} and the type of measurement filter designed in \autoref{sec:measurementFilter}, in this section an appropriate controller to stabilize the plant is designed and its performance is evaluated.
 
+Tuning the controller and testing its capabilities is performed both \textit{offline} with simulations using the building blocks $P[z]$, $H[z]$ and the yet to be defined $G[z]$ and \textit{online} using a software implementation of the control system with the real hardware, i.e. FLUTE and the controllable attenuator.
 
 \subsection{Choosing a Controller Type}
+The plant has been identified using a linear model in \autoref{sec:plantIdenti} resulting in the LTI system $P(s)$ or ($P[z]$). The matching controller does not necessarily have to be a LTI system, but choosing a LTI system simplifies design and analysis and is a justifiable choice here, as there a no good reasons against it, yet.
+
+The class of LTI controllers is dominated by the PID controller and its variants. PID stands for ``proportional'', ``integral'' and ``derivative'', which are LTI systems themselves, performing scaling, integration or differentiation. Depending on the application, variants, such as the PI controller, or the PD controller are used as well.
+
+According to \cite[p.~111]{Aastroem1995} PID control is applicable for plants with order two or less.
+Compared to other types of controllers, using a PID controller has many advantages. It is is quick to design and does not depend on an accurate plant model. Also after the designing step, the few free parameters can easily be presented to an operator and online fine tuning is possible.\footnote{In contrast a compensating controller is based on an accurate model of the plant and changes on the fly are difficult.\cite{SergeZacher2010}}
+
+In the next section such a PID controller is designed. As it is to be implemented in Software later, the design is done in discrete time.
+
 \subsection{Designing a Discrete Time PID Controller}
+The output signal $u(t)$ of a generic time continuous PID controller (see \autoref{fig:controllerDesignAndEvaluation-genericPID}) consists of the weighted sum of three error signals.
+
+\begin{figure}[tb]
+	\centering
+	\includegraphics[width=0.8\textwidth]{chap/ControllerDesignAndEvaluation/img/controller/pid.tikz}
+	\caption{Block diagram of a generic PID controller}
+	\label{fig:controllerDesignAndEvaluation-genericPID}
+\end{figure}
+First, a
+The first is simply the controller input error signal $e(t)$ scaled by the gain $k_p$. This is the proportional part of the PID controller. The integral part is calculated by computing the running time integral
+\begin{equation}\label{eq:ei}
+e_i(t)=\int_{0}^{t} e(\tau) \d{\tau}.
+\end{equation}
+This is than scaled by the constant $k_i$. To get the derivative part, the derivative
+\begin{equation}\label{eq:ed}
+e_d(t)=\frac{\d{}}{\d{t}} e(t)
+\end{equation}
+is calculated and weighted with $k_d$.
+All three are then summed to get $u(t)$ in the so called parallel form\cite[p.~5]{Dodds2015}:
+\begin{equation}
+u(t)=k_p e(t) + k_i \int_{0}^{t} e(\tau) \d{\tau} + k_d \frac{\d{}}{\d{t}} e(t)
+\end{equation}
+Often instead of the parallel form, the PID controller is stated in \textit{standard form}. Instead of using the gains $k_{p,\,i,\,d}$, the parameters proportional gain $K$, integral time $T_i$ and derivative time $T_d$ are used.\cite[p.~76]{Aastroem1995} With the conversions
+\begin{align}
+K&=k_i\\
+T_i=\frac{k_p}{k_i}&=\frac{K}{k_i}\\
+T_d=\frac{k_d}{k_p}&=\frac{k_d}{K}
+\end{align}
+the PID controller in standard form is
+\begin{equation}
+u(t)=K\left[e(t) + \frac{1}{T_i} \int_{0}^{t} e(\tau) \d{\tau} + T_d \frac{\d{}}{\d{t}} e(t)\right].
+\end{equation}
+The transfer function $G(s)$ is given by the Laplace of $u(t)$ using the computation rules\cite{Leon2015}
+\begin{align}
+\mathcal{L}\left\{\int_{0}^{t} y(\tau) \d{\tau}\right\} &= \frac{1}{s} Y(s)\\
+\mathcal{L}\left\{\frac{\d{}}{\d{t}} y(t)\right\} &= s Y(s)
+\end{align}
+as
+\begin{equation}
+G(s)=K\left[1+\frac{1}{s T_i}+s T_d\right].
+\end{equation}
+To get the discrete transfer function, either the Laplace transform $G(s)=\nicefrac{U(s)}{E(s)}$, is discretized or the $\mathcal{Z}$ transform of $u[n]$ is calculated.
+First, to get $u[n]$, the derivative in \autoref{eq:ed} is approximated by
+\begin{equation}
+e_d[n]=\frac{e[n]-e[n-1]}{T_s}.
+\end{equation}
+This assumes $e(t)$ is sampled with a sampling rate of $f_s=\nicefrac{1}{T_s}$ to get $e[n]$. In a similar fashion, the integral in \autoref{eq:ei} is approximated by
+\begin{equation}
+e_i[n]=e_i[n-1] + e[n] T_s.
+\end{equation}
+
+Using the shift rule of the $\mathcal{Z}$ transform\cite{Leon2015}
+\begin{equation}
+y[n-k] \laplace z^{-k} Y[z],
+\end{equation}
+the discrete transfer function of the PID controller is
+\begin{equation}
+G[z]=K\left[1+\frac{T_s}{T_i}\frac{z}{z-1}+\frac{T_d}{T_s}\frac{z-1}{z}\right].
+\end{equation}
+
+\subsubsection{Controller Tuning}
+Next the three free parameters $k_{p,\,i,\,d}$ or $K,\,T_{i,\,d}$ are to be chosen in such a way that the controller has optimal performance. This process is called \textit{tuning}. Tuning of the parameters can be performed online or offline.
+
+Online tuning is done by using the physical\footnote{``Physical'' in the sense that one could touch it. (But should one?)} plant. The most popular member of this class is the Ziegler-Nichols tuning\cite{Ziegler1942}. The method relies on experiments and tabulated values. The mostly used variant uses one measured step response.
+
+Using this method at FLUTE produced mixed results. While being a very simple and fast process, the resulting controller is often unstable. This is partially due to errors when extracting the tabulated values from the noisy step response, but also the method intrinsically leads to poor stability margins.\cite[p.~142]{Aastroem1995}
+Nonetheless the Ziegler-Nichols method yields a usable starting point, if the strategy is to fine tune the controller manually by intuition and experience of the user.
+
+As the Ziegler-Nichols method does not yield an acceptable parameter set and the method combined with fine tuning by hand takes a considerable amount of time, next tuning the parameters offline using only the plants transfer function and the measurement filter is done.
+The offline tuning can be done analytically or using different numerical optimization strategies. In \cite{DiazRodriguez2019} analytical methods, such as the internal model control design or the pole placement design are discussed. Both require the systems transfer function in a closed form.\\
+Tuning by numerical optimization chooses the parameters by a simulation or measured data. Goal of the optimization is to minimize a cost function $J$ like
+\begin{equation}
+J(\theta) = \sum_{n=0}^{\infty} e_{\theta}[n]^2
+\end{equation}
+with the parameter vector $\theta=[k_p,\,k_i,\,k_d]$ or $\theta=[K,\,T_i,\,T_d]$:
+\begin{equation}
+\theta_\text{opt} = \underset{\theta}{\text{argmin}} J(\theta)
+\end{equation}
+
+A convenient way to do such an optimization by simulation using the transfer function of the estimated plant is the Matlab \textit{PID Tuner}.
+
+\paragraph{Tuning the Controller with the Matlab PID Tuner}
+The Matlab PID Tuner accepts different kinds of system models used by the Matlab/Simulink ecosystem. It is possible to directly use estimated models, models defined via their transfer function or the zero-pole-gain representation, Simulink models or combinations of those\footnote{Series connection can be established by multiplying the models transfer functions.}.
+
+The manual of the PID Tuner\cite{pidTunerMan} describes the expected input (see \autoref{fig:controllerDesignAndEvaluation-pidTunersys}). The feedback path has to have unity gain, i.e. there is no measurement filter allowed. Therefore the measurement filter is moved before the junction where the output $y[n]$ would normally be measured. Then the measurement filter $H[z]$ is combined with the plant $P[z]$ to form $Sys[z]$. For that reason $y[n]$ becomes an internal signal of $Sys[z]$. However the new system output $y'[n]=h[z] \ast y[n]$ is not too different from the old, since $H[z]$ is designed to remove high frequency noise but retain the rest of $y[n]$.
+
+\begin{figure}[tb]
+	\centering
+	\includegraphics[]{chap/ControllerDesignAndEvaluation/img/controller/pidTunerArch.tikz}
+	\caption{Required system architecture for the Matlab PID Tuner; PID Tuner input is the system block $Sys[z]$ (green), generated output is the controller $G[z]$ (blue)}
+	\label{fig:controllerDesignAndEvaluation-pidTunersys}
+\end{figure}
+
+The manufactures documentation \cite{pidTuner} does not disclose any internals of the PID Tuner nor state which optimization technique is used, but three tuning objectives are stated:
+\begin{itemize}
+\item (Stability) The closed loop should be stable (that is BIBO stable as defined in \autoref{def:bibo})
+\item (Performance) The closed loop system tracks the input well and rejects disturbances as rapidly as possible (see \autoref{sec:drandtrack})
+\item (Robustness) A gain and phase margin accounts for errors in the system model (see \autoref{sec:plantIdenti})
+\end{itemize}
+
+Using \autoref{lst:controllerDesignAndEvaluation-pidTuner}, the estimated plant $P[z]$ is loaded, a measurement filter $H[z]$ is generated and the combination $Sys[z]=P[z]H[z]$ is fed into the PID Tuner.
+
+\begin{lstlisting}[style=matlab,caption = Matlab script to generate an input system for PID Tuner, label = lst:controllerDesignAndEvaluation-pidTuner]
+%design lowpass measurement filter H
+N=10;
+lpFilt1 = designfilt('lowpassfir', 'FilterOrder', N, 'CutoffFrequency', ...
+                    0.01, 'SampleRate', 0.2, 'DesignMethod', ...
+                    'window', 'Window', 'kaiser');
+
+%convert filter to a dynamic system                
+[z1,p1,k1]=zpk(lpFilt1);
+H1=zpk(z1,p1,k1,0.2);
+
+%load estimated transfer function and convert it to discrete form
+load('P2ZU.mat')
+P=c2d(idtf(P2ZU),0.2);
+
+Sys1=tf1*H1; %Combine plant P and measurement filter H
+pidTuner(Sys1); %Launch pidTuner
+\end{lstlisting}
+
+With this a controller for measurement filters with orders of $N=10$ and $N=40$ is designed. The disturbance rejection is calculated and plotted in \autoref{fig:controllerDesignAndEvaluation-pidDR}
+
+\begin{figure}[tb]
+	\centering
+	\includegraphics[width=\textwidth,height=0.5\textwidth]{chap/ControllerDesignAndEvaluation/img/controller/controllerDR.tikz}
+	\caption{}
+	\label{fig:controllerDesignAndEvaluation-pidDR}
+\end{figure}
+
+
 \subsection{Analyzing the Stability and Disturbance Rejection}
+
+
 \subsection{Offline Evaluation with Measured Data}
 
 
