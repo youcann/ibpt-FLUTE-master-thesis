@@ -235,7 +235,7 @@ The body temperature of the device is monitored with a PT100 temperature sensor 
 
 Each of the lab devices used is compatible with VXI11, which is a widely adopted standard that is used to send ASCII SCPI commands over an ethernet network (called LXI) or GPIB \cite{lxi2021}.
 This enables remote and programatically control of the devices over the network.
-With the library \textit{python-vxi11}, it is now possible to write a custom script, that sets the measurement devices to known initial conditions, drives the inputs of the attenuator and records the generated data.
+With the library \textit{python-vxi11}, it is now possible to write a custom script, that sets the measurement devices to known initial conditions, drives the inputs of the attenuator and records the generated data. Timing the output of new set-values and recording of data is done with the \textit{Advanced Python Scheduler}.\cite{apscheduler}\\ 
 The whole setup of the hardware in \autoref{fig:interfacingFlute_atteneval-setup} and the Python software, a measurement frequency of about \SI{0.5}{\Hz} to \SI{1}{\Hz} can be achieved, which is enough because most measurements taken are of a static nature and in the case of the temperature influence measurement, the thermal time constant is in the order of a few seconds.
 The limiting device is the HP E4419B which takes the longest to perform one measurement. Without it, measurement frequencies of over \SI{4}{\Hz} are possible.
 
