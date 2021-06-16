@@ -179,14 +179,14 @@ Feedback control systems, or closed-loop systems are to be differentiated from o
 Disturbance rejection and input tracking are two important characteristics to evaluate a stable controller. To calculate them, the block diagram in \autoref{fig:theoreticalFramework-feedback-architecture} and the Laplace transform of the inputs/outputs is used.\footnote{The Laplace transform of a function in time $f(t)$ is written as $F(s)=\mathcal{L}\left\{f(t)\right\}$.} 
 
 To calculate how the output $y(t)$ depend on the input $x(t)$, the input tracking transfer function can be used.\cite[p.~88]{Foellinger2016} It is calculated as the transfer function $F_T=\nicefrac{Y(s)}{X(s)}$ by setting $d(t)=0$:
-\begin{align}
+\begin{align}\label{eq:inputTracking}
 Y(s)&=G(s)P(s)E(s)\quad\text{and}\quad E(s)=X(s)-H(s)Y(s)\\
 \Leftrightarrow Y(s)\left[1+G(s)P(s)H(s)\right]&=G(s)P(s)X(s)\\
 \Leftrightarrow F_T:=\frac{Y(s)}{X(s)} &= \frac{G(s)P(s)}{1+G(s)P(s)H(s)}.
 \end{align}
 
 On the other hand, the transfer function $F_{DR}=\nicefrac{Y(s)}{D(s)}$ can be used to describe the systems response to a disturbance.\cite[p.~88]{Foellinger2016} It is defined by letting $x(t)=0$ and calculating
-\begin{align}
+\begin{align}\label{eq:disturbanceRejection}
 Y(s)&=G(s)P(s)E(s)+D(s)\quad\text{and}\quad E(s)=-H(s)Y(s)\\
 \Leftrightarrow Y(s)\left[1+G(s)P(s)H(s)\right]&=D(s)\\
 \Leftrightarrow F_{DR}:=\frac{Y(s)}{D(s)}&=\frac{1}{1+G(s)P(s)H(s)}.
@@ -205,7 +205,7 @@ F_o(s) = G(s)P(s)H(s)
 \end{equation}
 from $f=0$ to $f=\infty$ and using the Nyquist stability criterion.
 For the special case of a stable open loop $F_o(s)$ \footnote{The stability of $F_o(s)$ can often easily be determined from the block diagram.} the Nyquist stability criterion can be stated as\cite[p.~111]{Foellinger2016}
-\begin{definition}
+\begin{definition}\label{def:Nyquist}
 (\textit{Nyquist stability criterion}) If the open loop $F_o(s)$ is stable, then the closed loop is stable if $z=F_o(s=j2\pi f)$ does not go through or encircles $z=-1$.
 \end{definition}
 

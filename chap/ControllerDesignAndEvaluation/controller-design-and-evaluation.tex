@@ -48,7 +48,7 @@ In a test run over six hours (after all FLUTE subsystems had stabilized), the at
 The time signals $A(t)$ and $P_\text{cavity}(t)$ are then split into a \textit{estimation} data set (about \SI{80}{\percent} of the samples) and a \textit{validation} data set (the remaining $\approx$ \SI{20}{\percent}). This is done so the bulk of the available information is used to estimate the model, but there is data left that the model hasn't seen before. This smaller portion is used to validate the models performance, hence it is called the validation data set.
 
 The two data sets are then loaded into the \textsc{Matlab} \textit{System Identification Toolbox}. With the toolboxes pre-processing tools, first the means of both the input and output are removed, which is required by the estimators used.
-Then, using the ``process model'' estimator, linear, continuous time transfer functions with different numbers of zeros and poles are estimated. After that, to check the accuracy of the estimations, the System Identification Toolbox is used to simulate the output of the estimated systems (see \autoref{fig:controllerDesignAndEvaluation-identify-mo}). For that the aforementioned validation data set is used: The measured output is compared with the outputs predicted by the models.
+Then, using the ``process model'' estimator, linear, continuous time transfer functions with different numbers of zeros and poles are estimated (See screenshot of the GUI in \autoref{fig:Appendix-identify}). After that, to check the accuracy of the estimations, the System Identification Toolbox is used to simulate the output of the estimated systems (see \autoref{fig:controllerDesignAndEvaluation-identify-mo}). For that the aforementioned validation data set is used: The measured output is compared with the outputs predicted by the models.
 
 Using the Matlab function \texttt{zpk()} the models are converted into the zero-pole-gain representation. In
 \autoref{tab:controllerDesignAndEvaluation-identify-models} the estimated models are listed with their zeros, poles, gains and the model fit, as it is computed by the System Identification Toolbox. \texttt{P1}, \texttt{P2} and \texttt{P3} are models with one, two and three poles and a gain as free parameters. \texttt{P2ZU} consists of a complex pole pair, a zero and a gain. 
@@ -374,35 +374,120 @@ Sys1=tf1*H1; %Combine plant P and measurement filter H
 pidTuner(Sys1); %Launch pidTuner
 \end{lstlisting}
 
-With this a controller for measurement filters with orders of $N=10$ and $N=40$ is designed. The disturbance rejection is calculated and plotted in \autoref{fig:controllerDesignAndEvaluation-pidDR}
+Using the PID Tuner GUI (see \autoref{fig:Appendix-pidTuner}), the controller is designed by changing the design parameters \texttt{Response Time} (RT) and \texttt{Transient Behavior} (TB). Changing the response time (in seconds) influences how fast the controller acts on changes. With the transient behavior setting, the allowed over- and under-shoots, that is the deviation above and below the final value for $t \rightarrow \infty$ can be set qualitatively.
+
+With this tool four different controllers are designed, two for each measurement filters order of $N=10$ and $N=40$. The transient behavior with $0.2$ for all controllers is chosen as a compromise between speed and overshoot behavior. The optimized PID parameters (for a discrete time PID controller in parallel form) are listed in \autoref{tab:controllerDesignAndEvaluation-pidTunerResults}.
+
+\begin{table}[tb]
+\caption{Parameters of a discrete time PID controller in parallel form calculated with the Matlab PID Tuner; $N$ is the order of the used measurement filter}
+\label{tab:controllerDesignAndEvaluation-pidTunerResults}
+\centering
+\begin{tabular}{lSSSSSS}
+\toprule
+Name & {$N$} & {RT (in \si{\second})} & {TB} & {$k_p$} & {$k_i$} & {$k_d$} \\
+\midrule
+$G_1[z]$ &10 & 5   & 0.2 & \num{-0.000577} & \num{-0.000197} & \num{-0.000421}\\
+$G_2[z]$ &10 & 10  & 0.2 & \num{-0.000155} & \num{-0.000111} & \num{-5.43e-05}\\
+$G_3[z]$ &40 & 5   & 0.2 & \num{-0.000559} & \num{-2.27e-05} & \num{-0.000396}\\
+$G_4[z]$ &40 & 10  & 0.2 & \num{-0.00035} & \num{-9.68e-05} & \num{-0.000316}\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Analyzing the Input Tracking and Disturbance Rejection}
+The PID Tuner defaults to show the input tracking step response (as in \autoref{fig:Appendix-pidTuner}).
+The input tracking is calculated based on \autoref{eq:inputTracking}. To calculate it, the Matlab function \texttt{step()} is used which generates the step response plot of a dynamic system, in this case $F_T$. As the whole system consists only of linear building blocks, using an arbitrary step height of $1$ is possible. The response is then normalized in such a way that the final value is also $1$.
+
+In \autoref{fig:controllerDesignAndEvaluation-pidTunerITN10} and \autoref{fig:controllerDesignAndEvaluation-pidTunerITN40} the input tracking step responses for all four controllers are plotted. Note the different $t$ scales. As expected, for longer measurement filters, i.e. filters of higher orders, the controller has to act less aggressive. This causes longer settling times.
+Especially \autoref{fig:controllerDesignAndEvaluation-pidTunerITN40} shows that setting a shorter response time does not automatically cause the controller to set the output faster to its final value. While for the shorter response time, the set value is reached quicker, there is also a strong oscillation, so choosing the longer response time (see $G_4[z]$) can be beneficial.
 
 \begin{figure}[tb]
 	\centering
-	\includegraphics[width=\textwidth,height=0.5\textwidth]{chap/ControllerDesignAndEvaluation/img/controller/controllerDR.tikz}
-	\caption{}
-	\label{fig:controllerDesignAndEvaluation-pidDR}
+	\includegraphics[width=\textwidth,height=0.5\textwidth]{chap/ControllerDesignAndEvaluation/img/controller/pidTuner/trackingN10.tikz}
+	\caption{Step response of the input tracking $F_T$ for controller $G_1[z]$ and $G_2[z]$, designed with the plant $P[z]$ and a measurement filter of order $N=10$, response time goal to \SI{5}{\second} and \SI{10}{\second}}
+	\label{fig:controllerDesignAndEvaluation-pidTunerITN10}
+\end{figure}
+
+\begin{figure}[tb]
+	\centering
+	\includegraphics[width=\textwidth,height=0.5\textwidth]{chap/ControllerDesignAndEvaluation/img/controller/pidTuner/trackingN40.tikz}
+	\caption{Step response of the input tracking $F_T$ for controller $G_3[z]$ and $G_4[z]$, designed with the plant $P[z]$ and a measurement filter of order $N=40$, response time goal to \SI{5}{\second} and \SI{10}{\second}}
+	\label{fig:controllerDesignAndEvaluation-pidTunerITN40}
+\end{figure}
+
+Because for FLUTE the set-point only changes occasionally, basically a fixed set-point controller is needed. Therefore the disturbance rejection is more important than the input tracking when analyzing the controllers performance. The step responses of the disturbance rejection $F_{DR}$ are calculated in a similar way as the input tracking, using \autoref{eq:eq:disturbanceRejection} and \texttt{step()}. The $y$ axis are normalized so that the initial value is $1$ and the final value for $t \rightarrow \infty$ is $0$.
+
+In \autoref{fig:controllerDesignAndEvaluation-pidTunerDRN10} and \autoref{fig:controllerDesignAndEvaluation-pidTunerDRN40} the results for all controllers in \autoref{tab:controllerDesignAndEvaluation-pidTunerResults} are plotted.
+
+This shows that even for an optimistically low measurement filter order of $N=10$, the settling time is in the order of slightly under a minute. This is sufficient for the application but has more of a practical drawback: when fine-tuning the PID parameters manually on the machine, it is necessary to wait a few minutes after setting new parameters before assessing the change.
+
+Especially when looking a the plots of $G_3[z]$, it is obvious that there can be stability issues when using a too aggressive controller. For that reason in the next section the stability of the four controllers is analyzed.
+
+\begin{figure}[tb]
+	\centering
+	\includegraphics[width=\textwidth,height=0.5\textwidth]{chap/ControllerDesignAndEvaluation/img/controller/pidTuner/rejectionN10.tikz}
+	\caption{Step response of the disturbance rejection $F_{DR}$ for controller $G_1[z]$ and $G_2[z]$, designed with the plant $P[z]$ and a measurement filter of order $N=10$, response time goal to \SI{5}{\second} and \SI{10}{\second}}
+	\label{fig:controllerDesignAndEvaluation-pidTunerDRN10}
+\end{figure}
+
+\begin{figure}[tb]
+	\centering
+	\includegraphics[width=\textwidth,height=0.5\textwidth]{chap/ControllerDesignAndEvaluation/img/controller/pidTuner/rejectionN40.tikz}
+	\caption{Step response of the disturbance rejection $F_{DR}$ for controller $G_3[z]$ and $G_4[z]$, designed with the plant $P[z]$ and a measurement filter of order $N=40$, response time goal to \SI{5}{\second} and \SI{10}{\second}}
+	\label{fig:controllerDesignAndEvaluation-pidTunerDRN40}
 \end{figure}
 
 
-\subsection{Analyzing the Stability and Disturbance Rejection}
+\subsection{Analyzing the Stability}
+In this section the stability of the controllers $G_{i}[z]$ from the last section is evaluated.
+
+For that the Nyquist criterion according to \autoref{def:Nyquist} is used. With the Matlab function \texttt{nyquist()}, the locus $w=F_o[w=j2\pi f]$ of the open loops
+\begin{equation}
+F_o[z]=G[z] P[z] H[z]
+\end{equation}
+are calculated. For all controllers designed, they are plotted in \autoref{fig:controllerDesignAndEvaluation-pidTunerNyq}.
+
+This shows the gain margin for $G_3[z]$ (in combination with the $N=40$ filter), that is the distance to the critical point $w=(-1,0j)$ is already very small. So in addition to its oscillatory behavior and the longer settling time, there is also the risk that the system can become unstable if there are even small system parameter changes.
+
+\begin{figure}[tb]
+	\centering
+	\includegraphics[]{chap/ControllerDesignAndEvaluation/img/controller/pidTuner/nyquist1.tikz}
+	\caption{}
+	\label{fig:controllerDesignAndEvaluation-pidTunerNyq}
+\end{figure}
+
+In \autoref{fig:controllerDesignAndEvaluation-pidTunerfails} another issue is highlighted. If a controller is designed with a certain measurement filter order $N=N_0$ in mind but is used together with a filter of order $N=N_1>N_0$, it is very likely the closed loop system becomes unstable. In the figure the controller $G_1[z]$ is used together with the $N=40$ filter. Both the disturbance rejection and the Nyquist plot shows the closed loop to be unstable.
+
+\begin{figure}[tb]
+    \centering
+        \subfloat[a]{\input{chap/ControllerDesignAndEvaluation/img/controller/pidTuner/rejectionFail.tikz}}
+        \qquad
+        \subfloat[b]{\input{chap/ControllerDesignAndEvaluation/img/controller/pidTuner/nyquistfail.tikz}}
+       \caption{caption}
+    \label{fig:controllerDesignAndEvaluation-pidTunerfails}
+\end{figure}
 
 
 \subsection{Offline Evaluation with Measured Data}
+Now the performance of the controller $G_1[z]$ together with the filter order $N=10$ should be evaluated with measured data before testing it with FLUTE. This simulation is called offline evaluation.
 
+Offline evaluation of the control system is potentially less accurate due to an incomplete or erroneous model. But on the upside it requires no access to FLUTE and no potentially downtime of the machine. Also with modern computers the simulation time advances much faster than real-time. Another big advantage is repeatability. With a pre-recorded data-set as the disturbance input, simulations are consistent and do not depend on a changing environment or system parameters.
 
+The offline evaluation is done with Simulink, a block diagram development and simulation environment based on Matlab. The Simulink model (see \autoref{fig:Appendix-simuliunk}) uses the disturbance
+\begin{equation}
+d[n] = \Delta P_\text{cavity}[n] = P_\text{cavity}[n] - \mu_{P_\text{cavity}}
+\end{equation}
+with $\mu_{P_\text{cavity}}$ being the time average of $P_\text{cavity}[n]$ over one hour. $P_\text{cavity}[n]$ is re-sampled to $T_s=\SI{0.2}{\second}$.
+With this calculation of $d[n]$, it is assumed that the disturbance is the deviation of the cavity power from a (theoretical) set-point of $\mu_{P_\text{cavity}}$.
 
+With the simulation the effect of adding $d[n]$ to a system without any feedback and a system with the controller $G_1[z]$ and the measurement filter is compared. The result is shown in \autoref{fig:controllerDesignAndEvaluation-simulinkResult}
 
-
-
-
-
-
-
-
-
-
-
-
+\begin{figure}[tb]
+	\centering
+	\includegraphics[width=\textwidth,height=0.5\textwidth]{chap/ControllerDesignAndEvaluation/img/controller/simulink/offlineSimulation.tikz}
+	\caption{Output of the Simulink model in \autoref{fig:Appendix-simuliunk}; step size $T=\SI{0.2}{\second}$, end time $\SI{3600}{\second}$. Simulation time on an Intel i7-3770: \SI{3.5}{\second}}
+	\label{fig:controllerDesignAndEvaluation-simulinkResult}
+\end{figure}
 
 
 
