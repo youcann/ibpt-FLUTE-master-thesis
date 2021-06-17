@@ -252,7 +252,7 @@ Compared to other types of controllers, using a PID controller has many advantag
 
 In the next section such a PID controller is designed. As it is to be implemented in Software later, the design is done in discrete time.
 
-\subsection{Designing a Discrete Time PID Controller}
+\subsection{Designing a Discrete Time PID Controller}\label{sec:controlDesign}
 The output signal $u(t)$ of a generic time continuous PID controller (see \autoref{fig:controllerDesignAndEvaluation-genericPID}) consists of the weighted sum of three error signals.
 
 \begin{figure}[tb]
@@ -311,6 +311,12 @@ y[n-k] \laplace z^{-k} Y[z],
 the discrete transfer function of the PID controller is
 \begin{equation}
 G[z]=K\left[1+\frac{T_s}{T_i}\frac{z}{z-1}+\frac{T_d}{T_s}\frac{z-1}{z}\right].
+\end{equation}
+In the time domain, this becomes
+\begin{equation}\label{eq:pidn}
+u[n] = k_p e[n] 
++ k_i \left(\underbrace{e_i[n-1] + T_s e[n]}_{e_i[n]}\right) 
++ k_d \left(\underbrace{\frac{1}{T_s} e[n]-e[n-1]}_{e_d[n]}\right)
 \end{equation}
 
 \subsubsection{Controller Tuning}
@@ -496,35 +502,54 @@ With the simulation the effect of adding $d[n]$ to a system without any feedback
 
 
 \newpage
-\section{Software Design}
-As integrating a new subsystem into EPICS takes some time and effort and the control system is designated a temporary solution, it is more viable to operate it as an independent system.
+\section{Implementation of the Control System in Software}
+In this section the findings from the beginning of this chapter are used to implement a time discrete control system, that is a time discrete PID controller that is used to drive the controllable attenuator based on filtered measurements from the system.
 
-Before choosing a programming language, software frameworks, etc. the key requirements for the software are discussed:
+The system should be implemented as software that runs on most personal computers and requires few external dependencies to make it as portable as possible. The other core requirements can be summarized to be:
 \begin{itemize}
-\item Communication with EPICS to get values and with the RF attenuator
-\item Efficient and lightweight to achieve clock cycles times of a most \SI{0.1}{\second}
-\item Easy implementation of a (time discrete) PID controller
-\item GUI to show input, output and error signals
-\item Possibility to log signals to file for documentation
+\item Communicate with EPICS (over an Ethernet connection) to read in data such as $P_\text{cavity}[n]$
+\item Provide means to filter the incoming data with a measurement filter $H[z]$ with variable order $N$ and cutoff frequency $f_c$
+\item Calculate the control error $e[n]$ and based on that the controller output $u'[n]$. Then convert the controller output, an attenuation, to the matching control voltage $V_\text{control}$
+\item Communicate with the Keysight 34972A over VXI-11 (over an Ethernet Network) to set the control voltage $V_\text{control}[n]$ of the attenuator
+\item The control routine of the program needs to be light-weight enough so a scheduler can call it faster than five times a second to achieve a sampling time of \SI{0.2}{\second}
+\item Show the input, the output and the error signals to the user on a GUI
+\item Provide graphical input elements to let the user modify the measurement filter and the controller parameters ($k_p$, $k_i$, $k_d$)
+\item Log the input, output and parameters to disk for later reference
 \end{itemize}
 
-With these in mind first programming languages are regarded. As there are EPICS libraries for both C++ and Python, these two languages are examined in more detail.\\
-While C++ as a compile language promises speed, all other requirements are possible but would take much greater effort in C++ compared to Python. For that reason, in the following a small test program is written to evaluate the fastest clock cycle possible with a simple Python program.
+Since many other choices depend on it, first the programming language has be picked. As Python was used in earlier chapters and the communicating abilities to both EPICS and the Keysight 34972A were already proven, it is the obvious choice. 
 
- shows that retrieving one value of an EPICS channel and setting a new attenuator voltage takes only about \SI{20}{\milli\second}, thus using C++ is not necessary and Python can be utilized instead.
- 
-To create a PID controller in software instead of a continuous time system, only discrete time implementations are possible. Choosing a high clock cycle frequency however approximates the continuous time system. To get the error signals for the integral and derivative part, the integral is replaced with a cumulative recursive sum as
-\begin{equation}
-e_i[n]=e_i[n-1]+e[n] \cdot dt,
+From there on the GUI framework is the next decision to be made. For Python popular choices are \textit{Tkinter}, a build in implementation of the Tk/tcl GUI toolkit, \textit{wxPython}, a Python binding to the cross-platform GUI library wxWidgets, or \textit{PyQt}\cite{pyqt}, a set of Python bindings for the Qt GUI framework\cite{qt}. While Tkinter has the advantage of being build into the Python language, wxPython offers more functionality and is more widely adopted. PyQt profits from the large Qt ecosystem, so is it for example possible to develop the GUI separately from the code using \textit{Qt Designer}.
+
+For (live-) plotting of data in the GUI, the standard library in Python is \textit{matplotlib}\cite{Hunter2007}. It can be used with all three plotting libraries. However the biggest drawback is the possible update speed of the plots. With more than about a hundred points on the screen, the update frequency drops to well below \SI{1}{\hertz}. A much faster alternative is \textit{pyqtgraph}\cite{pyqtgraph}, a scientific plotting library written in Python and using the Qt GraphicsView. It is only compatible only with PyQt (or the PySide alternatives).
+
+Therefore PyQt and pyqtgraph are used to build handle the GUI and plot the live data. Also Qt Designer is used to model the GUI graphically.
+
+The control algorithm is implemented by directly using the equations derived in \autoref{sec:controlDesign}. The time domain representation of the PID controller is (restated from \autoref{eq:pidn})
+\begin{equation}\label{eq:pidn2}
+u[n] = k_p e[n] 
++ k_i \left(\underbrace{e_i[n-1] + T_s e[n]}_{e_i[n]}\right) 
++ k_d \left(\underbrace{\frac{1}{T_s} e[n]-e[n-1]}_{e_d[n]}\right)
 \end{equation}
-while the derivative is replaced by a difference
-\begin{equation}
-e_d[n]=\frac{e_i[n-1]-e[n]}{dt}.
-\end{equation}
+When translating \autoref{eq:pidn2} to code, the recursion ($e_i[n]$ depending on $e_i[n-1]$) is solved by introducing a variable that keeps track of $e_i[n]$ over time. The last value of $e[n]$, $e[n-1]$ is kept in memory for the derivative part.
+An example in pseudo code is listed in \autoref{lst:controllerDesignAndEvaluation-pidcode}.
 
-For the GUI a common framework should be used. In Python Tk and wxwidgets are common ways to build a GUI. Another viable option is PyQt, which, as the name suggests, is a Python port of the Qt framework. One major advantage of using PyQt is the possibility to import \texttt{.ui} files describing the GUI directly from the Qt RAD designer called ``Qt designer'', removing the need to create the GUI programmatically. Furthermore using PyQt enables the usage of \textit{pyqtgraph}, a highspeed plotting library only compatible with Qt. This ensures plotting live data does not bottleneck performance, which is often the problem with naive \textit{matplotlib} based solutions.
+\begin{lstlisting}[caption = PID controller implemented in pseudo code, label = lst:controllerDesignAndEvaluation-pidcode]
+while(true) {
+    e       := x_set - x_actual
+    e_i     := e_i_old + e*T_s
+    e_d     := (e-e_old)/T_s
+    e_i_old := e_i
+    e_old   := e
+    wait_sec(0.2)
+}
+\end{lstlisting}
 
-To log all relevant data from RAM to non-volatile memory (hard drive or network share), a simple approach with a line by line CSV writer is used.
+To get the timing right and to allow the GUI to be responsive while the control algorithm runs in the background, a scheduler that activates a callback function every \SI{0.2}{\second} should be used. Since in \autoref{sec:atteneval} the Advanced Python Scheduler (AP scheduler) is used successfully, it should also be used for the control system. Unfortunately the AP scheduler is not compatible with PyQt and using it interferes with the internal Qt timing systems. For that reason instead a timer is constructed with the  \texttt{QTimer} class.\cite{qtimer}
+
+Logging the data to disk is done by using the same \texttt{QTimer}, as is used for the control algorithm, to write one line of CSV data to disk each time the timer is triggered.
+
+With these building blocks ready, the GUI is build with Qt Designer and based on the \texttt{.ui} file generated from Qt Designer the GUI Application is implemented. For a screenshot of the program running see \autoref{fig:Appendix-qt}.
 
 
 
@@ -535,36 +560,47 @@ To log all relevant data from RAM to non-volatile memory (hard drive or network 
 
 
 \newpage
-\section{Online Evaluation of the Control System}
-To evaluate the performance of the control system, FLUTE is operated with and without the control system switched on for \SI{6}{\hour} each.
-Before the test, FLUTE is allowed to run a few hours for all components to reach operating temperatures.
+\section{Evaluation of the Control System (Online)}
+After evaluating the controller offline, it is now time to evaluate the performance of the control system on the machine. To do so, FLUTE is operated with and without the control system switched on for \SI{6}{\hour} each. Before the test, FLUTE is allowed to run a few hours for all components to reach operating temperatures.
 The result of the test is shown in \autoref{fig:controllerDesignAndEvaluation_resultTime}.
-Note, that in this test about \SI{7}{\hour} into the experiment there was an unintentional shutdown of FLUTE and the corresponding block of data is removed before further processing.
+Note, that in this test about \SI{7}{\hour} into the experiment there was an unexpected shutdown of FLUTE and the corresponding block of data is removed before further processing.
 
-\begin{figure}[tbh]
+\begin{figure}[tb]
 	\centering
 	\includegraphics[width=\textwidth,height=0.5\textwidth]{chap/ControllerDesignAndEvaluation/img/results/result_timesignal.tikz}
 	\caption{Cavity power over about \SI{15}{\hour} (about three hours of downtime removed for clarity around the \SI{7}{\hour} mark); control system switched off at \SI{6}{\hour} (recording started 2021/05/01 20:00)}
 	\label{fig:controllerDesignAndEvaluation_resultTime}
 \end{figure}
 
-\begin{figure}[tbh]
+\begin{figure}[tb]
 	\centering
 	\includegraphics[width=\textwidth,height=0.5\textwidth]{chap/ControllerDesignAndEvaluation/img/results/result_spectrogram.tikz}
 	\caption{Spectrogram of the cavity power in \autoref{fig:controllerDesignAndEvaluation_resultTime}}
 	\label{fig:controllerDesignAndEvaluation_resultSpectg}
 \end{figure}
 
-The time plot and also the spectogram in \autoref{fig:controllerDesignAndEvaluation_resultSpectg} shows the cavity RF power approximately reaches stationarity in $[0,\,2] \si{hour}$ respectivaley $[6,\,12] \si{hour}$. This allows the spectrum for these two blocks to be estimated using a periodogram method. In \autoref{fig:controllerDesignAndEvaluation_resultSpectg} the spectra for each case are shown.
+The time plot \autoref{fig:controllerDesignAndEvaluation_resultTime} and also the spectogram in \autoref{fig:controllerDesignAndEvaluation_resultSpectg} show the cavity RF power approximately reaches stationarity in the $[0,\,2]\,\si{hour}$ interval respectively in the $[6,\,12]\, \si{hour}$ interval.
+This allows the spectrum for these two blocks to be estimated using a periodogram method. In \autoref{fig:controllerDesignAndEvaluation_resultPeriodo} the spectra for each case are shown. The corresponding time data is plotted in \autoref{fig:controllerDesignAndEvaluation_resultComp}
 
-\begin{figure}[tbh]
+\begin{figure}[tb]
 	\centering
 	\includegraphics[width=\textwidth,height=0.7\textwidth]{chap/ControllerDesignAndEvaluation/img/results/controllerOnVsOff.tikz}
-	\caption{Comparison between the control system on and off}
+	\caption{Time plots comparing between the control system on and off}
 	\label{fig:controllerDesignAndEvaluation_resultComp}
 \end{figure}
 
-\begin{figure}[tbh]
+\begin{figure}[tb]
+	\centering
+	\includegraphics[width=\textwidth,height=0.7\textwidth]{chap/ControllerDesignAndEvaluation/img/results/controllerOnVsOffSpectrumErrorBand.tikz}
+	\caption{Power spectrum of the plots in \autoref{fig:controllerDesignAndEvaluation_resultTime} computed with Welch's method; shaded areas show the uncertainty according to \autoref{eq:varWelch}}
+	\label{fig:controllerDesignAndEvaluation_resultPeriodo}
+\end{figure}
+
+With the periodogram data, the control system success can be measured with the most prominent noise metric.
+
+Next the cases controller on and controller off should be compared with the relative standard deviation. Measuring and displaying the relative standard deviation $STD\%$ is also supported on the LLRF CSS panel at FLUTE, so while the experiments run, the values are checked from time to time. It can be observed that different values are shown over time although the plotted time signal looks stationary by eye. This suggests the relative standard deviation does not only depend on the window size $T$ over which is is calculated, but also heavily on the absolute position in time $t$. This effect is more visible for small window sizes. The issue is illustrated in \autoref{fig:controllerDesignAndEvaluation_resultSTDp}, where $STD\%=STD\%(t,T)$ is plotted as a function of the time $t$ and the window size $T$.
+
+\begin{figure}[tb]
     \centering
         \subfloat[Controller off]{\includegraphics[width=\textwidth,height=0.4\textwidth]{chap/ControllerDesignAndEvaluation/img/stdp_off.tikz}}
         \\
@@ -573,20 +609,15 @@ The time plot and also the spectogram in \autoref{fig:controllerDesignAndEvaluat
     \label{fig:controllerDesignAndEvaluation_resultSTDp}
 \end{figure}
 
-\begin{figure}[tbh]
+For that reason, for small window sizes, time averages of $STD\%$ should be used instead of single values. For the measured $STD\%(t,T)$ for the controller off and the controller on, $STD\%(T)$ is plotted in \autoref{fig:controllerDesignAndEvaluation_resultSTDp_means}. This plot shows what could already be guessed from \autoref{fig:controllerDesignAndEvaluation_resultSTDp}: with the $STD\%$ metric, the system seems \textit{less} stable with the controller on, if the $STD\%$ is calculated over small window sizes e.g. $T=\SI{1}{\minute}$. For very long windows, the dependency on the window position becomes very small. So for the comparison with the other metrics, $STD\%(T=\SI{4}{\hour})$ is used.
+
+\begin{figure}[tb]
 	\centering
 	\includegraphics[width=\textwidth,height=0.5\textwidth]{chap/ControllerDesignAndEvaluation/img/stdp_means.tikz}
 	\caption{Relative standard deviation $STD\%(T)$, shaded areas show $\operatorname{min}\{STD\%(t,T_0)\}$ and $\operatorname{max}\{STD\%(t,T_0)\}$, solid lines show $\operatorname{mean}\{STD\%(t,T_0)\}$ for a fixed window size $T=T_0$}
 	\label{fig:controllerDesignAndEvaluation_resultSTDp_means}
 \end{figure}
 
-
-\begin{figure}[tbh]
-	\centering
-	\includegraphics[width=\textwidth,height=0.7\textwidth]{chap/ControllerDesignAndEvaluation/img/results/controllerOnVsOffSpectrumErrorBand.tikz}
-	\caption{Power spectrum of the plots in \autoref{fig:controllerDesignAndEvaluation_resultTime} computed with Welch's method; shaded areas show the uncertainty according to \autoref{eq:varWelch}}
-	\label{fig:controllerDesignAndEvaluation_resultPeriodo}
-\end{figure}
 
 With the metrics from \autoref{sec:metrics}, the success of the control system is assessed in \autoref{tab:controllerDesignAndEvaluation_metrics}.
 
@@ -597,10 +628,10 @@ This shows for example the mean squared error is improved by a factor of about \
 \caption{Quantitative assessment of the controllers performance}\label{tab:controllerDesignAndEvaluation_metrics}
 \begin{tabular}{lSSS}
 	\toprule
-	Metric  & {Controller off} & {Controller on} & {Controller off/Controller on} \\ \midrule
-	$\%STD$ & 0.0011559        & 5.99225e-05     & 9.2891                         \\
-	$MSE$   & 37.639           & 0.10133         & 371.44                         \\
-	$MPN$   & 487309.29        & 14386.25        & 33.873                         \\ \bottomrule
+	Metric                 & {Controller off} & {Controller on} & {Controller off/Controller on} \\ \midrule
+	$\%STD(\SI{4}{\hour})$ & 0.0011559        & 5.99225e-05     & 9.2891                         \\
+	$MSE$                  & 37.639           & 0.10133         & 371.44                         \\
+	$MPN$                  & 487309.29        & 14386.25        & 33.873                         \\ \bottomrule
 \end{tabular}
 \end{table}
 

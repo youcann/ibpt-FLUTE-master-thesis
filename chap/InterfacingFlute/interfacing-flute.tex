@@ -117,7 +117,7 @@ else:
 
 
 
-\section{Output: Controllable RF Attenuator}
+\section{Output: Controllable RF Attenuator}\label{sec:atteneval}
 The output signal computed by the control systems has to have a way of influencing the RF power send to the cavity. This could be done over an EPICS channel (e.g. with the PyEpics function \texttt{caput()} to set the value of a process variable via a channel access). However to make it possible to move the control system from a general purpose personal computer to a dedicated digital signal processor, FPGA or similar in the future, using a physical device in the signal path is preferred.\\
 
 \subsection{Defining Requirements}
