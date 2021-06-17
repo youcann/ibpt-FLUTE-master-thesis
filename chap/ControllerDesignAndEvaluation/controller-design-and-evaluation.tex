@@ -21,7 +21,7 @@ To get the transfer function $P(s)=\mathcal{L}\left\{p(t)\right\}$ of the plant 
 
 \subsection{Identifying the Plant Attenuator+RF}
 The input PRBS signal is generated with the Python script in \autoref{lst:controllerDesignAndEvaluation-randomSequence}.
-Based on the value of a pseudo random number generator, the sequence toggles the attenuator between $V_\text{control}=\SI{7}{\volt}$ and $V_\text{control}=\SI{7}{\volt}$.
+Based on the value of a pseudo random number generator, the sequence toggles the attenuator between $V_\text{control}=\SI{7}{\volt}$ and $V_\text{control}=\SI{11}{\volt}$.
 Using \autoref{fig:interfacingFlute_attenDatten}, this equals a span in attenuation of \SIrange{6.892}{6.4026}{\dB}.
 With the parameter \texttt{toggleP}, the average length of one constant voltage level can be controlled. 
 
@@ -353,25 +353,26 @@ The manual of the PID Tuner\cite{pidTunerMan} describes the expected input (see 
 
 The manufactures documentation \cite{pidTuner} does not disclose any internals of the PID Tuner nor state which optimization technique is used, but three tuning objectives are stated:
 \begin{itemize}
-\item (Stability) The closed loop should be stable (that is BIBO stable as defined in \autoref{def:bibo})
-\item (Performance) The closed loop system tracks the input well and rejects disturbances as rapidly as possible (see \autoref{sec:drandtrack})
-\item (Robustness) A gain and phase margin accounts for errors in the system model (see \autoref{sec:plantIdenti})
+\item Stability: The closed loop should be stable (that is BIBO stable as defined in \autoref{def:bibo})
+\item Performance: The closed loop system tracks the input well and rejects disturbances as rapidly as possible (see \autoref{sec:drandtrack})
+\item Robustness: A gain and phase margin accounts for errors in the system model (see \autoref{sec:plantIdenti})
 \end{itemize}
 
 Using \autoref{lst:controllerDesignAndEvaluation-pidTuner}, the estimated plant $P[z]$ is loaded, a measurement filter $H[z]$ is generated and the combination $Sys[z]=P[z]H[z]$ is fed into the PID Tuner.
 
 \begin{lstlisting}[style=matlab,caption = Matlab script to generate an input system for PID Tuner, label = lst:controllerDesignAndEvaluation-pidTuner]
-%design lowpass measurement filter H
+
+% design lowpass measurement filter H
 N=10;
 lpFilt1 = designfilt('lowpassfir', 'FilterOrder', N, 'CutoffFrequency', ...
                     0.01, 'SampleRate', 0.2, 'DesignMethod', ...
                     'window', 'Window', 'kaiser');
 
-%convert filter to a dynamic system                
+% convert filter to a dynamic system                
 [z1,p1,k1]=zpk(lpFilt1);
 H1=zpk(z1,p1,k1,0.2);
 
-%load estimated transfer function and convert it to discrete form
+% load estimated transfer function and convert it to discrete form
 load('P2ZU.mat')
 P=c2d(idtf(P2ZU),0.2);
 
