@@ -1,6 +1,6 @@
 \chapter{Theoretical Framework}
 \section{Linear Accelerators}
-In a linear particle accelerator (LINAC), charged particles such as electrons are accelerated to increase their total energy over their energy at rest.
+In a linear particle accelerator (LINAC) charged particles ,such as electrons, are accelerated to increase their total energy over their energy at rest.
 
 Compared to heavier particles, such as protons ($m_p=\SI{938.27}{\mega\eV\per c\squared}$), electrons are fairly light ($m_p=\SI{0.511}{\mega\eV\per c\squared}$). Therefore they need to be brought to speeds comparable to the speed of light to achieve an useful energy increase. For this reason relativistic mechanics are needed to describe their movements.\footnote{As relativistic mechanics are a super set of classical mechanics, the equations also apply for slower particles.} \cite{Hinterberger1997}
 
@@ -82,7 +82,7 @@ If $x[n]$ is the realization of a stochastic process, then it is of random natur
 Because realizations of physical processes do not posses finite energy, they are not in the $\mathcal{L}_1$ set and their DFT is not defined \cite[p.~5]{Stoica1997}.
 
 In this case instead of an energy spectral density, the spectrum of the average power of the process, called the \textit{power spectral density (PSD)}, can be used instead.
-To compute the PSD, either there are two possibilities:
+To compute the PSD, there are two possibilities:
 \begin{align}
 \Phi_{xx}[k] &= \sum_{m=-\infty}^{\infty} r[m]\,\text{e}^{-j\frac{2\pi}{N}k\,m} \label{eq:phixx1}\\
 \Phi_{xx}[k] &= \lim_{N\rightarrow\infty} \text{E}\left\{\frac{1}{N}\left|\sum_{n=0}^{N-1} x[n]\,\text{e}^{-j\frac{2\pi}{N}k\,n}\right|^2 \right\} \label{eq:phixx2}
@@ -143,7 +143,7 @@ Compared to the Barlett method, the overlapping of up to \SI{50}{\percent} (see 
 \end{equation}
 
 
-In case on a non-stationary signal $x[n]$, one possibility to analyze and display the spectral content is the use of the short time Fourier transform (STFT) and the spectrogram, which is a two dimensional power spectral density function mapping frequency and time to a third coordinate like height, intensity or color.
+In case of a non-stationary signal $x[n]$, one possibility to analyze and display the spectral content is the use of the short time Fourier transform (STFT) and the spectrogram, which is a two dimensional power spectral density function mapping frequency and time to a third coordinate like height, intensity or color.
 
 To calculate the spectrogram, the signal is split into segments with the sliding window $w[n-m]$ for which duration the signal is assumed to be stationary. For each segment at time index $m$, the periodogram is calculated according to
 \begin{equation}
@@ -173,12 +173,12 @@ with $h(t)$ being the inverse Laplace transform of the filters transfer function
 	\label{fig:theoreticalFramework-feedback-architecture}
 \end{figure}
 
-Feedback control systems, or closed-loop systems are to be differentiated from open-loop systems, in which there is no return path, so they cannot compensate for \textit{un}known disturbances. If $d(t)$ is known $\forall t$, then an open loop system would be possible and any errors could simply be compensated.
+Feedback control systems, or closed-loop systems, are to be differentiated from open-loop systems, in which there is no return path, so they cannot compensate for \textit{un}known disturbances. If $d(t)$ is known $\forall t$, then an open loop system would be possible and any errors could simply be compensated.
 
 \subsection{Disturbance Rejection and Input Tracking}\label{sec:drandtrack}
 Disturbance rejection and input tracking are two important characteristics to evaluate a stable controller. To calculate them, the block diagram in \autoref{fig:theoreticalFramework-feedback-architecture} and the Laplace transform of the inputs/outputs is used.\footnote{The Laplace transform of a function in time $f(t)$ is written as $F(s)=\mathcal{L}\left\{f(t)\right\}$.} 
 
-To calculate how the output $y(t)$ depend on the input $x(t)$, the input tracking transfer function can be used.\cite[p.~88]{Foellinger2016} It is calculated as the transfer function $F_T=\nicefrac{Y(s)}{X(s)}$ by setting $d(t)=0$:
+To calculate how the output $y(t)$ depends on the input $x(t)$, the input tracking transfer function can be used.\cite[p.~88]{Foellinger2016} It is calculated as the transfer function $F_T=\nicefrac{Y(s)}{X(s)}$ by setting $d(t)=0$:
 \begin{align}\label{eq:inputTracking}
 Y(s)&=G(s)P(s)E(s)\quad\text{and}\quad E(s)=X(s)-H(s)Y(s)\\
 \Leftrightarrow Y(s)\left[1+G(s)P(s)H(s)\right]&=G(s)P(s)X(s)\\
@@ -196,7 +196,7 @@ Y(s)&=G(s)P(s)E(s)+D(s)\quad\text{and}\quad E(s)=-H(s)Y(s)\\
 The application of a controller to a system is only useful if the resulting system has a stable behavior.
 One possible definition of stability is the bounded input bounded output (BIBO) criterion\cite[p.~82]{Foellinger2016}:
 \begin{definition}\label{def:bibo}
-(\textit{BIBO stability}) A LTI system is said to be BIBO stable if for some $M,N \in \mathbb{R}^+$, the response to a bounded input $|u(t)| \le M$ results in a bonded output $|y(t)| \le N$.
+(\textit{BIBO stability}) A LTI system is said to be BIBO stable if for some $M,N \in \mathbb{R}^+$, the response to a bounded input $|u(t)| \le M$ results in a bounded output $|y(t)| \le N$.
 \end{definition}
 
 For a given control system, one way to analyze its stability is to plot the locus $z=F_o(s=j2\pi f)$ of the open loop frequency response

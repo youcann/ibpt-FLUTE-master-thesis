@@ -15,7 +15,7 @@ from epics import caget
 print(f"Cavity RF power: {caget('F:RF:LLRF:01:GunCav1:Power:Out')}")
 \end{lstlisting}
 
-Another way is to setup a channel object and create a subscription with an user defined callback function that is executed each time the process variable changes. This implements synchronous access to the PV and can be compared to an interrupt rather than polling the variable as in \autoref{lst:lst-caget}.\\
+Another way is to setup a channel object and create a subscription with an user defined callback function that is executed each time the process variable changes. This implements synchronous access to the PV and can be compared to an interrupt rather than polling the variable as in \autoref{lst:caget}.\\
 For a non trivial example see \autoref{lst:create_subscription}. In this program, the time differences between new values and their statistics are printed to the console.
 
 \begin{lstlisting}[style=python,caption = Using a user defined callback function to access an EPICS process value, label = lst:create_subscription]
@@ -97,10 +97,10 @@ Then a histogram with the relative frequency on the y axis is used as an estimat
 
 \subsection{Filtering the RF power Signals}
 In case of the klystron output RF power or the power at the cavity, filtering of the signal is needed to remove zero outliers.
-These outliers occur if a high voltage arc occurs inside the cavity, it is detected and the LLRF control system shuts of the RF power for the current pulse (called a ``breakdown'').
+These outliers occur if a high voltage arc occurs inside the cavity. This is detected and the LLRF control system shuts off the RF power for the current pulse (called a ``breakdown'').
 These outliners are not representative of the average RF power inside the cavity over multiple pulses and thus would greatly impair the controller performance.
 For that reason, before any further filtering to remove noise etc, a breakdown removal filter is used (\autoref{lst:control-system-breakdownremoval}).
-In principle the new power value is checked to be inside a band which size is determined by the mean deviation of the $N_{filt}$ previous values and a scaling $m$.
+In principle the new power value is checked to be inside a band the size of which is determined by the mean deviation of the $N_{filt}$ previous values and a scaling $m$.
 The percentile differences are used here as they are robust against outliers (i.e. other breakdowns) in the $N_{filt}$ previous values opposed to a normal standard deviation.
 The scaling with $(2*1.2815)^{-1}$ is used to make the mean deviation comparable to a standard deviation.
 
@@ -148,7 +148,7 @@ control voltage & \SIrange{3}{12}{\volt}\\
 \end{table}
 
 \subsection{Evaluation of the ZX73-2500-S+ Controllable RF Attenuator}
-The \textit{ZX73-2500-S+} is a voltage controllable RF attenuator with coaxial SMA connectors by the company Mini-Circuits. As there is no alternative model from Mini-Circuits and devices from other manufactures are offered with similar specifications, only the ZX73-2500-S+ is evaluated in detail in this section.
+The \textit{ZX73-2500-S+} is a voltage controllable RF attenuator with coaxial SMA connectors by the company Mini-Circuits. As there is no alternative model from Mini-Circuits and devices from other manufacturers are offered with similar specifications, only the ZX73-2500-S+ is evaluated in detail in this section.
 
 
 
@@ -249,7 +249,7 @@ All measurements are performed in the ``RF lab'' in building 348 (KARA hall on K
 \end{figure}
 
 \subsubsection{Relation between Control Voltage and Attenuation}
-In this section the relation between the control voltage and the attenuation is examined. All other parameters are kept constant:
+In this section, the relation between the control voltage and the attenuation is examined. All other parameters are kept constant:
 \begin{equation}
 A(\vec{x}) := A(V_{control})
 \end{equation}
@@ -316,10 +316,10 @@ For further error calculations, the maximum $\nicefrac{\Delta A(V_{control})}{\D
 
 The minimum possible step size of the attenuation can be calculated using $\left[\nicefrac{\Delta A(V_{control})}{\Delta V_{control}}\right]_{\text{max}}$ and the DAC output resolution of the Keysight 34907A ($\nicefrac{\SI{24}{\volt}}{2^{16}-1}=\SI{366.22}{\micro\volt}$):
 \begin{equation}
-\delta A(V_control) = \SI{0.242}{\dB\per\volt} \cdot \SI{366.22}{\micro\volt} = \SI{0.00008862524}{\dB}
+\delta A(V_{control}) = \SI{0.242}{\dB\per\volt} \cdot \SI{366.22}{\micro\volt} = \SI{0.00008862524}{\dB}
 \end{equation}
 
-To asses the stability of $V_{control}$, delivered from the Keysight 34972A (see \autoref{app:keysight-34972A}) DAC, its stability over the course of one day is measured. For that the voltage is taken once every 2 seconds with a Keysight 34470A multimeter (see \autoref{app:keysight-34470A}). The result is shown in \autoref{fig:interfacingFlute_vcontrolstab_longterm}.
+To assess the stability of $V_{control}$, delivered from the Keysight 34972A (see \autoref{app:keysight-34972A}) DAC, its stability over the course of one day is measured. For that the voltage is taken once every 2 seconds with a Keysight 34470A multimeter (see \autoref{app:keysight-34470A}). The result is shown in \autoref{fig:interfacingFlute_vcontrolstab_longterm}.
 
 \begin{figure}[tb]
 	\centering
@@ -362,7 +362,7 @@ for that the stability over the course of one day is measured. The voltage is ta
 	\label{fig:interfacingFlute_atteneval-vsupp-stability}
 \end{figure}
 
-Comparing \autoref{fig:interfacingFlute_atteneval-vsupp-stability} with \autoref{fig:interfacingFlute_vcontrolstab_longterm} suggest a relation between the deviations in $V_{control}$ and $V_+$. Since they are both generated by the same Keysight 34907A module, this is plausible. The slightly changing room temperature is assume to be the common cause.
+Comparing \autoref{fig:interfacingFlute_atteneval-vsupp-stability} with \autoref{fig:interfacingFlute_vcontrolstab_longterm} suggest a relation between the deviations in $V_{control}$ and $V_+$. Since they are both generated by the same Keysight 34907A module, this is plausible. The slightly changing room temperature is assumed to be the common cause.
 By calculating the correlation coefficients between $\Delta V_+$ and $\Delta V_{control}$ and also between $\Delta V_+$ and $\Delta \vartheta_{ambient}$, this can be verified:
 \begin{align}
 \text{Corr}(\Delta V_+,\Delta V_{control})         &= \num{0.99204} \\
@@ -378,7 +378,7 @@ which is also used as the worst case stability
 \sigma_{V_+} = \SI{0.154}{\milli\volt}
 \end{equation}
 
-There is also a constant offset of $\mu_{V,+,longterm}=\SI{-1.35}{\milli\volt}$, bu it is disregarded since it can easily be compensated for it by slightly increasing the supply voltage.
+There is also a constant offset of $\mu_{V,+,longterm}=\SI{-1.35}{\milli\volt}$, but it is disregarded since it can easily be compensated by slightly increasing the supply voltage.
 
 \subsubsection{Influence of RF Frequency on Attenuation}
 In this section the influence of a varying RF frequency on attenuation $\nicefrac{\Delta A}{\Delta f} (f)$ is examined. For that the set frequency of the R\&S SMC100 signal generator is varied while the attenuation is measured. The result is shown in \autoref{fig:interfacingFlute_atteneval-rf}.
@@ -405,7 +405,7 @@ it is sufficient to regard \autoref{fig:interfacingFlute_atteneval-rf} (b). In t
 \end{equation}
 
 \subsubsection{Influence of Case Temperature Variations on Attenuation}
-To get insight into the importance of a stable case temperature, its influence on the attenuation $\nicefrac{\Delta A}{\Delta \vartheta_{case}} (\vartheta_{case})$ and the temperature stability both in the ``RF lab'' and the final mounting position insight the FLUTE LLRF cabinet are measured.
+To get insight into the importance of a stable case temperature, its influence on the attenuation $\nicefrac{\Delta A}{\Delta \vartheta_{case}} (\vartheta_{case})$ and the temperature stability both in the ``RF lab'' and the final mounting position inside the FLUTE LLRF cabinet are measured.
 
 To measure $\nicefrac{\Delta A}{\Delta \vartheta_{case}} (\vartheta_{case})$, the following experimental setup is used.\\
 The bottom of the attenuator is fixed to a rectangular iron profile with zip ties. Then the iron profile is heated with the tip of a soldering iron (set to \SI{150}{\degreeCelsius}) for \SI{1}{\minute} and then allowed to cool for \SI{20}{\minute}. This cycle is repeated three times and the device temperature and the attenuation are measured once every \SI{2}{\second}. Due to heat flowing from the soldering iron to the iron profile and through device itself, a strong hysteresis between the heating and cooling cycle can be observed in \autoref{fig:interfacingFlute_atteneval-tempstab-influence}.

@@ -7,15 +7,15 @@ Third a measurement filter is used to improve the quality of the feedback signal
 
 \section{Plant Identification}\label{sec:plantIdenti}
 \subsection{Principle}
-Before choosing an appropriate controller, some insight of the system response has to be obtained. Therefore in this section the plants transfer function is estimated. In the context of this chapter ``plant'' refers to everything from the attenuation set at the controllable attenuator to the system output, e.g. the cavity RF power.
+Before choosing an appropriate controller, some insight of the system response has to be obtained. Therefore in this section the plant's transfer function is estimated. In the context of this chapter ``plant'' refers to everything from the attenuation set at the controllable attenuator to the system output, e.g. the cavity RF power.
 
 In the time domain, a LTI system is described by its impulse response $h(t)$, that is the reaction of the plant to an impulse at the input.
-Using this definition directly, the plants impulse response $p(t)$ could be measured by applying a short peak in the attenuation setting on the attenuator. The effect on the output is not easy to measure and a single measurement of this kind is very susceptible to noise.
+Using this definition directly, the plant's impulse response $p(t)$ could be measured by applying a short peak in the attenuation setting on the attenuator. The effect on the output is not easy to measure and a single measurement of this kind is very susceptible to noise.
 Therefore it is more common to measure the step response\cite{Wang2000}, which is the output of a system, when a step function is applied to its input. As the step function is the time integral of the impulse function, the step response can be converted to the impulse response by differentiation in time.
 
 Instead of measuring a single step response, often several step responses are measured and their average is computed to reduce the variance of the estimation. When measuring a step response the minimum needed measuring time depends on the systems time constants, but they are often not known beforehand.
 
-That is why when there is no prior knowledge of the system, the identification is sometimes done with a (pseudo) random binary sequence to excite the system with step functions of different lengths. The PRBS is chosen in a way that that some of the steps will probably last longer than a few dominant time constants of the system. 
+That is why when there is no prior knowledge of the system, the identification is sometimes done with a (pseudo) random binary sequence to excite the system with step functions of different lengths. The PRBS is chosen in a way that some of the steps will probably last longer than a few dominant time constants of the system. 
 
 To get the transfer function $P(s)=\mathcal{L}\left\{p(t)\right\}$ of the plant from its step response(s), several methods are common, including correlation based and frequency response based algorithms.
 
@@ -129,7 +129,7 @@ One possibility to describe a FIR filter is by giving its impulse response, i.e.
 h[n] = \frac{1}{N} [\underbrace{1,\,1,\,...,\,1}_N]
 \end{equation}
 
-The delay introduced by a digital filter can be quantified with the filters group delay
+The delay introduced by a digital filter can be quantified with the filter's group delay
 \begin{equation}
 \frac{\tau_g(f)}{T_s} = \frac{\d{\phi(f)}}{\d{f}}
 \end{equation}
@@ -139,7 +139,7 @@ which is given normalized to the sampling time $T_s$ \cite[p.~70]{Kammeyer2002}.
 \end{equation}
 
 With a sampling time of $T_s=\nicefrac{1}{\SI{5}{\hertz}}=\SI{200}{\milli\second}$ and $N=100$ the group delay is \SI{10}{\second}. In case of a steady operation this is acceptable, as the disturbances to compensate happen on a timescale in the order of several minutes.
-But in case of ongoing transients in case of user changes to the control system parameters, or short error bursts on the measured signal, this long delay causes problems and therefore should be reduced.
+But in case of ongoing transients due to user changes to the control system parameters or short error bursts on the measured signal, this long delay causes problems and therefore should be reduced.
 
 Therefore a more sophisticated digital filter is designed to replace the simple moving average.
 
@@ -147,13 +147,13 @@ On the one hand, a FIR filter is designed with the Kaiser window method.
 This method starts with the desired frequency response, which is usually given piece-wise. 
 In case of the low pass filter it is a step function at a cutoff frequency $f_c$.
 Then the IDFT is used to compute the corresponding impulse response $h_\text{IIR}[n]$, which is in general infinitely long.
-Windowing with e.g. a Kaiser window and then truncating the impulse response then yields the impulse response of the desired FIR filter $h_\text{FIR}[n]$.\cite[p.~533]{Oppenheim2010}.
+Windowing with e.g. a Kaiser window and then truncating the impulse response yields the impulse response of the desired FIR filter $h_\text{FIR}[n]$.\cite[p.~533]{Oppenheim2010}.
 With SciPy using \texttt{b=signal.firwin(N, fc,fs)}, the coefficients of a FIR with this method can be calculated.
 
-On the other hand, an IIR filter is designed with the impulse invariance method and an analogue Butterworth filter.
-This method could be interpreted as sampling the infinitely long analogue impulse response.\cite[p.~497]{Oppenheim2010}
-With SciPy using \texttt{b,a=signal.butter(N,fc,'lowpass',fs,)}, the coefficients of an IIR with this method can be calculated.
-For an IIR filter, the group delay cannot be calculated with \autoref{eq:groupD} and it is in general frequency depend.
+On the other hand, an IIR filter is designed with the impulse invariance method and an analog Butterworth filter.
+This method could be interpreted as sampling the infinitely long analog impulse response.\cite[p.~497]{Oppenheim2010}
+In SciPy using \texttt{b,a=signal.butter(N,fc,'lowpass',fs,)}, the coefficients of an IIR can be calculated with this method.
+For an IIR filter, the group delay cannot be calculated with \autoref{eq:groupD} and it is in general frequency-dependent.
 
 \autoref{fig:controllerDesignAndEvaluation-impulseresponses} shows the impulse responses of the moving average, the FIR lowpass and the IIR lowpass (truncated to $N=100$).
 
@@ -243,14 +243,14 @@ Based on the estimated model of the plant $P(s)$ (or $P[z]$) in \autoref{sec:pla
 Tuning the controller and testing its capabilities is performed both \textit{offline} with simulations using the building blocks $P[z]$, $H[z]$ and the yet to be defined $G[z]$ and \textit{online} using a software implementation of the control system with the real hardware, i.e. FLUTE and the controllable attenuator.
 
 \subsection{Choosing a Controller Type}
-The plant has been identified using a linear model in \autoref{sec:plantIdenti} resulting in the LTI system $P(s)$ or ($P[z]$). The matching controller does not necessarily have to be a LTI system, but choosing a LTI system simplifies design and analysis and is a justifiable choice here, as there a no good reasons against it, yet.
+The plant has been identified using a linear model in \autoref{sec:plantIdenti} resulting in the LTI system $P(s)$ (or $P[z]$). The matching controller does not necessarily have to be a LTI system, but choosing a LTI system simplifies design and analysis and is a justifiable choice here, as there are no good reasons against it, yet.
 
 The class of LTI controllers is dominated by the PID controller and its variants. PID stands for ``proportional'', ``integral'' and ``derivative'', which are LTI systems themselves, performing scaling, integration or differentiation. Depending on the application, variants, such as the PI controller, or the PD controller are used as well.
 
 According to \cite[p.~111]{Aastroem1995} PID control is applicable for plants with order two or less.
 Compared to other types of controllers, using a PID controller has many advantages. It is is quick to design and does not depend on an accurate plant model. Also after the designing step, the few free parameters can easily be presented to an operator and online fine tuning is possible.\footnote{In contrast a compensating controller is based on an accurate model of the plant and changes on the fly are difficult.\cite{SergeZacher2010}}
 
-In the next section such a PID controller is designed. As it is to be implemented in Software later, the design is done in discrete time.
+In the next section such a PID controller is designed. As it is to be implemented in software later, the design is done in discrete time.
 
 \subsection{Designing a Discrete Time PID Controller}\label{sec:controlDesign}
 The output signal $u(t)$ of a generic time continuous PID controller (see \autoref{fig:controllerDesignAndEvaluation-genericPID}) consists of the weighted sum of three error signals.
@@ -261,12 +261,11 @@ The output signal $u(t)$ of a generic time continuous PID controller (see \autor
 	\caption{Block diagram of a generic PID controller}
 	\label{fig:controllerDesignAndEvaluation-genericPID}
 \end{figure}
-First, a
 The first is simply the controller input error signal $e(t)$ scaled by the gain $k_p$. This is the proportional part of the PID controller. The integral part is calculated by computing the running time integral
 \begin{equation}\label{eq:ei}
 e_i(t)=\int_{0}^{t} e(\tau) \d{\tau}.
 \end{equation}
-This is than scaled by the constant $k_i$. To get the derivative part, the derivative
+This is then scaled by the constant $k_i$. To get the derivative part, the derivative
 \begin{equation}\label{eq:ed}
 e_d(t)=\frac{\d{}}{\d{t}} e(t)
 \end{equation}
@@ -328,7 +327,7 @@ Using this method at FLUTE produced mixed results. While being a very simple and
 Nonetheless the Ziegler-Nichols method yields a usable starting point, if the strategy is to fine tune the controller manually by intuition and experience of the user.
 
 As the Ziegler-Nichols method does not yield an acceptable parameter set and the method combined with fine tuning by hand takes a considerable amount of time, next tuning the parameters offline using only the plants transfer function and the measurement filter is done.
-The offline tuning can be done analytically or using different numerical optimization strategies. In \cite{DiazRodriguez2019} analytical methods, such as the internal model control design or the pole placement design are discussed. Both require the systems transfer function in a closed form.\\
+The offline tuning can be done analytically or using different numerical optimization strategies. In \cite{DiazRodriguez2019} analytical methods, such as the internal model control design or the pole placement design are discussed. Both require the system's transfer function in a closed form.\\
 Tuning by numerical optimization chooses the parameters by a simulation or measured data. Goal of the optimization is to minimize a cost function $J$ like
 \begin{equation}
 J(\theta) = \sum_{n=0}^{\infty} e_{\theta}[n]^2
@@ -343,7 +342,7 @@ A convenient way to do such an optimization by simulation using the transfer fun
 \paragraph{Tuning the Controller with the Matlab PID Tuner}
 The Matlab PID Tuner accepts different kinds of system models used by the Matlab/Simulink ecosystem. It is possible to directly use estimated models, models defined via their transfer function or the zero-pole-gain representation, Simulink models or combinations of those\footnote{Series connection can be established by multiplying the models transfer functions.}.
 
-The manual of the PID Tuner\cite{pidTunerMan} describes the expected input (see \autoref{fig:controllerDesignAndEvaluation-pidTunersys}). The feedback path has to have unity gain, i.e. there is no measurement filter allowed. Therefore the measurement filter is moved before the junction where the output $y[n]$ would normally be measured. Then the measurement filter $H[z]$ is combined with the plant $P[z]$ to form $Sys[z]$. For that reason $y[n]$ becomes an internal signal of $Sys[z]$. However the new system output $y'[n]=h[z] \ast y[n]$ is not too different from the old, since $H[z]$ is designed to remove high frequency noise but retain the rest of $y[n]$.
+The manual of the PID Tuner\cite{pidTunerMan} describes the expected input (see \autoref{fig:controllerDesignAndEvaluation-pidTunersys}). The feedback path has to have unity gain, i.e. there is no measurement filter allowed. Therefore the measurement filter is moved before the junction where the output $y[n]$ would normally be measured. Then the measurement filter $H[z]$ is combined with the plant $P[z]$ to form $Sys[z]$. For that reason $y[n]$ becomes an internal signal of $Sys[z]$. However the new system output $y'[n]=h[z] \ast y[n]$ is not too different from the old one, since $H[z]$ is designed to remove high frequency noise but retain the rest of $y[n]$.
 
 \begin{figure}[tb]
 	\centering
@@ -382,7 +381,7 @@ pidTuner(Sys1); %Launch pidTuner
 
 Using the PID Tuner GUI (see \autoref{fig:Appendix-pidTuner}), the controller is designed by changing the design parameters \texttt{Response Time} (RT) and \texttt{Transient Behavior} (TB). Changing the response time (in seconds) influences how fast the controller acts on changes. With the transient behavior setting, the allowed over- and under-shoots, that is the deviation above and below the final value for $t \rightarrow \infty$ can be set qualitatively.
 
-With this tool four different controllers are designed, two for each measurement filters order of $N=10$ and $N=40$. The transient behavior with $0.2$ for all controllers is chosen as a compromise between speed and overshoot behavior. The optimized PID parameters (for a discrete time PID controller in parallel form) are listed in \autoref{tab:controllerDesignAndEvaluation-pidTunerResults}.
+With this tool four different controllers are designed, two for each measurement filter's order of $N=10$ and $N=40$. The transient behavior with $0.2$ for all controllers is chosen as a compromise between speed and overshoot behavior. The optimized PID parameters (for a discrete time PID controller in parallel form) are listed in \autoref{tab:controllerDesignAndEvaluation-pidTunerResults}.
 
 \begin{table}[tb]
 \caption{Parameters of a discrete time PID controller in parallel form calculated with the Matlab PID Tuner; $N$ is the order of the used measurement filter}
@@ -402,7 +401,7 @@ $G_4[z]$ &40 & 10  & 0.2 & \num{-0.00035} & \num{-9.68e-05} & \num{-0.000316}\\
 
 \subsection{Analyzing the Input Tracking and Disturbance Rejection}
 The PID Tuner defaults to show the input tracking step response (as in \autoref{fig:Appendix-pidTuner}).
-The input tracking is calculated based on \autoref{eq:inputTracking}. To calculate it, the Matlab function \texttt{step()} is used which generates the step response plot of a dynamic system, in this case $F_T$. As the whole system consists only of linear building blocks, using an arbitrary step height of $1$ is possible. The response is then normalized in such a way that the final value is also $1$.
+The input tracking is calculated based on \autoref{eq:inputTracking}. To calculate it, the Matlab function \texttt{step()} is used, which generates the step response plot of a dynamic system, in this case $F_T$. As the whole system only consists of linear building blocks, using an arbitrary step height of $1$ is possible. The response is then normalized in such a way that the final value is also $1$.
 
 In \autoref{fig:controllerDesignAndEvaluation-pidTunerITN10} and \autoref{fig:controllerDesignAndEvaluation-pidTunerITN40} the input tracking step responses for all four controllers are plotted. Note the different $t$ scales. As expected, for longer measurement filters, i.e. filters of higher orders, the controller has to act less aggressive. This causes longer settling times.
 Especially \autoref{fig:controllerDesignAndEvaluation-pidTunerITN40} shows that setting a shorter response time does not automatically cause the controller to set the output faster to its final value. While for the shorter response time, the set value is reached quicker, there is also a strong oscillation, so choosing the longer response time (see $G_4[z]$) can be beneficial.
@@ -421,11 +420,11 @@ Especially \autoref{fig:controllerDesignAndEvaluation-pidTunerITN40} shows that 
 	\label{fig:controllerDesignAndEvaluation-pidTunerITN40}
 \end{figure}
 
-Because for FLUTE the set-point only changes occasionally, basically a fixed set-point controller is needed. Therefore the disturbance rejection is more important than the input tracking when analyzing the controllers performance. The step responses of the disturbance rejection $F_{DR}$ are calculated in a similar way as the input tracking, using \autoref{eq:eq:disturbanceRejection} and \texttt{step()}. The $y$ axis are normalized so that the initial value is $1$ and the final value for $t \rightarrow \infty$ is $0$.
+As the set-point for FLUTE only changes occasionally, basically a fixed set-point controller is needed. Therefore the disturbance rejection is more important than the input tracking when analyzing the controllers performance. The step responses of the disturbance rejection $F_{DR}$ are calculated in a similar way as the input tracking, using \autoref{eq:disturbanceRejection} and \texttt{step()}. The $y$ axes are normalized so that the initial value is $1$ and the final value for $t \rightarrow \infty$ is $0$.
 
 In \autoref{fig:controllerDesignAndEvaluation-pidTunerDRN10} and \autoref{fig:controllerDesignAndEvaluation-pidTunerDRN40} the results for all controllers in \autoref{tab:controllerDesignAndEvaluation-pidTunerResults} are plotted.
 
-This shows that even for an optimistically low measurement filter order of $N=10$, the settling time is in the order of slightly under a minute. This is sufficient for the application but has more of a practical drawback: when fine-tuning the PID parameters manually on the machine, it is necessary to wait a few minutes after setting new parameters before assessing the change.
+This shows that even for an optimistically low measurement filter order of $N=10$, the settling time is in the order of slightly under a minute. This is sufficient for the application, but has more of a practical drawback: when fine-tuning the PID parameters manually on the machine, it is necessary to wait a few minutes after setting new parameters before assessing the change.
 
 Especially when looking a the plots of $G_3[z]$, it is obvious that there can be stability issues when using a too aggressive controller. For that reason in the next section the stability of the four controllers is analyzed.
 
@@ -453,7 +452,7 @@ F_o[z]=G[z] P[z] H[z]
 \end{equation}
 are calculated. For all controllers designed, they are plotted in \autoref{fig:controllerDesignAndEvaluation-pidTunerNyq}.
 
-This shows the gain margin for $G_3[z]$ (in combination with the $N=40$ filter), that is the distance to the critical point $w=(-1,0j)$ is already very small. So in addition to its oscillatory behavior and the longer settling time, there is also the risk that the system can become unstable if there are even small system parameter changes.
+This shows the gain margin for $G_3[z]$ (in combination with the $N=40$ filter), that is the distance to the critical point $w=(-1,0j)$, is already very small. So in addition to its oscillatory behavior and the longer settling time, there is also the risk that the system can become unstable if there are even small system parameter changes.
 
 \begin{figure}[tb]
 	\centering
@@ -462,7 +461,7 @@ This shows the gain margin for $G_3[z]$ (in combination with the $N=40$ filter),
 	\label{fig:controllerDesignAndEvaluation-pidTunerNyq}
 \end{figure}
 
-In \autoref{fig:controllerDesignAndEvaluation-pidTunerfails} another issue is highlighted. If a controller is designed with a certain measurement filter order $N=N_0$ in mind but is used together with a filter of order $N=N_1>N_0$, it is very likely the closed loop system becomes unstable. In the figure the controller $G_1[z]$ is used together with the $N=40$ filter. Both the disturbance rejection and the Nyquist plot shows the closed loop to be unstable.
+In \autoref{fig:controllerDesignAndEvaluation-pidTunerfails} another issue is highlighted. If a controller is designed with a certain measurement filter order $N=N_0$ in mind, but is used together with a filter of order $N=N_1>N_0$, it is very likely the closed loop system becomes unstable. In the figure the controller $G_1[z]$ is used together with the $N=40$ filter. Both the disturbance rejection and the Nyquist plot show the closed loop to be unstable.
 
 \begin{figure}[tb]
     \centering
@@ -477,7 +476,7 @@ In \autoref{fig:controllerDesignAndEvaluation-pidTunerfails} another issue is hi
 \subsection{Offline Evaluation with Measured Data}
 Now the performance of the controller $G_1[z]$ together with the filter order $N=10$ should be evaluated with measured data before testing it with FLUTE. This simulation is called offline evaluation.
 
-Offline evaluation of the control system is potentially less accurate due to an incomplete or erroneous model. But on the upside it requires no access to FLUTE and no potentially downtime of the machine. Also with modern computers the simulation time advances much faster than real-time. Another big advantage is repeatability. With a pre-recorded data-set as the disturbance input, simulations are consistent and do not depend on a changing environment or system parameters.
+Offline evaluation of the control system is potentially less accurate due to an incomplete or erroneous model. But on the upside it requires no access to FLUTE and no potential downtime of the machine. Also with modern computers the simulation time advances much faster than real-time. Another big advantage is repeatability. With a pre-recorded data-set as the disturbance input, simulations are consistent and do not depend on a changing environment or system parameters.
 
 The offline evaluation is done with Simulink, a block diagram development and simulation environment based on Matlab. The Simulink model (see \autoref{fig:Appendix-simuliunk}) uses the disturbance
 \begin{equation}
@@ -517,9 +516,9 @@ The system should be implemented as software that runs on most personal computer
 \item Log the input, output and parameters to disk for later reference
 \end{itemize}
 
-Since many other choices depend on it, first the programming language has be picked. As Python was used in earlier chapters and the communicating abilities to both EPICS and the Keysight 34972A were already proven, it is the obvious choice. 
+Since many other choices depend on it, first the programming language has to be picked. As Python was used in earlier chapters and the communicating abilities to both EPICS and the Keysight 34972A were already proven, it is the obvious choice. 
 
-From there on the GUI framework is the next decision to be made. For Python popular choices are \textit{Tkinter}, a build in implementation of the Tk/tcl GUI toolkit, \textit{wxPython}, a Python binding to the cross-platform GUI library wxWidgets, or \textit{PyQt}\cite{pyqt}, a set of Python bindings for the Qt GUI framework\cite{qt}. While Tkinter has the advantage of being build into the Python language, wxPython offers more functionality and is more widely adopted. PyQt profits from the large Qt ecosystem, so is it for example possible to develop the GUI separately from the code using \textit{Qt Designer}.
+From there on the GUI framework is the next decision to be made. For Python popular choices are \textit{Tkinter}, a built in implementation of the Tk/tcl GUI toolkit, \textit{wxPython}, a Python binding to the cross-platform GUI library wxWidgets, or \textit{PyQt}\cite{pyqt}, a set of Python bindings for the Qt GUI framework\cite{qt}. While Tkinter has the advantage of being built into the Python language, wxPython offers more functionality and is more widely adopted. PyQt profits from the large Qt ecosystem, so is it for example possible to develop the GUI separately from the code using \textit{Qt Designer}.
 
 For (live-) plotting of data in the GUI, the standard library in Python is \textit{matplotlib}\cite{Hunter2007}. It can be used with all three plotting libraries. However the biggest drawback is the possible update speed of the plots. With more than about a hundred points on the screen, the update frequency drops to well below \SI{1}{\hertz}. A much faster alternative is \textit{pyqtgraph}\cite{pyqtgraph}, a scientific plotting library written in Python and using the Qt GraphicsView. It is only compatible only with PyQt (or the PySide alternatives).
 
@@ -545,7 +544,7 @@ while(true) {
 }
 \end{lstlisting}
 
-To get the timing right and to allow the GUI to be responsive while the control algorithm runs in the background, a scheduler that activates a callback function every \SI{0.2}{\second} should be used. Since in \autoref{sec:atteneval} the Advanced Python Scheduler (AP scheduler) is used successfully, it should also be used for the control system. Unfortunately the AP scheduler is not compatible with PyQt and using it interferes with the internal Qt timing systems. For that reason instead a timer is constructed with the  \texttt{QTimer} class.\cite{qtimer}
+To get the timing right and to allow the GUI to be responsive while the control algorithm runs in the background, a scheduler that activates a callback function every \SI{0.2}{\second} should be used. Since in \autoref{sec:atteneval} the Advanced Python Scheduler (AP scheduler) is used successfully, it should also be used for the control system. Unfortunately the AP scheduler is not compatible with PyQt and using it interferes with the internal Qt timing systems. For this reason, a timer is constructed instead with the  \texttt{QTimer} class.\cite{qtimer}
 
 Logging the data to disk is done by using the same \texttt{QTimer}, as is used for the control algorithm, to write one line of CSV data to disk each time the timer is triggered.
 
@@ -598,7 +597,7 @@ This allows the spectrum for these two blocks to be estimated using a periodogra
 
 With the periodogram data, the control system success can be measured with the most prominent noise metric.
 
-Next the cases controller on and controller off should be compared with the relative standard deviation. Measuring and displaying the relative standard deviation $STD\%$ is also supported on the LLRF CSS panel at FLUTE, so while the experiments run, the values are checked from time to time. It can be observed that different values are shown over time although the plotted time signal looks stationary by eye. This suggests the relative standard deviation does not only depend on the window size $T$ over which is is calculated, but also heavily on the absolute position in time $t$. This effect is more visible for small window sizes. The issue is illustrated in \autoref{fig:controllerDesignAndEvaluation_resultSTDp}, where $STD\%=STD\%(t,T)$ is plotted as a function of the time $t$ and the window size $T$.
+Next, the cases controller on and controller off should be compared with the relative standard deviation. Measuring and displaying the relative standard deviation $STD\%$ is also supported on the LLRF CSS panel at FLUTE, so while the experiments run, the values are checked from time to time. It can be observed that different values are shown over time although the plotted time signal looks stationary by eye. This suggests that the relative standard deviation does not only depend on the window size $T$ over which it is calculated, but also heavily on the absolute position in time $t$. This effect is more visible for small window sizes. The issue is illustrated in \autoref{fig:controllerDesignAndEvaluation_resultSTDp}, where $STD\%=STD\%(t,T)$ is plotted as a function of the time $t$ and the window size $T$.
 
 \begin{figure}[tb]
     \centering
@@ -609,7 +608,7 @@ Next the cases controller on and controller off should be compared with the rela
     \label{fig:controllerDesignAndEvaluation_resultSTDp}
 \end{figure}
 
-For that reason, for small window sizes, time averages of $STD\%$ should be used instead of single values. For the measured $STD\%(t,T)$ for the controller off and the controller on, $STD\%(T)$ is plotted in \autoref{fig:controllerDesignAndEvaluation_resultSTDp_means}. This plot shows what could already be guessed from \autoref{fig:controllerDesignAndEvaluation_resultSTDp}: with the $STD\%$ metric, the system seems \textit{less} stable with the controller on, if the $STD\%$ is calculated over small window sizes e.g. $T=\SI{1}{\minute}$. For very long windows, the dependency on the window position becomes very small. So for the comparison with the other metrics, $STD\%(T=\SI{4}{\hour})$ is used.
+For that reason, for small window sizes, time averages of $STD\%$ should be used instead of single values. For the measured $STD\%(t,T)$ for the controller off and the controller on cases, $STD\%(T)$ is plotted in \autoref{fig:controllerDesignAndEvaluation_resultSTDp_means}. This plot shows what could already be guessed from \autoref{fig:controllerDesignAndEvaluation_resultSTDp}: with the $STD\%$ metric, the system seems \textit{less} stable with the controller on, if the $STD\%$ is calculated over small window sizes e.g. $T=\SI{1}{\minute}$. For very long windows, the dependency on the window position becomes very small. So for the comparison with the other metrics, $STD\%(T=\SI{4}{\hour})$ is used.
 
 \begin{figure}[tb]
 	\centering
