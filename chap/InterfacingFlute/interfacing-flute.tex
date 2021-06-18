@@ -3,12 +3,12 @@ This chapter covers methods on interfacing the FLUTE accelerator, that is how to
 In this chapter \textit{input} and \textit{output} refer to the view from the control system.
 
 \section{Inputs}
-FLUTE uses the \textit{Experimental Physics and Industrial Control System (EPICS)}\cite{Dalesio1991} for control of various parts of the accelerator, to send real time data to be archived and to build user interfaces via \textit{Control System Studio (CSS)}\cite{CSS2021}, a JAVA based integrated development environment (IDE).
+FLUTE uses the \textit{\gls{epics}}\cite{Dalesio1991} for control of various parts of the accelerator, to send real time data to be archived and to build user interfaces via \textit{\gls{css}}\cite{CSS2021}, a development studio based on the Java \gls{ide} Eclipse. \cite{Mexner2018}
 
-EPICS offers client/server and publish/subscribe paradigms to access data in so called process variables (PV) through channels. Modules are usually written in the C programming language. To ease the access to EPICS channels in programs written with the Python language, the package \textit{PyEpics}\cite{Newville2019} can be used. Since all data of interest as input for the control system can be extracted through an EPICS channel, the next section deals with using PyEpics to obtain the data.
+\Gls{epics} offers client/server and publish/subscribe paradigms to access data in so called \gls{pv} through channels. Modules are usually written in the C programming language. To ease the access to \gls{epics} channels in programs written with the Python language, the package \textit{PyEpics}\cite{Newville2019} can be used. Since all data of interest as input for the control system can be extracted through an \gls{epics} channel, the next section deals with using PyEpics to obtain the data.
 
 \subsection{Accessing EPICS channels in Python with PyEpics}
-Before usage PyEpics needs to be installed, e.g. with \texttt{pip3 install pyepics} from the \textit{PyPi} repository. If the computer running the Python code can reach the EPICS CA repeater on the machine network, the connection is established automatically in the background. To get a channel value asynchronously, i.e. at an arbitrary time, the function \texttt{caget(pvname)} can be used with the name of the desired process value, see \autoref{lst:caget}.
+Before usage PyEpics needs to be installed, e.g. with \texttt{pip3 install pyepics} from the \textit{PyPi} repository. If the computer running the Python code can reach the \gls{epics} \gls{ca} repeater on the machine network, the connection is established automatically in the background. To get a channel value asynchronously, i.e. at an arbitrary time, the function \texttt{caget(pvname)} can be used with the name of the desired process value, see \autoref{lst:caget}.
 
 \begin{lstlisting}[style=python,caption = Using \texttt{caget()} to get the value of an EPICS process value, label = lst:caget]
 from epics import caget
@@ -47,7 +47,7 @@ while(True):
 \subsection{Properties of the Available Process Variables}
 In this section some process variables that may be used as inputs for the control system are analyzed. These are:
 \begin{itemize}
-\item \texttt{F:RF:LLRF:01:GunCav1:Power:Out Value}: The RF power measured immediately before the cavity
+\item \texttt{F:RF:LLRF:01:GunCav1:Power:Out Value}: The \gls{rf} power measured immediately before the cavity
 \item \texttt{F:AX:DAQDT:01:1:Wave:05:Sample Value}: The charge measured with a Faraday cup (RadiaBeam Technologies FARC-04 \cite{radiabeamFaradayCups}) and amplified with a charge sensitive amplifier (PCB 421A25 \cite{pcbsynotechPCB421A25Charge})
 \item \texttt{F:INJ-1:Gun:01:Temperature:Body Value}: The body temperature of the cavity
 \end{itemize}
@@ -56,7 +56,7 @@ In \autoref{fig:quantNoise} all three are plotted for a duration of \SI{15}{\min
 
 \begin{figure}[tb]
 		\hfill
-        \subfloat[Cavity RF power \texttt{F:RF:LLRF:01:GunCav1:Power:Out Value}]{\input{chap/InterfacingFlute/img/Inputs/RF.tikz}}
+        \subfloat[Cavity \gls{rf} power \texttt{F:RF:LLRF:01:GunCav1:Power:Out Value}]{\input{chap/InterfacingFlute/img/Inputs/RF.tikz}}
         
         \hfill
         \subfloat[Faraday cup charge \texttt{F:AX:DAQDT:01:1:Wave:05:Sample Value}]{\input{chap/InterfacingFlute/img/Inputs/FaradayCup.tikz}}
@@ -86,7 +86,7 @@ In addition the sample times of the process variables is examined if the method 
 \begin{equation}
 \Delta=t_{n+1}-t_n.
 \end{equation}
-Then a histogram with the relative frequency on the y axis is used as an estimator for the probability density function of the sample time intervals (see \autoref{fig:interfacingFlute_sampleTimesHist}). The histogram shows that the time series resulting from recording process variables out of the EPICS system are highly unevenly spaced. Thus the data needs to be converted to posses evenly spaced sample times to use common signal processing methods like the DFT or digital LTI filters. For offline analysis of prerecorded data, it can easily be resampled to a fixed time grid. But for online operation of a filter or a whole control system it is not possible to use an arbitrary resample method because they are often non causal or introduce significant group delay when made causal. Instead calling \texttt{caget()} with a (software-) timer can be used to get evenly spaced samples online.
+Then a histogram with the relative frequency on the y axis is used as an estimator for the probability density function of the sample time intervals (see \autoref{fig:interfacingFlute_sampleTimesHist}). The histogram shows that the time series resulting from recording process variables out of the EPICS system are highly unevenly spaced. Thus the data needs to be converted to posses evenly spaced sample times to use common signal processing methods like the \gls{dft} or digital \gls{lti} filters. For offline analysis of prerecorded data, it can easily be resampled to a fixed time grid. But for online operation of a filter or a whole control system it is not possible to use an arbitrary resample method because they are often non causal or introduce significant group delay when made causal. Instead calling \texttt{caget()} with a (software-) timer can be used to get evenly spaced samples online.
 
 \begin{figure}[tb]
 \centering
@@ -96,9 +96,9 @@ Then a histogram with the relative frequency on the y axis is used as an estimat
 \end{figure}
 
 \subsection{Filtering the RF power Signals}
-In case of the klystron output RF power or the power at the cavity, filtering of the signal is needed to remove zero outliers.
-These outliers occur if a high voltage arc occurs inside the cavity. This is detected and the LLRF control system shuts off the RF power for the current pulse (called a ``breakdown'').
-These outliners are not representative of the average RF power inside the cavity over multiple pulses and thus would greatly impair the controller performance.
+In case of the klystron output \gls{rf} power or the power at the cavity, filtering of the signal is needed to remove zero outliers.
+These outliers occur if a high voltage arc occurs inside the cavity. This is detected and the \gls{llrf} control system shuts off the \gls{rf} power for the current pulse (called a ``breakdown'').
+These outliners are not representative of the average \gls{rf} power inside the cavity over multiple pulses and thus would greatly impair the controller performance.
 For that reason, before any further filtering to remove noise etc, a breakdown removal filter is used (\autoref{lst:control-system-breakdownremoval}).
 In principle the new power value is checked to be inside a band the size of which is determined by the mean deviation of the $N_{filt}$ previous values and a scaling $m$.
 The percentile differences are used here as they are robust against outliers (i.e. other breakdowns) in the $N_{filt}$ previous values opposed to a normal standard deviation.
@@ -118,17 +118,17 @@ else:
 
 
 \section{Output: Controllable RF Attenuator}\label{sec:atteneval}
-The output signal computed by the control systems has to have a way of influencing the RF power send to the cavity. This could be done over an EPICS channel (e.g. with the PyEpics function \texttt{caput()} to set the value of a process variable via a channel access). However to make it possible to move the control system from a general purpose personal computer to a dedicated digital signal processor, FPGA or similar in the future, using a physical device in the signal path is preferred.\\
+The output signal computed by the control systems has to have a way of influencing the \gls{rf} power send to the cavity. This could be done over an \gls{epics} channel (e.g. with the PyEpics function \texttt{caput()} to set the value of a process variable via a channel access). However to make it possible to move the control system from a general purpose personal computer to a dedicated digital signal processor, \gls{fpga} or similar in the future, using a physical device in the signal path is preferred.\\
 
 \subsection{Defining Requirements}
-The controllable attenuator should allow to vary the attenuation in a span big enough to counteract typical instabilities on the FLUTE RF power. The set attenuation should be stable. This is especially needed in cases where the control system is not enabled. Then the attenuator should not add noise or drift to stay ``transparent'' for other systems. To allow for other attenuator or amplifiers in the signal path to compensate the attenuation around its operating point, the nominal attenuation should be as low as possible. The attenuation resolution should be low enough to allow for fine control and not to add noticeable quantization noise. Also the setup time for a new value should be small enough to not be visible to the control system.
+The controllable attenuator should allow to vary the attenuation in a span big enough to counteract typical instabilities on the \gls{flute} \gls{rf} power. The set attenuation should be stable. This is especially needed in cases where the control system is not enabled. Then the attenuator should not add noise or drift to stay ``transparent'' for other systems. To allow for other attenuator or amplifiers in the signal path to compensate the attenuation around its operating point, the nominal attenuation should be as low as possible. The attenuation resolution should be low enough to allow for fine control and not to add noticeable quantization noise. Also the setup time for a new value should be small enough to not be visible to the control system.
 
 Other factors like the control/supply voltages and the operating temperature range are limited by the available hardware or governed by the mounting location.
 
 All requirements are summarized in \autoref{tab:interfacingFlute_rfattenrequirements}.
 
 \begin{table}[tbh]
-\caption{Requirements for the controllable RF attenuator}
+\caption{Requirements for the controllable \gls{rf} attenuator}
 \label{tab:interfacingFlute_rfattenrequirements}
 \centering
 \begin{tabular}{lc}
@@ -148,7 +148,7 @@ control voltage & \SIrange{3}{12}{\volt}\\
 \end{table}
 
 \subsection{Evaluation of the ZX73-2500-S+ Controllable RF Attenuator}
-The \textit{ZX73-2500-S+} is a voltage controllable RF attenuator with coaxial SMA connectors by the company Mini-Circuits. As there is no alternative model from Mini-Circuits and devices from other manufacturers are offered with similar specifications, only the ZX73-2500-S+ is evaluated in detail in this section.
+The \textit{ZX73-2500-S+} is a voltage controllable \gls{rf} attenuator with coaxial SMA connectors by the company Mini-Circuits. As there is no alternative model from Mini-Circuits and devices from other manufacturers are offered with similar specifications, only the ZX73-2500-S+ is evaluated in detail in this section.
 
 
 
@@ -164,17 +164,17 @@ The \textit{ZX73-2500-S+} is a voltage controllable RF attenuator with coaxial S
 \begin{figure}[tb]
     \centering
 	\input{chap/InterfacingFlute/img/Output/attenuatorOverview/quadPiCequi.tikz}
-	\caption{Controllable attenuator design around the HP HSMP-3814 RF PIN diodes (redrawn and simplified from \cite{waughLowCostSurfaceMount1992})}
+	\caption{Controllable attenuator design around the HP HSMP-3814 \gls{rf} PIN diodes (redrawn and simplified from \cite{waughLowCostSurfaceMount1992})}
     \label{fig:quadPiequiC}
 \end{figure}
 
 
 
 
-The ZX73-2500-S+ attenuator consists of a brass housing/shielding containing the Mini-Circuits RVA-2500+, a variable SMD attenuator in the DV874 case form factor. The RF input and output are connected with female SMA screw connectors. The power supply and control voltage are connected with solder pins. In order to use shielded cables and a reliable connection, for all measurements SMA connectors are soldered to the supply and control pins. According to equivalent circuit in the data sheet\cite{mini-circuitsZX732500VoltageVariable} it can be assumed it is based on the common quad-$\pi$ pin diode design\cite{waughLowCostSurfaceMount1992}.
+The ZX73-2500-S+ attenuator consists of a brass housing/shielding containing the Mini-Circuits RVA-2500+, a variable SMD attenuator in the DV874 case form factor. The \gls{rf} input and output are connected with female SMA screw connectors. The power supply and control voltage are connected with solder pins. In order to use shielded cables and a reliable connection, for all measurements SMA connectors are soldered to the supply and control pins. According to equivalent circuit in the data sheet\cite{mini-circuitsZX732500VoltageVariable} it can be assumed it is based on the common quad-$\pi$ pin diode design\cite{waughLowCostSurfaceMount1992}.
 
 The attenuation versus frequency measurements from the manufactures data sheet are redone to both get a first impression of the device and verify it is generally operational and also as a sanity check for the used laboratory test equipment.
-Because the signal used by the FLUTE RF system is a \SI{3}{\GHz} single harmonic, the frequency measurement range is augmented over the maximum of \SI{2.5}{\GHz} in the data sheet to \SI{4}{\GHz}.
+Because the signal used by the FLUTE \gls{rf} system is a \SI{3}{\GHz} single harmonic, the frequency measurement range is augmented over the maximum of \SI{2.5}{\GHz} in the data sheet to \SI{4}{\GHz}.
 Between the measurement of each network analyzer trace, the control voltage $V_{control}$ of the attenuator is set to \SI{0}{\volt}, \SI{2}{\volt}, \SI{4}{\volt}, \SI{6}{\volt} or \SI{12}{\volt}.
 The result is shown in \autoref{fig:interfacingFlute_atteneval-overview-NA}\footnote{A through calibration of the network analyzer reduces the influence of the cables and connectors on the measurement. Change in attenuation due to play in the connectors and slight bend changes in the cables exceed the trace noise (\SI{0.004}{\dB rms}) and cause an uncertainty of about \SI{0.5}{\dB}}.
 When comparing the measured plots to the plots in the data sheet, there are obvious discrepancies. For $V_{control}=\SI{0}{\volt}$ the attenuator is very susceptible to noise on the control input, which could explain the differences for this curve. In the case of \SI{2}{\volt} and \SI{4}{\volt}, the almost constant offset scales with a similar logarithmic fashion as the attenuation does, which suggests device tolerances causing the deviations.
@@ -191,7 +191,7 @@ From this quick examination it is not possible to predict how the attenuator beh
 For this reason, with different measurement setups, the ZX73-2500-S+ is examined in greater detail in the next sections.
 
 To compare desired and spurious influences on the attenuation, the following model is used.\\
-The attenuation of the ZX73-2500-S+ $A$ depends on the control voltage $V_{control}$ but also on the supply voltage $V+$, the case temperature $\vartheta_{case}$ and the RF frequency $f$:
+The attenuation of the ZX73-2500-S+ $A$ depends on the control voltage $V_{control}$ but also on the supply voltage $V+$, the case temperature $\vartheta_{case}$ and the \gls{rf} frequency $f$:
 \begin{equation}
 A=A(\underbrace{V_{control},\,V_+,\,\vartheta_{case},\,f}_{\vec{x}}) = A\left(\vec{x}\right)
 \end{equation}
@@ -221,30 +221,30 @@ For the following measurements a common setup is used to ease the recording of d
 \begin{itemize}
 \item Supply the attenuator with the supply voltage $V_+$
 \item Supply the attenuator with the adjustable control voltage $V_{control}$
-\item Supply the RF input power with variable frequency $f$
-\item Measure the RF output power
+\item Supply the \gls{rf} input power with variable frequency $f$
+\item Measure the \gls{rf} output power
 \item Record all data as time series to a computers storage device
 \end{itemize}
 
 To achieve this, the setup in \autoref{fig:interfacingFlute_atteneval-setup} is used.
 The supply and control voltage are generated by a Keysight 34972A with a 34907A module (see \autoref{app:keysight-34972A}).
 To get a more accurate measurement of the actual voltages, two digital multimeters(Models 34470A and 34411A, see \autoref{app:keysight-34470A}) are connected directly at the $V_{control}$ and $V_+$ pins.
-The RF signal is generated by a Rhode und Schwarz SMC 100A signal generator.
+The \gls{rf} signal is generated by a Rhode und Schwarz SMC 100A signal generator.
 With the HP E4419B and its two inputs and a power splitter, it is possible to directly get the attenuation of the ZX73-2500-S+.
 The body temperature of the device is monitored with a PT100 temperature sensor connected to the 34972A.
 
-Each of the lab devices used is compatible with VXI11, which is a widely adopted standard that is used to send ASCII SCPI commands over an ethernet network (called LXI) or GPIB \cite{lxi2021}.
+Each of the lab devices used is compatible with \gls{vxi-11}, which is a widely adopted standard that is used to send \gls{ascii} \gls{scpi} commands over an ethernet network (called \gls{lxi}) or \gls{gpib}.\cite{lxi2021}
 This enables remote and programatically control of the devices over the network.
 With the library \textit{python-vxi11}, it is now possible to write a custom script, that sets the measurement devices to known initial conditions, drives the inputs of the attenuator and records the generated data. Timing the output of new set-values and recording of data is done with the \textit{Advanced Python Scheduler}.\cite{apscheduler}\\ 
 The whole setup of the hardware in \autoref{fig:interfacingFlute_atteneval-setup} and the Python software, a measurement frequency of about \SI{0.5}{\Hz} to \SI{1}{\Hz} can be achieved, which is enough because most measurements taken are of a static nature and in the case of the temperature influence measurement, the thermal time constant is in the order of a few seconds.
 The limiting device is the HP E4419B which takes the longest to perform one measurement. Without it, measurement frequencies of over \SI{4}{\Hz} are possible.
 
-All measurements are performed in the ``RF lab'' in building 348 (KARA hall on KIT Campus North) which is air conditioned to about \SI{20(2)}{\celsius}.
+All measurements are performed in the ``\gls{rf} lab'' in building 348 (\gls{kara} hall on KIT Campus North) which is air conditioned to about \SI{20(2)}{\celsius}.
 
 \begin{figure}[tb]
 	\centering
 	\includegraphics[]{chap/InterfacingFlute/img/Output/schematic.tikz}
-	\caption{Measurement setup: DUT(red), RF generator/power splitter/meter(blue),\\ DC sources/meters(green), temperature probe(yellow)}
+	\caption{Measurement setup: DUT(red), \gls{rf} generator/power splitter/meter(blue),\\ DC sources/meters(green), temperature probe(yellow)}
 	\label{fig:interfacingFlute_atteneval-setup}
 \end{figure}
 
@@ -278,7 +278,7 @@ The plot shows the attenuation can be varied over more than \SI{30}{\dB} and the
 Since the required change in attenuation of less than \SI{1}{\dB} is much smaller, it is only necessary to vary $V_{control}$ around the operating point.
 
 The optimal operating point for $V_{control}$ is selected by considering the following three aspects.
-First, the absolute attenuation at the operating point should be as low as possible to not worsen the SNR of the signal path. Second the control voltage has to fit in the possible output voltage range of the voltage source and still allow for adjustment towards both lower and higher voltages. 
+First, the absolute attenuation at the operating point should be as low as possible to not worsen the \gls{snr} of the signal path. Second the control voltage has to fit in the possible output voltage range of the voltage source and still allow for adjustment towards both lower and higher voltages. 
 In case of the Keysight 34972A/34907A the maximum possible output voltage is \SI{12}{\volt}.
 Third, the sensitivity should be as low as feasible to make the attenuation less susceptible to noise on the $V_{control}$ input.
 
@@ -319,7 +319,7 @@ The minimum possible step size of the attenuation can be calculated using $\left
 \delta A(V_{control}) = \SI{0.242}{\dB\per\volt} \cdot \SI{366.22}{\micro\volt} = \SI{0.00008862524}{\dB}
 \end{equation}
 
-To assess the stability of $V_{control}$, delivered from the Keysight 34972A (see \autoref{app:keysight-34972A}) DAC, its stability over the course of one day is measured. For that the voltage is taken once every 2 seconds with a Keysight 34470A multimeter (see \autoref{app:keysight-34470A}). The result is shown in \autoref{fig:interfacingFlute_vcontrolstab_longterm}.
+To assess the stability of $V_{control}$, delivered from the Keysight 34972A (see \autoref{app:keysight-34972A}) \gls{dac}, its stability over the course of one day is measured. For that the voltage is taken once every 2 seconds with a Keysight 34470A multimeter (see \autoref{app:keysight-34470A}). The result is shown in \autoref{fig:interfacingFlute_vcontrolstab_longterm}.
 
 \begin{figure}[tb]
 	\centering
@@ -353,7 +353,7 @@ Therefore using a linear regression of the measured data points, the influence o
 \end{equation}
 
 Next the stability of the supply voltage is measured.
-for that the stability over the course of one day is measured. The voltage is taken once every 2 seconds with a Keysight 34470A multimeter (see \autoref{app:keysight-34470A}). The result is shown in \autoref{fig:interfacingFlute_atteneval-vsupp-stability}.
+for that the stability over the course of one day is measured. The voltage is taken once every two seconds with a Keysight 34470A multimeter (see \autoref{app:keysight-34470A}). The result is shown in \autoref{fig:interfacingFlute_atteneval-vsupp-stability}.
 
 \begin{figure}[tb]
 	\centering
@@ -381,7 +381,7 @@ which is also used as the worst case stability
 There is also a constant offset of $\mu_{V,+,longterm}=\SI{-1.35}{\milli\volt}$, but it is disregarded since it can easily be compensated by slightly increasing the supply voltage.
 
 \subsubsection{Influence of RF Frequency on Attenuation}
-In this section the influence of a varying RF frequency on attenuation $\nicefrac{\Delta A}{\Delta f} (f)$ is examined. For that the set frequency of the R\&S SMC100 signal generator is varied while the attenuation is measured. The result is shown in \autoref{fig:interfacingFlute_atteneval-rf}.
+In this section the influence of a varying \gls{rf} frequency on attenuation $\nicefrac{\Delta A}{\Delta f} (f)$ is examined. For that the set frequency of the R\&S SMC100 signal generator is varied while the attenuation is measured. The result is shown in \autoref{fig:interfacingFlute_atteneval-rf}.
 
 \begin{figure}[tb]
     \centering
@@ -405,7 +405,7 @@ it is sufficient to regard \autoref{fig:interfacingFlute_atteneval-rf} (b). In t
 \end{equation}
 
 \subsubsection{Influence of Case Temperature Variations on Attenuation}
-To get insight into the importance of a stable case temperature, its influence on the attenuation $\nicefrac{\Delta A}{\Delta \vartheta_{case}} (\vartheta_{case})$ and the temperature stability both in the ``RF lab'' and the final mounting position inside the FLUTE LLRF cabinet are measured.
+To get insight into the importance of a stable case temperature, its influence on the attenuation $\nicefrac{\Delta A}{\Delta \vartheta_{case}} (\vartheta_{case})$ and the temperature stability both in the ``\gls{rf} lab'' and the final mounting position inside the FLUTE \gls{llrf} cabinet are measured.
 
 To measure $\nicefrac{\Delta A}{\Delta \vartheta_{case}} (\vartheta_{case})$, the following experimental setup is used.\\
 The bottom of the attenuator is fixed to a rectangular iron profile with zip ties. Then the iron profile is heated with the tip of a soldering iron (set to \SI{150}{\degreeCelsius}) for \SI{1}{\minute} and then allowed to cool for \SI{20}{\minute}. This cycle is repeated three times and the device temperature and the attenuation are measured once every \SI{2}{\second}. Due to heat flowing from the soldering iron to the iron profile and through device itself, a strong hysteresis between the heating and cooling cycle can be observed in \autoref{fig:interfacingFlute_atteneval-tempstab-influence}.
@@ -417,7 +417,7 @@ The bottom of the attenuator is fixed to a rectangular iron profile with zip tie
 	\label{fig:interfacingFlute_atteneval-tempstab-influence}
 \end{figure}
 
-To get $\nicefrac{\Delta A}{\Delta \vartheta_{case}} (\vartheta_{case})$ from the plot in \autoref{fig:interfacingFlute_atteneval-tempstab-influence} an approximately linear relationship $A(\vartheta_{case})$ is assumed. To get the slope, the $\vartheta_{case}$ component of the measured data points $(\vartheta_{case}|A(\vartheta_{case}))$ are rounded to one decimal place. Then data points with the same $A(\vartheta_{case})$ are averaged together and a linear regression is applied to the result. See \autoref{fig:interfacingFlute_atteneval-tempstab-influenceMean} for the resulting plot. The linear regressor yields
+To get $\nicefrac{\Delta A}{\Delta \vartheta_{case}} (\vartheta_{case})$ from the plot in \autoref{fig:interfacingFlute_atteneval-tempstab-influence} an approximately linear relationship $A(\vartheta_{case})$ is assumed. To get the slope, the $\vartheta_{case}$ component of the measured data points $(\vartheta_{case}|A(\vartheta_{case}))$ are rounded to one decimal place. Then data points with the same $A(\vartheta_{case})$ are averaged together and a linear regression is applied to the result. See \autoref{fig:interfacingFlute_atteneval-tempstab-influenceMean} for the resulting plot. The linear regression estimator yields
 \begin{equation}
 \frac{\Delta A}{\Delta \vartheta_{case}} (\vartheta_{case})
 \approx \frac{\Delta A}{\Delta \vartheta_{case}}
@@ -432,12 +432,12 @@ To get $\nicefrac{\Delta A}{\Delta \vartheta_{case}} (\vartheta_{case})$ from th
 	\label{fig:interfacingFlute_atteneval-tempstab-influenceMean}
 \end{figure}
 
-Next, the temperature stability in both the ``RF lab'' and in the FLUTE LLRF cabinet is measured. For that in each environment the temperature is recorded over night with a thermo element connected to the Keysight 34907A inside the Keysight 34972A every two seconds.
+Next, the temperature stability in both the ``\gls{rf} lab'' and in the FLUTE \gls{llrf} cabinet is measured. For that in each environment the temperature is recorded over night with a thermo element connected to the Keysight 34907A inside the Keysight 34972A every two seconds.
 
 \begin{figure}[tb]
 	\centering
 	\includegraphics[width=\textwidth,height=0.5\textwidth]{chap/InterfacingFlute/img/Output/temperature/tempStability.tikz}
-	\caption{Comparison between the temperature stability in the ``RF lab'' and inside the FLUTE LLRF cabinet}
+	\caption{Comparison between the temperature stability in the ``\gls{rf} lab'' and inside the FLUTE \gls{llrf} cabinet}
 	\label{fig:interfacingFlute_atteneval-tempstab-time}
 \end{figure}
 
@@ -484,7 +484,7 @@ This shows even in the worst case, the ZX73-2500-S+ attenuator is stable within 
 The other requirements from \autoref{tab:interfacingFlute_rfattenrequirements} are also fulfilled, see \autoref{tab:interfacingFlute_rfattenrequirements_result}.
 
 \begin{table}[tbh]
-\caption{Controllable RF attenuator evaluation test results}
+\caption{Controllable \gls{rf} attenuator evaluation test results}
 \label{tab:interfacingFlute_rfattenrequirements_result}
 \centering
 \begin{tabular}{lccl}
@@ -502,7 +502,6 @@ The other requirements from \autoref{tab:interfacingFlute_rfattenrequirements} a
 \end{table}
 
 \subsection{Test of the Attenuator with FLUTE}
-
 
 \begin{figure}[tb]
 	\centering

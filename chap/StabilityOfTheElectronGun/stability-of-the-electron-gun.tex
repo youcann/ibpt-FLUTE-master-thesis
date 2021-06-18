@@ -1,5 +1,39 @@
-\chapter{Current and Needed Stability of the Electron Gun}
-In this chapter the current stability of the RF system powering the electron gun is analyzed and the needed stability is defined.
+\chapter{The Electron Gun of FLUTE its Stability}
+\Gls{flute} is a \gls{linac} based terahertz (THz) photon source currently under commission aiming to be a source of high field THz pulses, provide a test facility for accelerator research and an injection device for \gls{cstart} (see \cite{SchaeferHaererPapash2019_1000091183}) in the future. \cite{Naknaimueang:2011zz}
+
+\begin{figure}[tb]
+	\centering
+	\includegraphics[width=\textwidth]{chap/StabilityOfTheElectronGun/img/flutePaper.png}
+	\caption{Schematic of the finished accelerator showing all installed and planned components \cite{Yan2018}}
+	\label{fig:fluteEgun-flutePaper}
+\end{figure}
+
+
+\section{The Electron Gun}
+
+\begin{figure}[tb]
+	\centering
+	\includegraphics[]{chap/StabilityOfTheElectronGun/img/fluteSchem.tikz}
+	\caption{}
+	\label{fig:fluteEgun-rfschematic}
+\end{figure}
+
+\begin{figure}[tb]
+	\centering
+	\includegraphics[]{chap/StabilityOfTheElectronGun/img/gun.tikz}
+	\caption{Cross section drawing of the electron gun together with the solenoid showing the photo-cathode (red) and the electron and laser beam trajectories
+	\\(modified from \cite{Bossart:clic} and \cite{Bossart:288412})}
+	\label{fig:fluteEgun-gunDraw}
+\end{figure}
+
+\begin{figure}[tb]
+	\centering
+	\includegraphics[width=\textwidth,height=0.5\textwidth]{chap/StabilityOfTheElectronGun/img/Ez.tikz}
+	\caption{Plot of the electrical field in $z$ direction over the length of the gun cavity (redrawn from \cite{Bossart:clic} using geometrical measurements from \cite{Hoeninger2014})}
+	\label{fig:fluteEgun-Ezplot}
+\end{figure}
+
+\section{Energy Stability of the Emitted Electrons}
 
 \section{Metrics to quantify stability}\label{sec:metrics}
 ``Stability'' can have different meanings depending on the context. In case of signal processing, a signal is usually said to be \textit{stable} if it has only little variation around its mean or some target value, i.e. the mean has to be constant and the variance stays below some threshold. 
@@ -33,9 +67,5 @@ This novel approach compares the power of the most prominent noise power source 
 MPN_x := \frac{P_{noise,\,max}}{P_x}
 \end{equation}
 
-\section{Determine the Needed Stability for FLUTE Operation}
-
-
-\section{Analyzing the Current Stability}
 
 

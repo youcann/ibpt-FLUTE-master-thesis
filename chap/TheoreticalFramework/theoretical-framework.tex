@@ -15,18 +15,11 @@ The total energy of a particle is
 U=\underbrace{\left(\gamma-1\right)mc^2}_{\text{kinetic engery } W} + \underbrace{mc^2}_{\text{rest energy}} = \gamma mc^2.
 \end{equation}
 
-With the kinetic electron energy out of the FLUTE electron gun of $W=\SI{7}{\mega\eV}$, rearranging \autoref{eq:theoreticalFramework_gammabeta} and using in $W=\left(\gamma-1\right)mc^2$ yield
+With the kinetic electron energy out of the \gls{flute} electron gun of $W=\SI{7}{\mega\eV}$, rearranging \autoref{eq:theoreticalFramework_gammabeta} and using in $W=\left(\gamma-1\right)mc^2$ yield
 \begin{align}
 \gamma &= \frac{W}{m_e\,c^2}+1=\num{14.699}\\
 \beta &= \sqrt{1-\nicefrac{1}{\gamma^2}}=\num{0.99768}.
 \end{align}
-
-
-\section{Beam Diagnostic Devices for Linear Accelerators}
-All (linear) particle accelerators need diagnostic devices to monitor the beam sizes, shapes, positions, length or charge.
-
-\paragraph{Beam Position Monitor (BPM)}
-\paragraph{Faraday Cup}
 
 \section{Signal Analysis}
 \subsection{Auto correlation and Cross correlation}
@@ -37,7 +30,7 @@ r_{xy}[n_1,n_2] = \text{E}\left\{(x[n_1]-\mu_x[n_1])(y[n_2]-\mu_y[n_2])^\ast\rig
 
 For the special case of $y[n]:=x[n]$, $r_{xx}[n_1,n_2]$ is called \textit{auto covariance} and is a measure of self similarity of $x[n]$ \cite[p.~172]{Park2017}.
 
-The processes $x[n]$ and $y[n]$ are called \textit{wide sense stationary} (WSS) if the following two properties hold \cite[p.~167]{Park2017}. 
+The processes $x[n]$ and $y[n]$ are called \textit{\gls{wss}} if the following two properties hold \cite[p.~167]{Park2017}. 
 First, their means $\mu_{\xi}[n]$ are constant, i.e. they do not depend on the sample index:
 \begin{align}
 \mu_{x}[n] &= \mu_x\\
@@ -48,7 +41,7 @@ Also the auto covariance does not depend on the absolute sample indices $n_1$ an
 r_{xy}[n_1,n_2] = r_{xy}[m],\qquad \text{with: } m:=n_2-n_1
 \end{equation}
 
-If both process in \autoref{eq:crosscovariance} are WSS, \autoref{eq:crosscovariance} simplifies to
+If both process in \autoref{eq:crosscovariance} are \gls{wss}, \autoref{eq:crosscovariance} simplifies to
 \begin{equation}
 r_{xy}[m] = \text{E}\left\{(x[n]-\mu_x)(y[n-m]-\mu_y)^\ast\right\}.
 \end{equation}
@@ -66,7 +59,7 @@ Then the auto covariance can be estimated with
 
 
 \subsection{Estimating the Spectrum of a Stochastic Process}
-For a deterministic, time-discrete signal $x[n] \in \mathcal{L}_1$, the discrete Fourier transform (DFT) exists\cite{Lapidoth2019} and is defined as
+For a deterministic, time-discrete signal $x[n] \in \mathcal{L}_1$, the \gls{dft} exists\cite{Lapidoth2019} and is defined as
 \begin{equation}
 X[k] = \sum_{n=0}^{N-1} x[n]\,\text{e}^{-j\frac{2\pi}{N}k\,n}\qquad k,n \in [0,\,N-1],
 \end{equation}
@@ -76,13 +69,13 @@ Therefore, $S_{xx}$ is defined as
 \begin{equation}
 S_{xx} = \left|X[k]\right|^2
 \end{equation}
-and called the \textit{energy spectral density (ESD)}.
+and called the \textit{\gls{esd}}.
 
 If $x[n]$ is the realization of a stochastic process, then it is of random nature rather than deterministic.
-Because realizations of physical processes do not posses finite energy, they are not in the $\mathcal{L}_1$ set and their DFT is not defined \cite[p.~5]{Stoica1997}.
+Because realizations of physical processes do not posses finite energy, they are not in the $\mathcal{L}_1$ set and their \gls{dft} is not defined \cite[p.~5]{Stoica1997}.
 
-In this case instead of an energy spectral density, the spectrum of the average power of the process, called the \textit{power spectral density (PSD)}, can be used instead.
-To compute the PSD, there are two possibilities:
+In this case instead of an energy spectral density, the spectrum of the average power of the process, called the \textit{\gls{psd}}, can be used instead.
+To compute the \gls{psd}, there are two possibilities:
 \begin{align}
 \Phi_{xx}[k] &= \sum_{m=-\infty}^{\infty} r[m]\,\text{e}^{-j\frac{2\pi}{N}k\,m} \label{eq:phixx1}\\
 \Phi_{xx}[k] &= \lim_{N\rightarrow\infty} \text{E}\left\{\frac{1}{N}\left|\sum_{n=0}^{N-1} x[n]\,\text{e}^{-j\frac{2\pi}{N}k\,n}\right|^2 \right\} \label{eq:phixx2}
@@ -108,7 +101,7 @@ Both methods yield equal results, if $r[m]$ is estimated with the biased estimat
 \hat{r}_{\text{unbiased}}[m] = \frac{1}{N-m} \sum_{n=m+1}^{N} x[n]\,x^\ast[n-m]\qquad m \in [0,\,N-1].
 \end{equation}
 
-\cite{Rowell2008} shows one key weakness of the unmodified periodogram method in \autoref{eq:periodogram}: The variance does not decrease significantly with more samples $N$. Instead the variance of the periodogram for each frequency approaches the square of the actual PSD:
+\cite{Rowell2008} shows one key weakness of the unmodified periodogram method in \autoref{eq:periodogram}: The variance does not decrease significantly with more samples $N$. Instead the variance of the periodogram for each frequency approaches the square of the actual \gls{psd}:
 \begin{equation}
 \lim_{N\rightarrow\infty} \text{Var}\left\{\hat{\Phi}_{p,\,xx}[k]\right\} = \Phi_{xx}^2[k]
 \end{equation}
@@ -143,7 +136,7 @@ Compared to the Barlett method, the overlapping of up to \SI{50}{\percent} (see 
 \end{equation}
 
 
-In case of a non-stationary signal $x[n]$, one possibility to analyze and display the spectral content is the use of the short time Fourier transform (STFT) and the spectrogram, which is a two dimensional power spectral density function mapping frequency and time to a third coordinate like height, intensity or color.
+In case of a non-stationary signal $x[n]$, one possibility to analyze and display the spectral content is the use of the \gls{stft} and the spectrogram, which is a two dimensional power spectral density function mapping frequency and time to a third coordinate like height, intensity or color.
 
 To calculate the spectrogram, the signal is split into segments with the sliding window $w[n-m]$ for which duration the signal is assumed to be stationary. For each segment at time index $m$, the periodogram is calculated according to
 \begin{equation}
@@ -194,9 +187,9 @@ Y(s)&=G(s)P(s)E(s)+D(s)\quad\text{with:}\quad E(s)=-H(s)Y(s)\\
 
 \subsection{Stability}
 The application of a controller to a system is only useful if the resulting system has a stable behavior.
-One possible definition of stability is the bounded input bounded output (BIBO) criterion\cite[p.~82]{Foellinger2016}:
+One possible definition of stability is the \gls{bibo} criterion\cite[p.~82]{Foellinger2016}:
 \begin{definition}\label{def:bibo}
-(\textit{BIBO stability}) A LTI system is said to be BIBO stable if for some $M,N \in \mathbb{R}^+$, the response to a bounded input $|u(t)| \le M$ results in a bounded output $|y(t)| \le N$.
+(\textit{BIBO stability}) A \gls{lti} system is said to be \gls{bibo} stable if for some $M,N \in \mathbb{R}^+$, the response to a bounded input $|u(t)| \le M$ results in a bounded output $|y(t)| \le N$.
 \end{definition}
 
 For a given control system, one way to analyze its stability is to plot the locus $z=F_o(s=j2\pi f)$ of the open loop frequency response

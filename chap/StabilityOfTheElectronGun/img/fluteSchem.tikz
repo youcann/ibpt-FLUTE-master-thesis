@@ -1,0 +1,72 @@
+\begin{tikzpicture}
+\usetikzlibrary{shapes}
+\draw (0,-0.5) node[align=left,xshift=8,anchor=south] {\footnotesize \SI{230}{\volt}}-- (11,-0.5);
+\draw[] (11,-0.5) -- (13,-0.5);
+
+\begin{scope}[shift={(0.75,-1.5)}]
+\node[align=center,anchor=south] at (1.5/2,1.55) {\footnotesize Current Source\\\footnotesize\textcolor{blue!80}{$I=\SI{200}{\milli\ampere}$}};
+\draw[fill=gray!20] (0,0) rectangle +(1.5,1.5);
+\draw[] (0,0) -- (1.5,1.5);
+\node[] at (0.3,1.2) {$\sim$};
+\node[] at (1.2,0.2) {$=$};
+\end{scope}
+
+\begin{scope}[shift={(0.75+3*1,-1.5)}]
+\node[align=center,anchor=south] at (1.5/2,1.5) {\footnotesize Pulse Forming Network\\\footnotesize\textcolor{blue!80}{$T_{pulse}=\SI{4.5}{\micro\second}$}};
+\draw[fill=gray!20] (0,0) rectangle +(1.5,1.5);
+\draw (0,1) to[/tikz/circuitikz/bipoles/length=0.5cm,D] (0.75,1);
+\draw (0.75,1) to[/tikz/circuitikz/bipoles/length=0.5cm,C,*-] +(0,-0.75) node[/tikz/circuitikz/bipoles/length=0.5cm,rground] {};
+\tikzset{style=american}
+\draw (0.75,1) -- (1,1) to[/tikz/circuitikz/bipoles/length=0.5cm,inductor,*-] +(0,-0.75) node[/tikz/circuitikz/bipoles/length=0.5cm,rground] {};
+\draw (0.75,1) -- (1,1) to[/tikz/circuitikz/bipoles/length=0.5cm,nos] (1.5,1) ;
+\end{scope}
+
+\begin{scope}[shift={(0.75+6*1,-1.5)}]
+\node[align=center,anchor=south] at (1.5/2,1.5) {\footnotesize Transformer\\\footnotesize\textcolor{blue!80}{$\frac{N_s}{N_p}=\frac{1}{17}$}};
+\tikzset{style=american}
+\draw[fill=gray!20] (0,0) rectangle +(1.5,1.5);
+\node[/tikz/circuitikz/bipoles/length=0.5cm,transformer] (t) at (0.75,0.63) {};
+\draw (0,1) |- (t.A1) ;
+\draw (t.B1) -| (1.5,1) ;
+\draw (t.A2) --  +(0,0) node[/tikz/circuitikz/bipoles/length=0.5cm,rground] {} ;
+\draw (t.B2) --  +(0,0) node[/tikz/circuitikz/bipoles/length=0.5cm,rground] {} ;
+\end{scope}
+
+\begin{scope}[shift={(0.75+9*1,-1.5)}]
+\node[align=center,anchor=south] at (1.5/2,1.5) {\footnotesize Klystron\\\footnotesize\textcolor{blue!80}{$P_{out}=\SI{50}{\mega\watt}$}\\\footnotesize\textcolor{blue!80}{$f_{out}=\SI{3}{\GHz}$}\\\footnotesize\textcolor{blue!80}{$G\approx\SI{50}{\dB}$}};
+\draw[fill=gray!20] (0,0) rectangle +(1.5,1.5);
+\draw (0,1) -- (0.3,1) -- (0.3,1.3) -| (0.85,0.75);
+\draw[] (0.75,0.75) -- (1.2,0.75) |- (1.5,1);
+\begin{scope}[shift={(0.75,0.75)}]
+\begin{scope}[scale=0.4]
+\draw[fill=white] (-0.5,1) -- (-0.5,-1) -- (1,0) -- cycle;
+\end{scope}
+\end{scope}
+\end{scope}
+
+\begin{scope}[shift={(0.75+12*1,-1.5)}]
+\node[align=center,anchor=south,font=\footnotesize] at (1.5/2,1.5) {E-Gun \\ (photo cathode \\+ RF cavity)};
+\draw[fill=gray!20] (0,0) rectangle +(1.5,1.5);
+\draw[] (0,1) -- (0.75,1);
+\draw[fill=white] (0.4,0.75) ellipse (0.2 and 0.5);
+\draw[fill=white,draw=none] (0.4,1.25) rectangle (1.1,0.25);
+\draw (0.4,1.25) -- (1.1,1.25);
+\draw (0.4,0.25) -- (1.1,0.25);
+\draw[fill=white] (1.1,0.75) ellipse (0.2 and 0.5);
+\end{scope}
+
+\node[draw,circle,fill=gray!20,label={[align=center]\footnotesize Oscillator\\\footnotesize \textcolor{blue!80}{$\SI{3}{\GHz}$}},minimum size=0.75cm]  (osc) at (0.75+6*1+0.75,-3.5) {$\sim$};
+\draw[] (osc) -| node[pos=0.65,fill=white,regular polygon,regular polygon sides=3, draw, shape border rotate=0,label={[align=center,anchor=west]\footnotesize Pre-Amp\\\footnotesize \textcolor{blue!80}{$\SI{200}{\watt}$}}] {} (10.05,-0.75) -- +(0.25,0);
+
+\draw[dashed] (1.5,-3.5) -| (5,-0.5);
+\draw[dashed,->] (5,-3.5) -- (osc);
+\begin{scope}[shift={(1.5,-3.5)}]
+\node[draw,circle,minimum size=0.75cm,fill=gray!20,label={[align=center]\footnotesize Trigger\\\footnotesize \textcolor{blue!80}{$\SI{5}{\Hz}$}}] {};
+\begin{scope}[scale=0.4,yshift=-0.35cm]
+\draw (-0.5,0) -| (-0.1,1) -- (0.1,1) |- (0.5,0);
+\end{scope}
+\end{scope}
+
+\draw[->,dashed] (13.8,-0.75) -- node[pos=0.9,anchor=south] {$e^-$}+(1,0);
+
+\end{tikzpicture}

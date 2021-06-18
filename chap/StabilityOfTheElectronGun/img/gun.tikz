@@ -1,0 +1,13 @@
+\begin{tikzpicture}
+\node {\includegraphics[width=6cm]{chap/StabilityOfTheElectronGun/img/gun2.png}};
+\draw [decorate,decoration={brace,amplitude=10pt}] (-3,5) -- (0.7,5) node [black,midway,yshift=0.6cm] {\scriptsize Gun Section};
+\draw [decorate,decoration={brace,amplitude=10pt}] (1,5) -- (3,5) node [black,midway,yshift=0.6cm] {\scriptsize Solenoid};
+
+\node[align=center,font=\scriptsize] at(1.89,-2.8) {Coil};
+\node[align=center,font=\scriptsize,fill=white,inner sep=1mm] at(1.89,-3.28) {Iron Yoke};
+\node[align=center,font=\scriptsize] at(0.13,1.79) {Wave\\Guide};
+
+\draw[->,thick,blue] (-1.29,0.62) -- +(7.5,-0.005) node[anchor=south east] {Electron Beam};
+\draw[-<,thick,green] (-1.29,0.62) -- +(7.5,-0.19) node[anchor=north east] {Laser Beam};
+
+\end{tikzpicture}
