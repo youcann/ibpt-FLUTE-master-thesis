@@ -1,28 +1,34 @@
 \chapter{Theoretical Framework}
-\section{Linear Accelerators}
-In a linear particle accelerator (LINAC) charged particles ,such as electrons, are accelerated to increase their total energy over their energy at rest.
+\section{Relativistic Electrons}
+In a (linear) particle accelerator, charged particles, such as electrons, are accelerated to increase their total energy over their energy at rest.
 
-Compared to heavier particles, such as protons ($m_p=\SI{938.27}{\mega\eV\per c\squared}$), electrons are fairly light ($m_p=\SI{0.511}{\mega\eV\per c\squared}$). Therefore they need to be brought to speeds comparable to the speed of light to achieve an useful energy increase. For this reason relativistic mechanics are needed to describe their movements.\footnote{As relativistic mechanics are a super set of classical mechanics, the equations also apply for slower particles.} \cite{Hinterberger1997}
+Compared to heavier particles, such as protons ($m_p=\SI{938.27}{\mega\eV\per c\squared}$), electrons are light particles ($m_p=\SI{0.511}{\mega\eV\per c\squared}$). They are typically accelerated to speeds comparable to the speed of light to achieve kinetic energies usable for scientific experiments. For this reason, relativistic mechanics are needed to describe their movements.\footnote{As relativistic mechanics are a super set of classical mechanics, the equations also apply for slower particles.} \cite{Hinterberger1997}
 
 With the speed of light $c=\SI{2.998e8}{\m\per\s}$ and the particle velocity $v$, it is common to define \cite{Wangler2008}:
 \begin{align}\label{eq:theoreticalFramework_gammabeta}
 \text{(normalized velocity)}\qquad\beta &= \frac{v}{c}\\
-\text{(relativistic mass factor)}\qquad\gamma &= \frac{1}{\sqrt{1-\beta^2}}
+\text{(relativistic mass factor)}\qquad\gamma &= \frac{1}{\sqrt{1-\beta^2}} \\
+\text{(relativistic momentum)}\qquad p &= \gamma m v 
 \end{align}
 
-The total energy of a particle is
+The total energy of a particle is \cite{Hinterberger1997}
 \begin{equation}
-U=\underbrace{\left(\gamma-1\right)mc^2}_{\text{kinetic engery } W} + \underbrace{mc^2}_{\text{rest energy}} = \gamma mc^2.
+E=\sqrt{(mc^2)^2+(pc)^2},\qquad\text{with the rest energy } mc^2
+\end{equation}
+and the kinetic energy is
+\begin{equation}
+T=E-mc^2.
 \end{equation}
 
-With the kinetic electron energy out of the \gls{flute} electron gun of $W=\SI{7}{\mega\eV}$, rearranging \autoref{eq:theoreticalFramework_gammabeta} and using in $W=\left(\gamma-1\right)mc^2$ yield
+With electrons leaving the \gls{flute} electron gun with a momentum of $p=\SI{7}{\MeV\per c}$, this is equivalent to
 \begin{align}
-\gamma &= \frac{W}{m_e\,c^2}+1=\num{14.699}\\
-\beta &= \sqrt{1-\nicefrac{1}{\gamma^2}}=\num{0.99768}.
+E=\sqrt{(m_ec^2)^2+(pc)^2} &= \SI{7.0186271886}{\MeV}\\
+\gamma = \frac{E}{m_ec^2} &= \num{13.73511}\\
+\beta = \sqrt{1-\gamma^-2} &= 0.9973
 \end{align}
 
 \section{Signal Analysis}
-\subsection{Auto correlation and Cross correlation}
+\subsection{Auto Correlation and Cross Correlation}
 The \textit{cross covariance} between two stochastic processes $x[n]$ and $y[n]$ is a measure of the similarity between $x[n]$ at index $n_1$ and $y[n]$ at index $n_2$ and is defined as
 \begin{equation}\label{eq:crosscovariance}
 r_{xy}[n_1,n_2] = \text{E}\left\{(x[n_1]-\mu_x[n_1])(y[n_2]-\mu_y[n_2])^\ast\right\}.
@@ -201,4 +207,37 @@ For the special case of a stable open loop $F_o(s)$ \footnote{The stability of $
 \begin{definition}\label{def:Nyquist}
 (\textit{Nyquist stability criterion}) If the open loop $F_o(s)$ is stable, then the closed loop is stable if $z=F_o(s=j2\pi f)$ does not go through or encircles $z=-1$.
 \end{definition}
+
+
+\section{Metrics to Quantify the Stability of a Signal}\label{sec:metrics}
+``Stability'' can have different meanings depending on the context. In case of signal processing, a signal is usually said to be \textit{stable} if it has only little variation around its mean or some target value, i.e. the mean has to be constant and the variance stays below some threshold. 
+Stability is not to be confused with stationarity, which requires the mean and the variance and the autocorrelation stay constant over time \cite{Guthrie2020}. To express stability as a single numerical value, there are several possibilities, some are described in the following.
+
+\paragraph{Relative Standard Deviation}
+This measures the stability as the standard deviation but related to the mean value to make it comparable to other quantities with different scaling or units.
+
+The relative, or percentual, standard deviation of the stationary stoachastic process $X$ is defined using the mean $\mu_X$ and the standard deviation $\sigma_X$ as
+\begin{equation}
+\op{\%STD_X} := \frac{\sigma_X}{\mu_X}.
+\end{equation}
+Is the process $X$ non stationary, $\op{\%STD_X}$ depends on the absolute time $t$ and the window size $T$ for which the process is assumed to be stationary:
+\begin{equation}
+\op{\%STD_X} = \op{\%STD_X}(t,T)
+\end{equation}
+In that case, for a fixed window size $T=T_0$, a mean percentual standard deviation can be computed with (assuming discrete time steps $t_n$, $n\in[0,N-1]$)
+\begin{equation}
+\op{\%STD_X}(T=T_0) = \frac{1}{N} \sum_{n=0}^{N-1} \op{\%STD_X}(t_n,T_0)
+\end{equation}
+
+\paragraph{Mean Squared Error}
+The mean squared error sums up the squared errors $\left(x[n] - x_t[n]\right)^2$ of $x[n]$ from a set value $x_t[n]$. To remove the effect of the length of the data sequence, the sum is devided by the length of the sequence $N$:
+\begin{equation}
+MSE_x := \frac{1}{N} \sum_{n=0}^{N-1} \left(x[n] - x_t[n]\right)^2
+\end{equation}
+
+\paragraph{Relative Power of Most Prominent Noise}
+This novel approach compares the power of the most prominent noise power source $P_{noise,\,max}$ of the signal $x$ with the total power $P_x$:
+\begin{equation}
+MPN_x := \frac{P_{noise,\,max}}{P_x}
+\end{equation}
 

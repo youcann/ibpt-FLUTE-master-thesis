@@ -81,8 +81,8 @@
 
 \SelectLanguage{english}
 \newcommand{\thesisauthor}{Marvin-Dennis Noll}
-\newcommand{\thesistopic}{Stability Improvements at FLUTE}
-\newcommand{\thesisentopic}{Verbesserung der Stabilität von FLUTE}
+\newcommand{\thesistopic}{Development of a Control System to Improve the Stability of the FLUTE Electron Gun}
+\newcommand{\thesisentopic}{Entwicklung einer Regelung zur Verbesserung der FLUTE Elektronen-Kanone}
 \newcommand{\thesislongtopic}{}
 \newcommand{\thesisinstitute}{Institute for Beam Physics and Technology}
 \newcommand{\thesisreviewerone}{Prof. Dr.-Ing. John Jelonnek (IHM)}
@@ -90,16 +90,16 @@
 \newcommand{\thesisadvisorone}{Dr. Nigel Smale (IBPT)} % to use: enter names and uncomment in titlepg
 \newcommand{\thesisadvisortwo}{}
 \newcommand{\thesistimestart}{15.11.2020} % on titlepage
-\newcommand{\thesistimeend}{01.07.2021} % on titlepage
-\newcommand{\thesistimehandin}{01.07.2021} % on second page 'preamble'
+\newcommand{\thesistimeend}{07.07.2021} % on titlepage
+\newcommand{\thesistimehandin}{16.07.2021} % on second page 'preamble'
 \newcommand{\thesispagehead}{Master Thesis: \thesisentopic} % page heading
 
 \hypersetup
 {
     pdfauthor={\thesisauthor},
-    pdftitle={Masterarbeit: \thesistopic},
+    pdftitle={Master thesis: \thesistopic},
     pdfsubject={\thesislongtopic},
-    pdfkeywords={kit,physics,master,thesis,\thesisauthor}
+    pdfkeywords={kit,physics,master,thesis,flute,ibpt\thesisauthor}
 }
 
 \begin{document}
@@ -113,7 +113,7 @@
     \tableofcontents                    % listoftables on new pages
     \listoffigures
     \listoftables
-    \printglossaries
+    \clearpage\begingroup\let\newpage\relax\printglossary\endgroup
     \endgroup
     \cleardoublepage
 
@@ -121,12 +121,12 @@
     \MainMatter
 	\input{chap/Abstract/abstract.tex}
 	
-	%\input{chap/Introduction/introduction.tex}
-	%\input{chap/TheoreticalFramework/theoretical-framework.tex}
+	\input{chap/Introduction/introduction.tex}
+	\input{chap/TheoreticalFramework/theoretical-framework.tex}
 	\input{chap/StabilityOfTheElectronGun/stability-of-the-electron-gun.tex}
-	%\input{chap/InterfacingFlute/interfacing-flute.tex}
-	%\input{chap/ControllerDesignAndEvaluation/controller-design-and-evaluation.tex}
-	%\input{chap/SummaryAndOutlook/summary-and-outlook.tex}
+	\input{chap/InterfacingFlute/interfacing-flute.tex}
+	\input{chap/ControllerDesignAndEvaluation/controller-design-and-evaluation.tex}
+	\input{chap/SummaryAndOutlook/summary-and-outlook.tex}
 
     \Appendix
     \addtocontents{toc}{\protect\setcounter{tocdepth}{1}}

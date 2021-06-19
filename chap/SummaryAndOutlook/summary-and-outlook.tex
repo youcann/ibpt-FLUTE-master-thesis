@@ -1,1 +1,12 @@
 \chapter{Summary and Outlook}
+For the operational phase of \gls{flute}, a stable electron generation will be vital to perform scientific experiments. But also in its current commissioning phase, having a stable electron gun is highly desired. Not only for setting up the beam diagnostic devices, but also for intermediate- and pre-experiments and the comissioning phase of the \gls{linac} section a reliable low energy section is expected.
+
+At the start of the thesis, the stability of the gun was unsatisfactory. As the main source of the instability, the cooling system of the electron gun's body could be identified. But there are other systems and effects that negatively influence the electron generation. These still have not been fully identified and understood, yet.
+
+However this thesis shows that with a control system that interacts with the low power input signal of the klystron, it is possible to improve the stability by creating a closed-loop feedback system using readouts from the \gls{epics} control system as ``sensors'' and a controllable \gls{rf} attenuator in the signal path as ``actuator''. The system transfer function (plant) between the attenuator and the power in the electron gun cavity shows $PT_2$ behavior, so control with a \gls{pid} controller is possible and its positive effects on the stability are shown.
+
+However the studies here also show the limitations of a traditional \gls{lti} control system. The parameterization of the necessary measurement filter is a trade-off between stability of the controller and noise in the system, which in both cases degrades output stability.
+
+The control system could be further optimized by switching to a totally different controller architecture. A possible choice might be model predictive control, which exploits the already identified plant transfer function but determines the output through an optimization process rather than a linear system.
+
+Also the future of the current electron gun and \gls{rf} supply is unclear. Switching to another gun and/or a more modern power supply could render the implemented control system in its current form obsolete. However the general principles would still apply and the system could be adopted if needed.

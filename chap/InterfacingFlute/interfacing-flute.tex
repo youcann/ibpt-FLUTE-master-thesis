@@ -502,12 +502,34 @@ The other requirements from \autoref{tab:interfacingFlute_rfattenrequirements} a
 \end{table}
 
 \subsection{Test of the Attenuator with FLUTE}
+In this section the attenuator in mounted at \gls{flute} and its function is verified against the data gathered in the lab in earlier sections.
+
+The attenuator is installed at its final mounting location inside the \gls{llrf} cabinet in the \gls{flute} bunker basement and is connected between the output of the vector modulator (after the oscillator, not shown in \autoref{fig:fluteEgun-rfschematic}) and the input of the pre-amplifier. With the controllable attenuator at its operating point, the signal path now contains an attenuation of about \SI{6}{\dB} at all times. To compensate for, the attenuation at another another attenuator inside the \gls{llrf} system is lowered accordingly.
+
+After all components of \gls{flute} are warmed up to operational temperatures, the attenuation versus control voltage curve $A(V_\text{control})$ is measured again (compare the lab measurement \autoref{fig:interfacingFlute_attenDatten}).
+
+To do so, the control voltage $V_\text{control}$ is varied in \SI{0.5}{\volt} steps (see \autoref{fig:interfacingFlute_finalTest_calv}), with each step kept for \SI{20}{\minute}. Synchronous to that, the \gls{rf} power of the cavity is recorded (see \autoref{fig:interfacingFlute_finalTest_calp}), from which the attenuation $A$ can be calculated. Computing the averaging over each step yields $A(V_\text{control})$. It is depicted in \autoref{fig:interfacingFlute_finalTest} together with its uncertainty.
+
 
 \begin{figure}[tb]
 	\centering
-	\includegraphics[width=\textwidth,height=0.5\textwidth]{chap/InterfacingFlute/img/Output/attenFluteErrorbars.tikz}
-	\caption{}
-	\label{fig:aaaa}
+	\includegraphics[width=\textwidth,height=0.4\textwidth]{chap/InterfacingFlute/img/Output/cal/cal_V.tikz}
+	\caption{Time signal $V_\text{control}$ used to calculate \autoref{fig:interfacingFlute_finalTest}}
+	\label{fig:interfacingFlute_finalTest_calv}
+\end{figure}
+
+\begin{figure}[tb]
+	\centering
+	\includegraphics[width=\textwidth,height=0.4\textwidth]{chap/InterfacingFlute/img/Output/cal/cal_P.tikz}
+	\caption{Time signal $A(V_\text{control})$ used to calculate \autoref{fig:interfacingFlute_finalTest}}
+	\label{fig:interfacingFlute_finalTest_calp}
+\end{figure}
+
+\begin{figure}[tb]
+	\centering
+	\includegraphics[width=\textwidth,height=0.7\textwidth]{chap/InterfacingFlute/img/Output/attenFluteErrorbars.tikz}
+	\caption{Measured $A(V_\text{control})$ with \gls{flute}; error bars show the span between minimum and maximum values in each $V_\text{control}$ step}
+	\label{fig:interfacingFlute_finalTest}
 \end{figure}
 
 

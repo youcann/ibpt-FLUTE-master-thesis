@@ -55,7 +55,7 @@
 \draw[fill=white] (1.1,0.75) ellipse (0.2 and 0.5);
 \end{scope}
 
-\node[draw,circle,fill=gray!20,label={[align=center]\footnotesize Oscillator\\\footnotesize \textcolor{blue!80}{$\SI{3}{\GHz}$}},minimum size=0.75cm]  (osc) at (0.75+6*1+0.75,-3.5) {$\sim$};
+\node[draw,circle,fill=gray!20,label={[align=center]\footnotesize Oscillator\\\footnotesize \textcolor{blue!80}{$\SI{2.99855}{\GHz}$}},minimum size=0.75cm]  (osc) at (0.75+6*1+0.75,-3.5) {$\sim$};
 \draw[] (osc) -| node[pos=0.65,fill=white,regular polygon,regular polygon sides=3, draw, shape border rotate=0,label={[align=center,anchor=west]\footnotesize Pre-Amp\\\footnotesize \textcolor{blue!80}{$\SI{200}{\watt}$}}] {} (10.05,-0.75) -- +(0.25,0);
 
 \draw[dashed] (1.5,-3.5) -| (5,-0.5);

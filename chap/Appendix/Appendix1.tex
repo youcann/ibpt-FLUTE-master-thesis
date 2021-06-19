@@ -10,7 +10,6 @@
 		\toprule
 		\textbf{Specification} & \textbf{Value}\\
 		\midrule
-		\multicolumn{2}{c}{DC volt}\\
 		Digits & 6~\nicefrac{1}{2}\\
 		Measurement method & cont integrating multi-slope IV A/D converter\\
 		Accuracy (\SI{10}{\volt} range, 24 hours) & \SI{0.0015}{\percent}+\SI{0.0004}{\percent} (\si{\percent} of reading + \si{\percent} of range)\\
@@ -42,7 +41,6 @@
 		\toprule
 		\textbf{Specification} & \textbf{Value}\\
 		\midrule
-		\multicolumn{2}{c}{DC volt}\\
 		Digits & 7~\nicefrac{1}{2}\\
 		Measurement method & cont integrating multi-slope IV A/D converter\\
 		Accuracy (\SI{10}{\volt} range, 24 hours) & \SI{0.0008}{\percent}+\SI{0.0002}{\percent} (\si{\percent} of reading + \si{\percent} of range)\\
@@ -98,37 +96,6 @@
 \end{table}
 
 
-\subsection{Oscilloscopes}
-\subsubsection{Tektronix MSO64}\label{app:tektronix-MSO64}
-\begin{table}[H]
-	\centering
-	\caption{Tektronix MSO64 specifications}
-	\label{tab:tektronix-MSO64-specs}
-	\begin{tabularx}{\textwidth}{ll}
-		\toprule
-		\textbf{Specification} & \textbf{Value}\\
-		\midrule
-		Bandwidth & \SI{6}{\GHz} \\
-		Sample rate & \SI{25}{\giga S \per\second}\\
-		ADC resolution & \SI{12}{bit}\\
-		DC gain accuracy (@ \SI{50}{\ohm}, >\SI{2}{\mV\per div}) & \SI{+-2}{\percent}\\
-		\bottomrule
-	\end{tabularx}
-\end{table}
-
-\begin{table}[H]
-	\centering
-	\caption{Tektronix MSO64 some SCPI commands}
-	\label{tab:tektronix-MSO64-scpi}
-	\begin{tabularx}{\textwidth}{Xll}
-		\toprule
-		\textbf{Description} & \textbf{Example command} & \textbf{Example return}\\
-		\midrule
-		Read mean of measurement 1 (current acq.) & \texttt{MEASUrement:MEAS1:RESUlts:CURR:MEAN?} & \texttt{3.0685821787408} \\
-		\bottomrule
-	\end{tabularx}
-\end{table}
-
 \subsection{RF signal generator}
 \subsubsection{Rohde and Schwarz SMC100A}
 \begin{table}[H]
@@ -174,7 +141,7 @@
 		\midrule
 		Digits & 4\\
 		Accuracy (abs. without power sensor) & \SI{+-0.02}{\dB} \\
-		\multicolumn{2}{c}{\textbf{Power probe: E4412A}}\\
+		\multicolumn{2}{c}{Power probe: E4412A}\\
 		Frequency range & \SI{10}{\MHz} to \SI{18}{\GHz}\\
 		Power range & \SI{-70}{dBm} to \SI{20}{dBm}\\
 		\bottomrule
