@@ -1,0 +1,26 @@
+\begin{tikzpicture}
+\node[circle,draw,align=center,minimum width=1cm] (sum1) at (0,0) {\Large $+$};
+\node[rectangle,draw,align=center,minimum width=2cm,minimum height=1.5cm] (c) at (2,0) {Controller\\$G(s)$};
+\node[circle,draw,align=center,minimum width=1cm] (sum3) at (3.95,0) {\Large $+$};
+\node[rectangle,draw,align=center,minimum width=1.2cm,minimum height=1.5cm,fill=yellow!50] (g1) at (5.5,0) {Plant\\$P_1(s)$};
+\node[rectangle,draw,align=center,minimum width=1.2cm,minimum height=1.5cm,fill=yellow!50] (g2) at (8.5,0) {Plant\\$P_2(s)$};
+\node[circle,draw,align=center,minimum width=1cm] (sum2) at (7,0) {\Large $+$};
+\node[rectangle,draw,align=center,minimum width=2.5cm,minimum height=1.5cm] (f) at (5,-2.5) {Filter\\$H(s)$};
+\node[rectangle,draw,align=center,minimum width=1.2cm,minimum height=1.5cm,fill=green!50] (d) at (5.5,2.5) {D. Filt\\$D(s)$};
+
+\draw[{Latex[length=3mm]}-] (sum1) -- node[pos=0.8,anchor=south] {$x(t)$} +(-1.75,0);
+\draw[-{Latex[length=3mm]}] (sum1) -- node[pos=0.5,anchor=south] {} (c);
+\draw[-{Latex[length=3mm]}] (c) -- node[pos=0.5,anchor=south] {} (sum3);
+\draw[-{Latex[length=3mm]}] (sum3) -- node[pos=0.5,anchor=south] {} (g1);
+\draw[-{Latex[length=3mm]}] (g1) -- node[pos=0.5,anchor=south] {} (sum2);
+\draw[-{Latex[length=3mm]}] (sum2) -- node[pos=0.5,anchor=south] {} (g2);
+\draw[-{Latex[length=3mm]}] (g2) -- node[pos=0.8,anchor=south] {$y(t)$} +(1.75,0);
+
+\draw[-{Latex[length=3mm]},dashed] (d) -| node[pos=0.8,anchor=south] {} (sum3);
+\draw[dashed] (d) --  node[fill,circle,minimum width=0.75ex,inner sep=0,pos=1] {} +(1.5,0);
+
+\draw[-{Latex[length=3mm]}] (g2)+(1,0) |-  node[fill,circle,minimum width=0.75ex,inner sep=0,pos=0] {} (f); %todo
+
+\draw[-{Latex[length=3mm]}] (f) -|node[pos=0.1,anchor=south] {$r(t)$} node[pos=0.9,anchor=west] {$-$}  (sum1);
+\draw[{Latex[length=3mm]}-] (sum2) -- node[pos=0.9,anchor=west] {$d(t)$} +(0,3.5);
+\end{tikzpicture}

@@ -636,12 +636,74 @@ This shows for example the mean squared error is improved by a factor of about \
 \end{table}
 
 \section{Further Improvements to the Control System}
-\subsection{Disturbance Feed-Forward Of the Gun Temperature}
+In this section, two method for improving the control system's performance are examined. First the closed-feedback loop is supplemented with an additional input for one disturbance source, the gun's body temperature. A different approach tested is switching from the gun cavity \gls{rf} power to the electron charge, as measured by the Faraday cup at the end of the low-energy section, as the controlled signal.
+
+\subsection{Changing the Controller Architecture: Disturbance Feed-Forward of the Gun Temperature}
+Instead of changing only the parameter of the \gls{pid} controller or switching to another type of controller, the strategy presented here relies on changing the architecture over the standard form (see \autoref{fig:theoreticalFramework-feedback-architecture}) to include a feed-forward path\footnote{The calculations here are done in continuous time to be comparable with the control system model in \autoref{sec:feedbackcontrol}}.
+
+To use the disturbance $d(t)$ ($|d(t)|<\infty$) explicitly in the control system, it has to be measurable separately from the control system's output $y(t)$. This can practically only be done if either all disturbance sources or the dominant ones can be identified and measured with some physical sensor. If the signal $d(t)$ is obtainable, it can be fed into the signal path near the controller. In the literature, two locations for the disturbance signal to be injected to are described. The method used decides, among other things, which (if any) filtering of $d(t)$ has to be done.
+
+One technique is to regard the disturbance to be similar to the error signal $e(t)$, i.e. the controller input. \cite{Brosilow2002} In this case, the pre-processing, in general, has to include a scaling operation, because the units and magnitudes of $e(t)$ and $d(t)$ are different. If $d(t)$ has non-zero mean, it needs to be subtracted to achieve linear behavior. This means, the needed disturbance filter is
+\begin{equation}
+D_1(s)=k_\text{disturbance,1} D'(s),\qquad \text{with } D'(s)=\mathcal{L}\left\{d(t)-\mu_{d(t)}\right\}.
+\end{equation}
+
+The second method is to add the filtered disturbance signal to the controller output. \cite{Foellinger2016,electronics7100223} In general, this also requires the same pre-processing as before,
+\begin{equation}
+D_2(s)=k_\text{disturbance,2} D'(s),\qquad \text{with } D'(s)=\mathcal{L}\left\{d(t)-\mu_{d(t)}\right\},
+\end{equation}
+but with a different scaling factor $k_\text{disturbance,2} \neq k_\text{disturbance,1}$. This method has the advantage of being potentially faster, because the controller does not occur in the signal path for the disturbance feed-forward, so its dynamics add no additional delay to $d_2(t)$.
+
+In both cases it is common to add another filter to $D_{1,\,2}$. This is often a lowpass filter $H_d()$ to remove noise. The disturbance filter than becomes
+\begin{equation}
+D(s) = k_\text{disturbance} \cdot H_d(s).
+\end{equation}
+
+The new controller architecture is shown in \autoref{fig:controllerDesignAndEvaluation-distfeedforwardArchitecture}. Drawn there is the plant $P(s)$ being split into $P_1(s)$ and $P_2(s)$. This is neither necessary nor possible under all circumstances but feeding forward the disturbance that acts earlier on the plant would lessen the delay of $d(t)$\footnote{A disturbance that acts on the middle of the plant is different from the one that acts on the end.}. Besides its main purpose of quickly reacting to a disturbance change, the feed-forward also has the inherent benefit of having no influence of the systems stability. Since $d(t)$ is assumed to be finite, the output has to react to $d(t)$ also with a finite response, as the filtered $d(t)$ is only added to $y(t)$.
+
+\begin{figure}[tb]
+	\centering
+	\includegraphics[]{chap/ControllerDesignAndEvaluation/img/optimization/newArch.tikz}
+	\caption{Schematic for a control system that uses disturbance feed-forward of the measurable disturbance $d(t)$ in addition to the feed-back loop; changes to the classical control system architecture in \autoref{fig:theoreticalFramework-feedback-architecture} highlighted in yellow(changed) and green(added) (based on \cite[p.~221]{Foellinger2016})}
+	\label{fig:controllerDesignAndEvaluation-distfeedforwardArchitecture}
+\end{figure}
+
+--Todo: Results and plots--
+
+
 \subsection{Feed-Back on Faraday-Cup Measurements}
+With the relation
+\begin{equation}
+P_B = \frac{I \Delta W}{q},
+\end{equation}
+the power the cavity transfers to the beam $P_B$ is related to the current of the beam $I$ and the energy gain $\Delta W$. \cite[p.~43]{Wangler2008}
 
+The Faraday cup mounted at the end of the low energy section together with the \gls{csa} measures the integrated beam current. The \gls{csa} is reset with every new pulse, so it measures
+\begin{equation}
+Q_\text{FC} = \int_{0}^{T_\text{pulse}} I(t) \d{t} = \int_{0}^{\SI{4.5}{\micro\second}} I(t) \d{t}.
+\end{equation}
 
+The Faraday cup does not discriminate between the origin nor the location in time of the electron beam in the $[0,\,T_\text{pulse}]$ interval. In particular that means it is sensitive to the dark current emitted with the \gls{rf} supply switched on, but without any laser pulses. This is different from the the measurements of the \gls{ict} and the charge output of one of the \glspl{bpm}. \cite{Nasse2019}
 
+The advantage of using $Q_\text{FC}$ over the \gls{rf} power $P_\text{cavity}$ is that the measurement of the charge relates more closely to the electron energies.
 
+Because the Faraday cup measures dark current, the control system, with $Q_\text{FC}$ as an input, can be tested with the laser off, the same as is was with the cavity power.
+
+\autoref{fig:controllerDesignAndEvaluation-optimCav} and \autoref{fig:controllerDesignAndEvaluation-optimFaraday} show the cavity power and the (uncalibrated) charge reading of the Faraday cup for three different cases: the control system switched off, the control system on with the cavity power used as control input and the control system with the Faraday cup's readout (via the \gls{csa}) as an input.
+
+\begin{figure}[tb]
+	\centering
+	\includegraphics[width=\textwidth,height=0.5\textwidth]{chap/ControllerDesignAndEvaluation/img/optimization/cavityPower.tikz}
+	\caption{Cavity power without control interaction, with the controller acting on the cavity power and with the controller acting on charge; Note the three curves are measured at different times and have no relation to one another}
+	\label{fig:controllerDesignAndEvaluation-optimCav}
+\end{figure}
+
+\begin{figure}[tb]
+	\centering
+	\includegraphics[width=\textwidth,height=0.5\textwidth]{chap/ControllerDesignAndEvaluation/img/optimization/faradayCharge.tikz}
+	\caption{Electron charge without control interaction, with the controller acting on the cavity power and with the controller acting on charge; Note the three curves are measured at different times and have no relation to one another}
+	\label{fig:controllerDesignAndEvaluation-optimFaraday}
+\end{figure}
 
 
 
