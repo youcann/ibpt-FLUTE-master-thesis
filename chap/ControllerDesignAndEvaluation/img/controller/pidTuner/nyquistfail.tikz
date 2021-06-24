@@ -21,8 +21,6 @@ xmax=2,
 ymin=-2,
 ymax=2,
 axis background/.style={fill=white},
-axis x line*=bottom,
-axis y line*=left,
 ]
 \draw[gray!50] (-2,0) -- (2,0);
 \draw[gray!50] (0,-2) -- (0,2);

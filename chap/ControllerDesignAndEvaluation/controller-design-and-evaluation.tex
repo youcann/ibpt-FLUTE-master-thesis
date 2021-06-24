@@ -168,7 +168,7 @@ In \autoref{fig:controllerDesignAndEvaluation-filterResults}, the three filter t
 
 \begin{figure}[tb]
 	\centering
-	\includegraphics[width=\textwidth,height=0.5\textwidth]{chap/ControllerDesignAndEvaluation/img/measurementFilter/firVsMa.tikz}
+	\includegraphics[width=\textwidth,height=0.65\textwidth]{chap/ControllerDesignAndEvaluation/img/measurementFilter/firVsMa.tikz}
 	\caption{Effects of the three different lowpass filters in \autoref{fig:controllerDesignAndEvaluation-impulseresponses} on noisy data}
 	\label{fig:controllerDesignAndEvaluation-filterResults}
 \end{figure}
@@ -192,6 +192,8 @@ with the coefficient vector $\vec{b}=[b_{10},\,...,\,b_0]$, with
 \end{equation}
 
 Instead of stating the transfer function, a plot of the poles and zeros is a more intuitive representation. In \autoref{fig:controllerDesignAndEvaluation-zplane}, the poles and zeros of the \gls{fir} filter with $N=10$ are compared to one with $N=40$. In addition, \autoref{fig:controllerDesignAndEvaluation-magn} shows the magnitude responses of such filters.
+
+For a fixed cutoff frequency and variable order $N$, the trade-off for choosing $N$ is between the group delay introduced by the filter (see \autoref{eq:groupD}) and the width of the transition band or in other words the sharpness of the filter. This can be seen by comparing the cases $N=10$ and $N=40$ for the \gls{fir} filters in \autoref{fig:controllerDesignAndEvaluation-filterResults}: While the smoothing-effect of the longer filter is obviously better, it also causes a higher group delay, which results in the filter result of the $N=40$ filter being shifted in time by $\frac{40}{2}T_s = \SI{4}{\second}$ compared to $\frac{10}{2}T_s = \SI{1}{\second}$ in case of $N=10$. While a high smoothness is desired for the control system to reject high frequency noise, using a filter with a too high order can introduce a group delay high enough to shift the closed-loop from negative to positive feedback, thus making it unstable.
 
 For the controller design in the next section and the later implemented real-time system, the cutoff frequency and the filter order are kept variable to leave room for improvement.
 
@@ -491,7 +493,7 @@ With the simulation the effect of adding $d[n]$ to a system without any feedback
 \begin{figure}[tb]
 	\centering
 	\includegraphics[width=\textwidth,height=0.5\textwidth]{chap/ControllerDesignAndEvaluation/img/controller/simulink/offlineSimulation.tikz}
-	\caption{Output of the Simulink model in \autoref{fig:Appendix-simuliunk}; step size $T=\SI{0.2}{\second}$, end time $\SI{3600}{\second}$. Simulation time on an Intel i7-3770: \SI{3.5}{\second}}
+	\caption{Output of the Simulink model in \autoref{fig:Appendix-simuliunk}; step size $T=\SI{0.2}{\second}$, end time $\SI{3600}{\second}$. Simulation time on a computer equipped with an Intel i7-3770: \SI{3.5}{\second}}
 	\label{fig:controllerDesignAndEvaluation-simulinkResult}
 \end{figure}
 
@@ -579,7 +581,7 @@ Note, that in this test about \SI{7}{\hour} into the experiment there was an une
 	\label{fig:controllerDesignAndEvaluation_resultSpectg}
 \end{figure}
 
-The time plot \autoref{fig:controllerDesignAndEvaluation_resultTime} and also the spectogram in \autoref{fig:controllerDesignAndEvaluation_resultSpectg} show the cavity \gls{rf} power approximately reaches stationarity in the $[0,\,2]\,\si{hour}$ interval respectively in the $[6,\,12]\, \si{hour}$ interval.
+The time plot \autoref{fig:controllerDesignAndEvaluation_resultTime} and also the spectogram in \autoref{fig:controllerDesignAndEvaluation_resultSpectg} show the cavity \gls{rf} power approximately reaches stationarity in the $[0,\,6]\,\si{hour}$ interval respectively in the $[6,\,12]\, \si{hour}$ interval.
 This allows the spectrum for these two blocks to be estimated using a periodogram method. In \autoref{fig:controllerDesignAndEvaluation_resultPeriodo} the spectra for each case are shown. The corresponding time data is plotted in \autoref{fig:controllerDesignAndEvaluation_resultComp}
 
 \begin{figure}[tb]

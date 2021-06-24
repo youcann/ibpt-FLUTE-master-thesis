@@ -6,11 +6,11 @@ baseline,
 \definecolor{color0}{rgb}{0.12156862745098,0.466666666666667,0.705882352941177}
 
 \begin{axis}[
-height=0.43\textwidth,
+height=0.42\textwidth,
 ytick distance=0.1,
 tick align=outside,
 tick pos=left,
-width=0.43\textwidth,
+width=0.42\textwidth,
 x grid style={white!69.0196078431373!black},
 xlabel={$f_o$ (in \si{\kHz})},
 xmin=-33000.0073466986, xmax=33000.0073466986,
@@ -25,10 +25,11 @@ y tick label style={
         /pgf/number format/.cd,
             fixed,
             fixed zerofill,
-            precision=3,
+            precision=4,
         /tikz/.cd
     }
 ]
+\draw[gray!50] ({axis cs:0,0}|-{rel axis cs:0,1}) -- ({axis cs:0,0}|-{rel axis cs:0,0});
 \addplot [only marks, mark=x, draw=color0]
 table{%
 x                      y

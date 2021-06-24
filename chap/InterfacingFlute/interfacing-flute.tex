@@ -47,7 +47,7 @@ while(True):
 \subsection{Properties of the Available Process Variables}
 In this section some process variables that may be used as inputs for the control system are analyzed. These are:
 \begin{itemize}
-\item \texttt{F:RF:LLRF:01:GunCav1:Power:Out Value}: The \gls{rf} power measured immediately before the cavity
+\item \texttt{F:RF:LLRF:01:GunCav1:Power:Out Value}: The \gls{rf} power measured in the half cell of the gun cavity
 \item \texttt{F:AX:DAQDT:01:1:Wave:05:Sample Value}: The charge measured with a Faraday cup (RadiaBeam Technologies FARC-04 \cite{radiabeamFaradayCups}) and amplified with a charge sensitive amplifier (PCB 421A25 \cite{pcbsynotechPCB421A25Charge})
 \item \texttt{F:INJ-1:Gun:01:Temperature:Body Value}: The body temperature of the cavity
 \end{itemize}
@@ -118,7 +118,7 @@ else:
 
 
 \section{Output: Controllable RF Attenuator}\label{sec:atteneval}
-The output signal computed by the control systems has to have a way of influencing the \gls{rf} power send to the cavity. This could be done over an \gls{epics} channel (e.g. with the PyEpics function \texttt{caput()} to set the value of a process variable via a channel access). However to make it possible to move the control system from a general purpose personal computer to a dedicated digital signal processor, \gls{fpga} or similar in the future, using a physical device in the signal path is preferred.\\
+The output signal computed by the control systems has to have a way of influencing the \gls{rf} power sent to the cavity. This could be done over an \gls{epics} channel (e.g. with the PyEpics function \texttt{caput()} to set the value of a process variable via a channel access). However to make it possible to move the control system from a general purpose personal computer to a dedicated digital signal processor, \gls{fpga} or similar in the future, using a physical device in the signal path is preferred.\\
 
 \subsection{Defining Requirements}
 The controllable attenuator should allow to vary the attenuation in a span big enough to counteract typical instabilities on the \gls{flute} \gls{rf} power. The set attenuation should be stable. This is especially needed in cases where the control system is not enabled. Then the attenuator should not add noise or drift to stay ``transparent'' for other systems. To allow for other attenuator or amplifiers in the signal path to compensate the attenuation around its operating point, the nominal attenuation should be as low as possible. The attenuation resolution should be low enough to allow for fine control and not to add noticeable quantization noise. Also the setup time for a new value should be small enough to not be visible to the control system.
@@ -157,7 +157,7 @@ The \textit{ZX73-2500-S+} is a voltage controllable \gls{rf} attenuator with coa
 		\subfloat[left: ZX73-2500-S+ with cover; right: cover removed showing RVA-2500+ and a buffer capacitor ]{\input{chap/InterfacingFlute/img/Output/attenuatorOverview/attenPhoto.tikz}}
 		\\
 		\subfloat[equivalent circuit from the manufacturer (redrawn from  \cite{mini-circuitsZX732500VoltageVariable})]{\input{chap/InterfacingFlute/img/Output/attenuatorOverview/attenCequi.tikz}}
-		\caption{caption}
+		\caption{The ZX73-2500-S+ controllable \gls{rf} attenuator by Mini-Circuits}
     \label{fig:attenPhotoAndEquiC}
 \end{figure}
 
@@ -171,12 +171,16 @@ The \textit{ZX73-2500-S+} is a voltage controllable \gls{rf} attenuator with coa
 
 
 
-The ZX73-2500-S+ attenuator consists of a brass housing/shielding containing the Mini-Circuits RVA-2500+, a variable SMD attenuator in the DV874 case form factor. The \gls{rf} input and output are connected with female SMA screw connectors. The power supply and control voltage are connected with solder pins. In order to use shielded cables and a reliable connection, for all measurements SMA connectors are soldered to the supply and control pins. According to equivalent circuit in the data sheet\cite{mini-circuitsZX732500VoltageVariable} it can be assumed it is based on the common quad-$\pi$ pin diode design\cite{waughLowCostSurfaceMount1992}.
+The ZX73-2500-S+ attenuator consists of a brass housing/shielding containing the Mini-Circuits RVA-2500+, a variable SMD attenuator in the DV874 case form factor. The \gls{rf} input and output are connected with female SMA screw connectors. The power supply and control voltage are connected with solder pins. In order to use shielded cables and a reliable connection, for all measurements SMA connectors are soldered to the supply and control pins. According to equivalent circuit in the data sheet \cite{mini-circuitsZX732500VoltageVariable}, it can be assumed it is based on the common quad-$\pi$ pin diode design introduced in \cite{waughLowCostSurfaceMount1992}. In this attenuator design, the resistors in a fixed $\pi$-configuration attenuator are switched out for \gls{rf} PIN diodes with the appropriate biasing and matching resistors and capacitors, see \autoref{fig:quadPiequiC}. At high frequencies, PIN diodes behave like resistors with the differential resistance
+\begin{equation}
+r_d = f(I_F)
+\end{equation}
+being an inverse function of the forward bias current, which makes the attenuator adjustable.
 
 The attenuation versus frequency measurements from the manufactures data sheet are redone to both get a first impression of the device and verify it is generally operational and also as a sanity check for the used laboratory test equipment.
 Because the signal used by the FLUTE \gls{rf} system is a \SI{3}{\GHz} single harmonic, the frequency measurement range is augmented over the maximum of \SI{2.5}{\GHz} in the data sheet to \SI{4}{\GHz}.
 Between the measurement of each network analyzer trace, the control voltage $V_{control}$ of the attenuator is set to \SI{0}{\volt}, \SI{2}{\volt}, \SI{4}{\volt}, \SI{6}{\volt} or \SI{12}{\volt}.
-The result is shown in \autoref{fig:interfacingFlute_atteneval-overview-NA}\footnote{A through calibration of the network analyzer reduces the influence of the cables and connectors on the measurement. Change in attenuation due to play in the connectors and slight bend changes in the cables exceed the trace noise (\SI{0.004}{\dB rms}) and cause an uncertainty of about \SI{0.5}{\dB}}.
+The result is shown in \autoref{fig:interfacingFlute_atteneval-overview-NA}\footnote{A thru calibration of the network analyzer reduces the influence of the cables and connectors on the measurement. The change in attenuation due to play in the connectors and slight bend changes in the cables exceeds the trace noise (\SI{0.004}{\dB rms}) and causes an uncertainty of about \SI{0.5}{\dB}}.
 When comparing the measured plots to the plots in the data sheet, there are obvious discrepancies. For $V_{control}=\SI{0}{\volt}$ the attenuator is very susceptible to noise on the control input, which could explain the differences for this curve. In the case of \SI{2}{\volt} and \SI{4}{\volt}, the almost constant offset scales with a similar logarithmic fashion as the attenuation does, which suggests device tolerances causing the deviations.
 
 \begin{figure}[tb]
@@ -392,11 +396,17 @@ In this section the influence of a varying \gls{rf} frequency on attenuation $\n
     \label{fig:interfacingFlute_atteneval-rf}
 \end{figure}
 
-Since the stability of the FLUTE oscillator is measured using a phase noise analyzer to be
-\begin{equation}
-\sigma_f = \SI{0}{\hertz},
-\end{equation}
-it is sufficient to regard \autoref{fig:interfacingFlute_atteneval-rf} (b). In the range of \SI{\pm1}{\kHz} around the operating point frequency of \SI{3}{\GHz}, $\nicefrac{\Delta A}{\Delta f} (f)$ is almost constant. From the data points, the value can be calculated to
+Phase noise measurements of the \gls{flute} main oscillator\footnote{Using the phase noise analyzer HA7062C by Holzworth, see \autoref{app:holzworth-ha7062c}} yield the phase noises
+\begin{align}
+\mathscr{L}(f_o=\SI{10}{\hertz}) &= \SI{-78.63}{\dB c}\\
+\mathscr{L}(f_o=\SI{1}{\kilo\hertz}) &= \SI{-116.26}{\dB c}\\
+\mathscr{L}(f_o=\SI{10}{\kilo\hertz}) &= \SI{-139.29}{\dB c}\\
+\mathscr{L}(f_o=\SI{1}{\mega\hertz}) &= \SI{-142.29}{\dB c},
+\end{align}
+
+with $f_o$ being the offset frequency from the carrier and the unit \si{\dB c} measuring the offset power from the carrier.
+
+Since this shows the oscillator to be much more stable than $f_o=\SI{10}{\kHz}$, is it is sufficient to consider only \autoref{fig:interfacingFlute_atteneval-rf} (b). In the range of \SI{\pm1}{\kHz} around the operating point frequency of \SI{3}{\GHz}, $\nicefrac{\Delta A}{\Delta f} (f)$ is almost constant. From the data points, the value can be calculated to
 \begin{equation}
 \frac{\Delta A(f)}{\Delta f}(f) 
 \approx \frac{\Delta A(f)}{\Delta f} 
