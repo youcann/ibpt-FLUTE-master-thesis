@@ -674,6 +674,44 @@ The new controller architecture is shown in \autoref{fig:controllerDesignAndEval
 
 
 \subsection{Feed-Back on Faraday-Cup Measurements}
+
+
+
+
+\begin{figure}[tb]
+	\centering
+	\includegraphics[]{chap/ControllerDesignAndEvaluation/img/optimization/chargeAmp.tikz}
+	\caption{Schematic of an inverting integrator using an integrated operational amplifier}
+	\label{fig:controllerDesignAndEvaluation-integrator}
+\end{figure}
+
+Using an operational amplifier, an analog inverting integrator can be constructed as depicted in \autoref{fig:controllerDesignAndEvaluation-integrator}.\cite[p.~230]{Horowitz2015}
+
+By using one of the fundamental rules of the ideal model of an operational amplifier, that is the voltage difference between the $+$ and $-$ inputs vanishes, the input impedance is
+\begin{equation}
+Z_\text{in} = \frac{V_\text{in}}{I_\text{in}} = R.
+\end{equation}
+
+The transfer function in the Laplace space can be directly stated using Kirchhoff's voltage law\footnote{The sum of all signed voltages around a closed loop is zero.} and the complex impedance of a capacitor $Z_C=\frac{1}{sC}$ (with $s=j\omega$) as
+\begin{equation}
+\frac{V_\text{out}(s)}{V_\text{in}(s)} = -\frac{R+\frac{1}{sC}}{R}.
+\end{equation}
+Substituting $I_\text{in}(s)=\frac{V_\text{in}(s)}{Z_\text{in}} = \frac{V_\text{in}(s)}{R}$ yields
+\begin{equation}
+\frac{V_\text{out}(s)}{I_\text{in}(s)} = -\left(R+\frac{1}{sC}\right).
+\end{equation}
+
+\begin{equation}
+\frac{V_\text{out}(s)}{I_\text{in}(s)} = -\frac{1}{sC}.
+\end{equation}
+
+With $\mathscr{L}\left\{\int_{0}^{t} x(\tau) \d{\tau}\right\}=\frac{1}{s} X(s)$, the output in the time domain becomes
+\begin{align}
+V_\text{out}(t) &= \mathscr{L}^{-1}\left\{-I_\text{in}(s) \frac{1}{sC}\right\}\\
+                &= -\frac{1}{C} \frac{1}{s} I_\text{in}(s)\\
+                &= -\frac{1}{C} \int_{0}^{t} I_\text{in}(\tau) \d{\tau}.
+\end{align}
+
 With the relation
 \begin{equation}
 P_B = \frac{I \Delta W}{q},
