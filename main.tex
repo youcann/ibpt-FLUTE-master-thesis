@@ -6,7 +6,8 @@
 \usepackage[protrusion=true,expansion,tracking]{microtype}
 \microtypecontext{spacing=nonfrench}
 \usepackage[english,ngerman]{babel}
-\usepackage[backend=biber,style=ieee, dashed=false]{biblatex} %no dashes for same author
+%\usepackage[backend=biber,style=ieee, dashed=false]{biblatex} %no dashes for same author
+\usepackage[backend=biber,style=alphabetic]{biblatex} %no dashes for same author
 \addbibresource{lit.bib}
 \usepackage{amsmath}
 \usepackage{amssymb}
@@ -106,9 +107,11 @@
 \begin{document}
     \FrontMatter
 	\tikzset{external/export=false}
-    \input{include/titlepage}
+	%\input{include/titlepage}
+    \input{include/titlepageIhm}
     \tikzset{external/export=true}
     \input{include/preamble}
+    \input{chap/Abstract/abstract.tex}
 
     \begingroup \let\clearpage\relax    % in order to avoid listoffigures and
     \tableofcontents                    % listoftables on new pages
@@ -120,14 +123,13 @@
 
     % Contents
     \MainMatter
-	\input{chap/Abstract/abstract.tex}
 	
 	\input{chap/Introduction/introduction.tex}
 	\input{chap/TheoreticalFramework/theoretical-framework.tex}
-	\input{chap/StabilityOfTheElectronGun/stability-of-the-electron-gun.tex}
-	\input{chap/InterfacingFlute/interfacing-flute.tex}
-	\input{chap/ControllerDesignAndEvaluation/controller-design-and-evaluation.tex}
-	\input{chap/SummaryAndOutlook/summary-and-outlook.tex}
+	%\input{chap/StabilityOfTheElectronGun/stability-of-the-electron-gun.tex}
+	%\input{chap/InterfacingFlute/interfacing-flute.tex}
+	%\input{chap/ControllerDesignAndEvaluation/controller-design-and-evaluation.tex}
+	%\input{chap/SummaryAndOutlook/summary-and-outlook.tex}
 
     \Appendix
     \addtocontents{toc}{\protect\setcounter{tocdepth}{1}}
