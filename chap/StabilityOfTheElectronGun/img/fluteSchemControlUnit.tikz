@@ -1,5 +1,6 @@
 \begin{tikzpicture}
 \draw[draw=none] (-0.5,1) rectangle (15.5,-5);
+
 \usetikzlibrary{shapes}
 \draw (0,-0.5) node[align=left,xshift=8,anchor=south] {\footnotesize \SI{230}{\volt}}-- (11,-0.5);
 \draw[] (11,-0.5) -- (13,-0.5);
@@ -57,7 +58,7 @@
 \end{scope}
 
 \node[draw,circle,fill=gray!20,label={[align=center]\footnotesize Oscillator\\\footnotesize \textcolor{blue!80}{$\SI{2.99855}{\GHz}$}},minimum size=0.75cm]  (osc) at (0.75+6*1+0.75,-3.5) {$\sim$};
-\draw[] (osc) -| node[pos=0.65,fill=white,regular polygon,regular polygon sides=3, draw, shape border rotate=0,label={[align=center,anchor=west]\footnotesize Pre-Amp\\\footnotesize \textcolor{blue!80}{$\SI{200}{\watt}$}}] {} (10.05,-0.75) -- +(0.25,0);
+\draw[] (osc) -| node[pos=0.25,draw,rectangle,align=center,fill=green!50] (att) {\footnotesize controllable\\\footnotesize attenuator} node[pos=0.65,fill=white,regular polygon,regular polygon sides=3, draw, shape border rotate=0,label={[align=center,anchor=west]\footnotesize Pre-Amp\\\footnotesize \textcolor{blue!80}{$\SI{200}{\watt}$}}] {} (10.05,-0.75) -- +(0.25,0);
 
 \draw[dashed] (1.5,-3.5) -| (5,-0.5);
 \draw[dashed,->] (5,-3.5) -- (osc);
@@ -69,5 +70,9 @@
 \end{scope}
 
 \draw[->,dashed] (13.8,-0.75) -- node[pos=0.9,anchor=south] {$e^-$}+(1,0);
+
+\node[draw,rectangle,fill=blue!50,align=center,minimum width=1.5cm] (cu) at (13.5,-3.5) {\footnotesize control\\\footnotesize unit};
+\draw[->] (cu.south) -- +(0,-0.5) -| node[pos=0.12,anchor=south] {\footnotesize $u(t)=V_{control}(t)$} (att.south);
+\draw[<-] (cu)  -- node[pos=0.15,anchor=east] {\footnotesize $y(t)=P_{cavity}(t)$} +(0,2);
 
 \end{tikzpicture}

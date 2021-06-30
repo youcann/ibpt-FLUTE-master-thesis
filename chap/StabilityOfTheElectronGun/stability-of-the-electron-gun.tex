@@ -28,7 +28,14 @@ For the $\text{TM}_{010}$ mode there is only an electrical field in the $z$ dire
 
 To tune the resonance frequency $f_{010}$, which depends on the cavity's radius $a$, to the target design frequency of \SI{2.99855}{\GHz}, two method are used. For once the cavity is equipped with piston tuners that allow changing the geometries of each cell slightly. Additionally because of the expansion and contraction of the copper body due to temperature changes, the set-point of the water cooling system can also be changed to alter the cavity geometry.
 
-\begin{figure}[tb]
+\begin{figure}[tbh]
+	\centering
+	\includegraphics[width=\textwidth,height=0.5\textwidth]{chap/StabilityOfTheElectronGun/img/Ez.tikz}
+	\caption{Plot of the electrical field in $z$ direction over the length of the gun cavity (redrawn from \cite{Bossart:clic} using geometrical measurements from \cite{Hoeninger2014})}
+	\label{fig:fluteEgun-Ezplot}
+\end{figure}
+
+\begin{figure}[tbh]
 	\centering
 	\includegraphics[]{chap/StabilityOfTheElectronGun/img/gun.tikz}
 	\caption{Cross section drawing of the electron gun together with the solenoid (which is used for focusing the electron beam) showing the photo-cathode (red) and the electron and laser beam trajectories
@@ -36,12 +43,6 @@ To tune the resonance frequency $f_{010}$, which depends on the cavity's radius 
 	\label{fig:fluteEgun-gunDraw}
 \end{figure}
 
-\begin{figure}[tb]
-	\centering
-	\includegraphics[width=\textwidth,height=0.5\textwidth]{chap/StabilityOfTheElectronGun/img/Ez.tikz}
-	\caption{Plot of the electrical field in $z$ direction over the length of the gun cavity (redrawn from \cite{Bossart:clic} using geometrical measurements from \cite{Hoeninger2014})}
-	\label{fig:fluteEgun-Ezplot}
-\end{figure}
 
 \section{Relation between RF power and Electron Energy}
 A standing wave inside a \gls{rf} cavity for a $TM_{010}$ mode can be written as
@@ -89,6 +90,22 @@ This shows the gained energy also depends on the properties of the cavity.
 \section{Current RF Stability and Proposed Solution}
 To get an overview of the current stability of the \gls{rf} power, the deviation of the cavity power process value (\gls{epics}: F:RF:LLRF:01:GunCav1:Power:Out Value) from its mean is plotted over one hour, see \autoref{fig:fluteEgun-deviation}.
 
+
+With the metrics defined in \autoref{sec:metrics}, the $\op{\%STD}$ is \SI{0.15}{\percent} and the $\op{MSE}$ is \num{38.54}.
+
+From the time plot in \autoref{fig:fluteEgun-deviation} and the periodogram in \autoref{fig:fluteEgun-periodo} it becomes clear that there is random white noise, but also a periodic part and a slow drift in the signal. While it is not possible to counteract the random fluctuations be any practical means, it is however possible to compensate for the slower disturbances.
+
+Hence in the next chapters, the control system is developed to counteract these noise components. 
+
+The control system should be made up with a controllable \gls{rf} attenuator added to the existing \gls{rf} system. This way there is no modification to the proprietary \gls{llrf}\footnote{The \gls{llrf} is visualized as only the oscillator in \autoref{fig:fluteEgun-rfschematic} and \autoref{fig:fluteEgun-rfschematicControl} but contains also its own feedback system and a vector modulator} necessary. With the addition of the control unit (see \autoref{fig:fluteEgun-rfschematicControl}), which is designed in later chapters and contains the controller $G(s)$ and the filter $H(s)$, the a closed-loop for feedback control is formed.
+
+\begin{figure}[tb]
+	\centering
+	\includegraphics[]{chap/StabilityOfTheElectronGun/img/fluteSchemControlUnit.tikz}
+	\caption{Schematic of the \gls{flute} \gls{rf} system with the proposed control unit and the controllable \gls{rf} attenuator added}
+	\label{fig:fluteEgun-rfschematicControl}
+\end{figure}
+
 \begin{figure}[tb]
 	\centering
 	\includegraphics[width=\textwidth,height=0.5\textwidth]{chap/StabilityOfTheElectronGun/img/assesment.tikz}
@@ -102,14 +119,6 @@ To get an overview of the current stability of the \gls{rf} power, the deviation
 	\caption{Periodogram of \autoref{fig:fluteEgun-deviation}; calculated using the Welch method}
 	\label{fig:fluteEgun-periodo}
 \end{figure}
-
-With the metrics defined in \autoref{sec:metrics}, the $\op{STD}\%$ is \SI{0.15}{\percent} and the $\op{MSE}$ is \num{38.54}.
-
-From the time plot in \autoref{fig:fluteEgun-deviation} and the periodogram in \autoref{fig:fluteEgun-periodo} it becomes clear that there is random white noise, but also a periodic part and a slow drift in the signal. While it is not possible to counteract the random fluctuations be any practical means, it is however possible to compensate for the slower disturbances.
-
-Hence in the next chapters, a \textbf{control system} is developed to counteract these noise components.
-
-
 
 
 

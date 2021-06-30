@@ -13,19 +13,30 @@ With the speed of light $c=\SI{2.998e8}{\m\per\s}$ and the particle velocity $v$
 
 The total energy of a particle is \cite{Hinterberger1997}
 \begin{equation}
-E=\sqrt{(mc^2)^2+(pc)^2},\qquad\text{with the rest energy } mc^2
+W=\sqrt{(mc^2)^2+(pc)^2},
 \end{equation}
-and the kinetic energy is
+with the rest energy $mc^2$ and the kinetic energy is
 \begin{equation}
-T=E-mc^2.
+W=E-mc^2.
 \end{equation}
 
-With electrons leaving the \gls{flute} electron gun with a momentum of $p=\SI{7}{\MeV\per c}$, this is equivalent to
+With electrons (mass $m_e$) leaving the \gls{flute} electron gun with a momentum of $p=\SI{7}{\MeV\per c}$, this is equivalent to
 \begin{align}
-E=\sqrt{(m_ec^2)^2+(pc)^2} &= \SI{7.0186271886}{\MeV}\\
-\gamma = \frac{E}{m_ec^2} &= \num{13.73511}\\
-\beta = \sqrt{1-\gamma^-2} &= 0.9973
+W=\sqrt{(m_ec^2)^2+(pc)^2} &= \SI{7.0186271886}{\MeV}\\
+\gamma = \frac{W}{m_ec^2} &= \num{13.73511}\\
+\beta = \sqrt{1-\gamma^{-2}} &= 0.9973
 \end{align}
+
+The force exerted on an electron (charge $q$) by an electric field $E$ and a magnetic flux density $B$ is given by the Lorentz force \cite[p.~19]{Hinterberger1997}
+\begin{equation}\label{eq:fl}
+F_L = q\left(E+v\times B\right).
+\end{equation}
+As the force due to the magnetic field is scaled with the velocity $v$, it is technically more viable to steer and focus an electron beam with magnets instead of electric fields. This is mainly because strong magnetic fields are easier to create and work with than high electric fields, which are difficult to handle. \cite[p.~27]{Krieger2013}
+
+\autoref{eq:fl} also motivates the use need for stable electron energies. Since the velocity depends on the energy, the force on the electrons is also a function of their energy. The magnetic fluxes of electromagnets can only be changed slowly compared to the repetition rate of an accelerator, so corrections to $B$ are not possible, so $v$/$E$ needs to be stable for a stable trajectory/focusing.
+
+
+
 
 \section{Signal Analysis}
 \subsection{Auto Correlation and Cross Correlation}
@@ -34,9 +45,9 @@ The \textit{cross covariance} between two stochastic processes $x[n]$ and $y[n]$
 r_{xy}[n_1,n_2] = \text{E}\left\{(x[n_1]-\mu_x[n_1])(y[n_2]-\mu_y[n_2])^\ast\right\}.
 \end{equation}
 
-For the special case of $y[n]:=x[n]$, $r_{xx}[n_1,n_2]$ is called \textit{auto covariance} and is a measure of self similarity of $x[n]$ \cite[p.~172]{Park2017}.
+For the special case of $y[n]:=x[n]$, $r_{xx}[n_1,n_2]$ is called \textit{auto covariance} and is a measure of self similarity of $x[n]$. \cite[p.~172]{Park2017}
 
-The processes $x[n]$ and $y[n]$ are called \textit{\gls{wss}} if the following two properties hold \cite[p.~167]{Park2017}. 
+The processes $x[n]$ and $y[n]$ are called \textit{\gls{wss}} if the following two properties hold. \cite[p.~167]{Park2017}
 First, their means $\mu_{\xi}[n]$ are constant, i.e. they do not depend on the sample index:
 \begin{align}
 \mu_{x}[n] &= \mu_x\\
@@ -47,25 +58,25 @@ Also the auto covariance does not depend on the absolute sample indices $n_1$ an
 r_{xy}[n_1,n_2] = r_{xy}[m],\qquad \text{with: } m:=n_2-n_1
 \end{equation}
 
-If both process in \autoref{eq:crosscovariance} are \gls{wss}, \autoref{eq:crosscovariance} simplifies to
+If both processes in \autoref{eq:crosscovariance} are \gls{wss}, \autoref{eq:crosscovariance} simplifies to
 \begin{equation}
 r_{xy}[m] = \text{E}\left\{(x[n]-\mu_x)(y[n-m]-\mu_y)^\ast\right\}.
 \end{equation}
 
 For the auto covariance both means are identical and can be moved outside the expectation operator:
 \begin{equation}
-r_{xx}[m] = \text{E}\left\{(x[n])(y[n-m])^\ast\right\}-\mu_{x}^2.
+r_{xx}[m] = \text{E}\left\{(x[n])(x[n-m])^\ast\right\}-\mu_{x}^2.
 \end{equation}
 
-When analyzing signals, the stochastic processes are often unknown and only one realization $x[n]$ is known. But if the process generating $x[n]$ is \textit{(weakly) ergodic}, then one realization is enough to determine the auto covariance of the process \cite[p.~252]{Puente2019}.
+When analyzing signals, the stochastic processes are often unknown and only one realization $x[n]$ is known. But if the process generating $x[n]$ is \textit{(weakly) ergodic}, then one realization is enough to determine the auto covariance of the process. \cite[p.~252]{Puente2019}
 Then the auto covariance can be estimated with
 \begin{equation}\label{eq:autocovarianveEstimation}
-\hat{r}[m] = \frac{1}{N} \sum_{n=m+1}^{N} x[n]\,x^\ast[n-m]\qquad m \in [0,\,N-1]
+\hat{r}[m] = \frac{1}{N} \sum_{n=m+1}^{N} x[n]\,x^\ast[n-m]\qquad m \in [0,\,N-1].
 \end{equation} 
 
 
 \subsection{Estimating the Spectrum of a Stochastic Process}
-For a deterministic, time-discrete signal $x[n] \in \mathcal{L}_1$, the \gls{dft} exists\cite{Lapidoth2019} and is defined as
+For a deterministic, time-discrete signal $x[n] \in \mathcal{L}_1$, the \gls{dft} exists (see \cite{Lapidoth2019}) and is defined as
 \begin{equation}
 X[k] = \sum_{n=0}^{N-1} x[n]\,\text{e}^{-j\frac{2\pi}{N}k\,n}\qquad k,n \in [0,\,N-1],
 \end{equation}
@@ -73,12 +84,12 @@ using $k=\frac{N}{2\pi}\,\omega = N\,f$ as the independent, discrete frequency v
 From the complex sequence $X[k]$, often only the magnitude (or energy) is of greater interest while the phase information are neglected. 
 Therefore, $S_{xx}$ is defined as
 \begin{equation}
-S_{xx} = \left|X[k]\right|^2
+S_{xx} = \left|X[k]\right|^2,
 \end{equation}
-and called the \textit{\gls{esd}}.
+called the \textit{\gls{esd}}.
 
 If $x[n]$ is the realization of a stochastic process, then it is of random nature rather than deterministic.
-Because realizations of physical processes do not posses finite energy, they are not in the $\mathcal{L}_1$ set and their \gls{dft} is not defined \cite[p.~5]{Stoica1997}.
+Because realizations of physical processes do not posses finite energy, they are not in the $\mathcal{L}_1$ set and their \gls{dft} is not defined. \cite[p.~5]{Stoica1997}
 
 In this case instead of an energy spectral density, the spectrum of the average power of the process, called the \textit{\gls{psd}}, can be used instead.
 To compute the \gls{psd}, there are two possibilities:
@@ -90,7 +101,7 @@ When assuming $r[m]$ decays ``fast enough'', i.e.
 \begin{equation}
 \lim_{N\rightarrow\infty} \frac{1}{N} \sum_{m=-N}^{N} |m|\,\left|r[m]\right| = 0
 \end{equation}
-then \autoref{eq:phixx1} and \autoref{eq:phixx2} are equal\cite[p.~7]{Stoica1997}.
+then \autoref{eq:phixx1} and \autoref{eq:phixx2} are equal. \cite[p.~7]{Stoica1997}
 
 For measured data however neither equations can be used directly.
 For \autoref{eq:phixx1} the auto covariance sequence $r[m]$ is unknown.
@@ -119,14 +130,14 @@ There are several popular methods that improve on the periodogram/correlogram co
 \begin{equation}
 \hat{\Phi}_{BT,\,xx}[k] = \sum_{m=-(M-1)}^{M-1} w[k]\hat{r}[m]\,\text{e}^{-j\frac{2\pi}{N}k\,m}
 \end{equation}
-The choice of the window $w[k]$ trades frequency resolution for variance and smearing for leakage reduction \cite[p.~41]{Stoica1997}.
+The choice of the window $w[k]$ trades frequency resolution for variance and smearing for leakage reduction. \cite[p.~41]{Stoica1997}
 
 \textbf{Barlett:} The Barlett method reduces the variance of the periodogram by splitting the $N$ data samples in $Q=\nicefrac{N}{M}$ blocks and averaging together the sub-periodograms:
 \begin{align}
 \hat{\Phi}_{q,\,xx}[k] &= \frac{1}{M} \left| \sum_{n=0}^{M-1} x_q[n]\,\text{e}^{-j\frac{2\pi}{M}k\,n}\right|^2\\
 \hat{\Phi}_{B,\,xx}[k] &= \frac{1}{Q} \sum_{q=1}^{Q} \hat{\Phi}_{q,\,xx}[k]
 \end{align}
-The variance of the estimation scales with $Q$ \cite[p.~6]{Rowell2008}:
+The variance of the estimation scales with $Q$ (see \cite[p.~6]{Rowell2008}):
 \begin{equation}
 \text{Var}\left\{\hat{\Phi}_{B,\,xx}[k]\right\} = \frac{1}{Q}\Phi_{xx}^2[k]
 \end{equation}
@@ -142,6 +153,7 @@ Compared to the Barlett method, the overlapping of up to \SI{50}{\percent} (see 
 \end{equation}
 
 
+\paragraph{Spectogram}
 In case of a non-stationary signal $x[n]$, one possibility to analyze and display the spectral content is the use of the \gls{stft} and the spectrogram, which is a two dimensional power spectral density function mapping frequency and time to a third coordinate like height, intensity or color.
 
 To calculate the spectrogram, the signal is split into segments with the sliding window $w[n-m]$ for which duration the signal is assumed to be stationary. For each segment at time index $m$, the periodogram is calculated according to
@@ -158,33 +170,34 @@ To calculate the spectrogram, the signal is split into segments with the sliding
 
 
 \section{Feedback Control Systems}\label{sec:feedbackcontrol}
-Feedback control systems are used to control a dynamic system (plant) in such a way that its output $y(t)$ follows a certain input $x(t)$ and disturbances on the output $d(t)$ are rejected. The general structure of a closed loop control system is shown in \autoref{fig:theoreticalFramework-feedback-architecture}. To achieve the tracking of the input and the stabilization of the output, a controller $G(s)$ uses the error $e(t)$ to control the plant $P(s)$ accordingly.
+Feedback control systems are used to control a dynamic system (also called a plant) in such a way that its output $y(t)$ follows a certain input $x(t)$ and disturbances on the output $d(t)$ are rejected. The general structure of a closed-loop control system is shown in \autoref{fig:theoreticalFramework-feedback-architecture}. To achieve sufficient tracking of the input and stabilization of the output, a controller $G(s)$ uses the error $e(t)$ to control the plant $P(s)$ accordingly.
 The error is defined as
 \begin{equation}
 e(t)=x(t)-r(t) = x(t)-[y(t)\ast h(t)]
 \end{equation}
-with $h(t)$ being the inverse Laplace transform of the filters transfer function $H(s)$.
+with $h(t)$ being the inverse Laplace transform of the filters transfer function $H(s)$. The signal $r(t)$ is the output of the measurement filter $h(t)$ or $H(s)$. It is most commonly a lowpass filter used to reject high-frequency noise on the system output $y(t)$.
+
+Feedback control systems, or closed-loop systems, are to be differentiated from open-loop systems, in which there is no return path, so they cannot compensate for \textit{un}known disturbances. If $d(t)$ is known $\forall t$, then an open loop system would be possible and any errors could simply be compensated. But for real world application this approach is only usable for crude control tasks or if the system is very well understood or isolated from its surroundings.
 
 \begin{figure}[tb]
 	\centering
 	\includegraphics[width=\textwidth]{chap/TheoreticalFramework/img/feedbackControl/architecture.tikz}
-	\caption{General structure of a time continuous feedback control system}
+	\caption[Control system structure]{General structure of a time-continuous feedback control system}
 	\label{fig:theoreticalFramework-feedback-architecture}
 \end{figure}
 
-Feedback control systems, or closed-loop systems, are to be differentiated from open-loop systems, in which there is no return path, so they cannot compensate for \textit{un}known disturbances. If $d(t)$ is known $\forall t$, then an open loop system would be possible and any errors could simply be compensated.
-
 \subsection{Disturbance Rejection and Input Tracking}\label{sec:drandtrack}
-Disturbance rejection and input tracking are two important characteristics to evaluate a stable controller. To calculate them, the block diagram in \autoref{fig:theoreticalFramework-feedback-architecture} and the Laplace transform of the inputs/outputs is used.\footnote{The Laplace transform of a function in time $f(t)$ is written as $F(s)=\mathcal{L}\left\{f(t)\right\}$.} 
+Disturbance rejection and input tracking are two important characteristics to evaluate a stable controller. To calculate them, the block diagram in \autoref{fig:theoreticalFramework-feedback-architecture} and the Laplace transform of the inputs/outputs are used.\footnote{The Laplace transform of a function in time $f(t)$ is written as $F(s)=\mathcal{L}\left\{f(t)\right\}$.} 
 
-To calculate how the output $y(t)$ depends on the input $x(t)$, the input tracking transfer function can be used.\cite[p.~88]{Foellinger2016} It is calculated as the transfer function $F_T=\nicefrac{Y(s)}{X(s)}$ by setting $d(t)=0$:
+To calculate how the output $y(t)$ depends on the input $x(t)$, the input tracking transfer function can be used. \cite[p.~88]{Foellinger2016}
+It is calculated as the transfer function $F_T=\nicefrac{Y(s)}{X(s)}$ by setting $d(t)=0$:
 \begin{align}\label{eq:inputTracking}
 Y(s)&=G(s)P(s)E(s)\quad\text{with:}\quad E(s)=X(s)-H(s)Y(s)\\
 \Leftrightarrow Y(s)\left[1+G(s)P(s)H(s)\right]&=G(s)P(s)X(s)\\
 \Leftrightarrow F_T:=\frac{Y(s)}{X(s)} &= \frac{G(s)P(s)}{1+G(s)P(s)H(s)}.
 \end{align}
 
-On the other hand, the transfer function $F_{DR}=\nicefrac{Y(s)}{D(s)}$ can be used to describe the systems response to a disturbance.\cite[p.~88]{Foellinger2016} It is defined by letting $x(t)=0$ and calculating
+On the other hand, the transfer function $F_{DR}=\nicefrac{Y(s)}{D(s)}$ can be used to describe the systems response to a disturbance. \cite[p.~88]{Foellinger2016} It is defined by setting $x(t)=0$ and calculating
 \begin{align}\label{eq:disturbanceRejection}
 Y(s)&=G(s)P(s)E(s)+D(s)\quad\text{with:}\quad E(s)=-H(s)Y(s)\\
 \Leftrightarrow Y(s)\left[1+G(s)P(s)H(s)\right]&=D(s)\\
@@ -193,7 +206,7 @@ Y(s)&=G(s)P(s)E(s)+D(s)\quad\text{with:}\quad E(s)=-H(s)Y(s)\\
 
 \subsection{Stability}
 The application of a controller to a system is only useful if the resulting system has a stable behavior.
-One possible definition of stability is the \gls{bibo} criterion\cite[p.~82]{Foellinger2016}:
+One possible definition of stability is the \gls{bibo} criterion (see \cite[p.~82]{Foellinger2016}):
 \begin{definition}\label{def:bibo}
 (\textit{BIBO stability}) A \gls{lti} system is said to be \gls{bibo} stable if for some $M,N \in \mathbb{R}^+$, the response to a bounded input $|u(t)| \le M$ results in a bounded output $|y(t)| \le N$.
 \end{definition}
@@ -203,15 +216,16 @@ For a given control system, one way to analyze its stability is to plot the locu
 F_o(s) = G(s)P(s)H(s)
 \end{equation}
 from $f=0$ to $f=\infty$ and using the Nyquist stability criterion.
-For the special case of a stable open loop $F_o(s)$ \footnote{The stability of $F_o(s)$ can often easily be determined from the block diagram.} the Nyquist stability criterion can be stated as\cite[p.~111]{Foellinger2016}
+For the special case of a stable open loop $F_o(s)$ \footnote{The stability of $F_o(s)$ can often easily be determined from the block diagram.} the Nyquist stability criterion can be stated as (see \cite[p.~111]{Foellinger2016})
 \begin{definition}\label{def:Nyquist}
-(\textit{Nyquist stability criterion}) If the open loop $F_o(s)$ is stable, then the closed loop is stable if $z=F_o(s=j2\pi f)$ does not go through or encircles $z=-1$.
+(\textit{Nyquist stability criterion}) If the open loop $F_o(s)$ is stable, then the closed loop is stable if $z=F_o(s=j2\pi f)$ does not go through or encircles $z=(-1,0j)$.
 \end{definition}
 
-
+\newpage
 \section{Metrics to Quantify the Stability of a Signal}\label{sec:metrics}
 ``Stability'' can have different meanings depending on the context. In case of signal processing, a signal is usually said to be \textit{stable} if it has only little variation around its mean or some target value, i.e. the mean has to be constant and the variance stays below some threshold. 
-Stability is not to be confused with stationarity, which requires the mean and the variance and the autocorrelation stay constant over time \cite{Guthrie2020}. To express stability as a single numerical value, there are several possibilities, some are described in the following.
+Stability is not to be confused with stationarity, which requires the mean and the variance and the autocorrelation stay constant over time. \cite{Guthrie2020} 
+To express stability as a single numerical value, there are several possibilities, some are described in the following.
 
 \paragraph{Relative Standard Deviation}
 This measures the stability as the standard deviation but related to the mean value to make it comparable to other quantities with different scaling or units.
@@ -224,20 +238,23 @@ Is the process $X$ non stationary, $\op{\%STD_X}$ depends on the absolute time $
 \begin{equation}
 \op{\%STD_X} = \op{\%STD_X}(t,T)
 \end{equation}
-In that case, for a fixed window size $T=T_0$, a mean percentual standard deviation can be computed with (assuming discrete time steps $t_n$, $n\in[0,N-1]$)
-\begin{equation}
-\op{\%STD_X}(T=T_0) = \frac{1}{N} \sum_{n=0}^{N-1} \op{\%STD_X}(t_n,T_0)
+In that case, for a fixed window size $T=T_0$, a mean percentual standard deviation can be computed with 
+\begin{equation}\label{eq:stdp}
+\op{\%STD_X}(T=T_0) = \frac{1}{N} \sum_{n=0}^{N-1} \op{\%STD_X}(t_n,T_0).
 \end{equation}
+This assumes discrete time steps $t_n$, $n\in[0,N-1]$.
 
 \paragraph{Mean Squared Error}
-The mean squared error sums up the squared errors $\left(x[n] - x_t[n]\right)^2$ of $x[n]$ from a set value $x_t[n]$. To remove the effect of the length of the data sequence, the sum is devided by the length of the sequence $N$:
+A similar measure to the percentual standard deviation is the \gls{mse}, if instead of the mean $\mu_X$, a fixed target $x_t$ is used.
+
+The mean squared error sums up the squared errors $\left(x[n] - x_t[n]\right)^2$ of $x[n]$ from a set value $x_t$. To remove the effect of the length of the data sequence, the sum is devided by the length of the sequence $N$:
 \begin{equation}
-MSE_x := \frac{1}{N} \sum_{n=0}^{N-1} \left(x[n] - x_t[n]\right)^2
+\op{MSE}_x := \frac{1}{N} \sum_{n=0}^{N-1} \left(x[n] - x_t\right)^2
 \end{equation}
 
 \paragraph{Relative Power of Most Prominent Noise}
-This novel approach compares the power of the most prominent noise power source $P_{noise,\,max}$ of the signal $x$ with the total power $P_x$:
-\begin{equation}
-MPN_x := \frac{P_{noise,\,max}}{P_x}
+This novel approach compares the power of the most prominent noise power source $P_\text{noise, max}$ of the signal $x$ with the total power $P_x$:
+\begin{equation}\label{eq:mpn}
+\op{MPN}_x := \frac{P_\text{noise, max}}{P_x}
 \end{equation}
 
