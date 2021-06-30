@@ -258,3 +258,13 @@ This novel approach compares the power of the most prominent noise power source 
 \op{MPN}_x := \frac{P_\text{noise, max}}{P_x}
 \end{equation}
 
+Compared to the relative standard deviation $\op{\%STD}(t,T)$, this method has the advantage of being time-independent and keeping periodic noise structures:\\
+
+\paragraph{Comparison}
+To make $\op{\%STD}(t,T)$ independent of time, it could be tempting to choose $T=T_\text{total}$ with $T_\text{toal}$ being the time span of the data set. But because of the averaging effect of the standard deviation estimator, this washes out the maxima and thus could lead to an under-estimation of $\op{\%STD}$, so an over-estimation of the stability.
+
+The $\op{MSE}$ uses the whole data set, but due to normalizing, maxima can also be hidden.
+
+Periodogram-based method have the advantage that for a fixed target value $x_t$, they are very easy to interpret: All power that is not in the $f=0$ frequency bin, is definitely noise. Integrating over these noise bins yields the error power comparable to the $\op{MSE}$.
+The described $\op{MPN}$ metric has the advantage of showing the largest contributor to the noise and allows for an easy validation of a controllers success on this noise component.
+

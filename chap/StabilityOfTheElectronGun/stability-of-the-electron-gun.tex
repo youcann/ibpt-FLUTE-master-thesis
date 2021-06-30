@@ -91,7 +91,9 @@ This shows the gained energy also depends on the properties of the cavity.
 To get an overview of the current stability of the \gls{rf} power, the deviation of the cavity power process value (\gls{epics}: F:RF:LLRF:01:GunCav1:Power:Out Value) from its mean is plotted over one hour, see \autoref{fig:fluteEgun-deviation}.
 
 
-With the metrics defined in \autoref{sec:metrics}, the $\op{\%STD}$ is \SI{0.15}{\percent} and the $\op{MSE}$ is \num{38.54}.
+With the metrics defined in \autoref{sec:metrics}, the $\op{\%STD}$ is \SI{0.15}{\percent}, the $\op{MSE}$ is \num{38.54} and the most prominent noise power is $\op{MPN}=0.01677$.
+
+Before \gls{flute} is fully assembled, it is difficult to estimate how stable the electron energies will be based on this measurement of the cavity \gls{rf} power stability. With some rough estimate calculations, it has been determined, a stability of $\op{\%STD}=\SI{0.10}{\percent}$ may suffice. \cite{Nigel2021}
 
 From the time plot in \autoref{fig:fluteEgun-deviation} and the periodogram in \autoref{fig:fluteEgun-periodo} it becomes clear that there is random white noise, but also a periodic part and a slow drift in the signal. While it is not possible to counteract the random fluctuations be any practical means, it is however possible to compensate for the slower disturbances.
 

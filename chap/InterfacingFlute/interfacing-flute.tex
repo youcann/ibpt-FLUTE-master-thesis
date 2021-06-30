@@ -3,7 +3,7 @@ This chapter covers methods on interfacing the FLUTE accelerator, that is how to
 In this chapter \textit{input} and \textit{output} refer to the view from the control system.
 
 \section{Inputs}
-FLUTE uses the \textit{\gls{epics}}\cite{Dalesio1991} for control of various parts of the accelerator, to send real time data to be archived and to build user interfaces via \textit{\gls{css}}\cite{CSS2021}, a development studio based on the Java \gls{ide} Eclipse. \cite{Mexner2018}
+FLUTE uses the \textit{\gls{epics}}\cite{Dalesio1991} for control of various parts of the accelerator, to archived time series data and to build user interfaces via \textit{\gls{css}}\cite{CSS2021}, a development studio based on the Java \gls{ide} Eclipse. \cite{Mexner2018}
 
 \Gls{epics} offers client/server and publish/subscribe paradigms to access data in so called \gls{pv} through channels. Modules are usually written in the C programming language. To ease the access to \gls{epics} channels in programs written with the Python language, the package \textit{PyEpics}\cite{Newville2019} can be used. Since all data of interest as input for the control system can be extracted through an \gls{epics} channel, the next section deals with using PyEpics to obtain the data.
 
@@ -514,7 +514,7 @@ The other requirements from \autoref{tab:interfacingFlute_rfattenrequirements} a
 \subsection{Test of the Attenuator with FLUTE}
 In this section the attenuator in mounted at \gls{flute} and its function is verified against the data gathered in the lab in earlier sections.
 
-The attenuator is installed at its final mounting location inside the \gls{llrf} cabinet in the \gls{flute} bunker basement and is connected between the output of the vector modulator (after the oscillator, not shown in \autoref{fig:fluteEgun-rfschematic}) and the input of the pre-amplifier. With the controllable attenuator at its operating point, the signal path now contains an attenuation of about \SI{6}{\dB} at all times. To compensate for, the attenuation at another another attenuator inside the \gls{llrf} system is lowered accordingly.
+The attenuator is installed at its final mounting location inside the \gls{llrf} cabinet in the \gls{flute} bunker basement and is connected between the output of the vector modulator (after the oscillator, not shown in \autoref{fig:fluteEgun-rfschematic}) and the input of the pre-amplifier. With the controllable attenuator at its operating point, the signal path now contains an attenuation of about \SI{6}{\dB} at all times.
 
 After all components of \gls{flute} are warmed up to operational temperatures, the attenuation versus control voltage curve $A(V_\text{control})$ is measured again (compare the lab measurement \autoref{fig:interfacingFlute_attenDatten}).
 

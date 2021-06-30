@@ -6,7 +6,7 @@
 \node[rectangle,draw,align=center,minimum width=1.2cm,minimum height=1.5cm,fill=yellow!50] (g2) at (8.5,0) {Plant\\$P_2(s)$};
 \node[circle,draw,align=center,minimum width=1cm] (sum2) at (7,0) {\Large $+$};
 \node[rectangle,draw,align=center,minimum width=2.5cm,minimum height=1.5cm] (f) at (5,-2.5) {Filter\\$H(s)$};
-\node[rectangle,draw,align=center,minimum width=1.2cm,minimum height=1.5cm,fill=green!50] (d) at (5.5,2.5) {D. Filt\\$D(s)$};
+\node[rectangle,draw,align=center,minimum width=1.2cm,minimum height=1.5cm,fill=green!50] (d) at (5.5,2.5) {Filter\\$D(s)$};
 
 \draw[{Latex[length=3mm]}-] (sum1) -- node[pos=0.8,anchor=south] {$x(t)$} +(-1.75,0);
 \draw[-{Latex[length=3mm]}] (sum1) -- node[pos=0.5,anchor=south] {} (c);
