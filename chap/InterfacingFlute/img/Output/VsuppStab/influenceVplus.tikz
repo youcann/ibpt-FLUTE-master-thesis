@@ -10,12 +10,12 @@ legend style={fill opacity=0.8, draw opacity=1, text opacity=1, draw=white!80!bl
 tick align=outside,
 tick pos=left,
 x grid style={white!69.0196078431373!black},
-xlabel={Supply voltage \(\displaystyle V_+\) (in \si{\volt})},
+xlabel={Supply voltage \(\displaystyle V_+\) (\si{\volt})},
 yticklabel style={/pgf/number format/precision=4,/pgf/number format/fixed},
 xmin=2.8, xmax=3.2,
 xtick style={color=black},
 y grid style={white!69.0196078431373!black},
-ylabel={Attenuation \(\displaystyle A(V_+)\) (in \si{\dB})},
+ylabel={Attenuation \(\displaystyle A(V_+)\) (\si{\dB})},
 ymin=6.48076334835011, ymax=6.4835,
 ytick style={color=black}
 ]

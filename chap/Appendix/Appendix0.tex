@@ -2,31 +2,32 @@
 \begin{figure}[tbh]
 	\centering
 	\includegraphics[width=\textwidth]{chap/Appendix/ControllerDesign/identi}
-	\caption{Screenshot of the Matlab System Identification Toolbox; to the right the process models estimator window}
+	\caption[Matlab System Identification Toolbox]{Screenshot of the Matlab System Identification Toolbox; to the right the process models estimator window}
 	\label{fig:Appendix-identify}
 \end{figure}
 
 \begin{figure}[tbh]
 	\centering
 	\includegraphics[width=\textwidth]{chap/Appendix/ControllerDesign/pidTuner}
-	\caption{Screenshot of the Matlab PID Tuner from the Control Systems Toolbox}
+	\caption[Matlab PID Tuner]{Screenshot of the Matlab PID Tuner from the Control Systems Toolbox}
 	\label{fig:Appendix-pidTuner}
 \end{figure}
 
 \begin{figure}[tbh]
 	\centering
 	\includegraphics[width=\textwidth]{chap/Appendix/ControllerDesign/simulink}
-	\caption{Simulink model to evaluate the designed controller together with the measurement filter (\texttt{ol1}) compared to the uncontrolled system (in \texttt{P2ZU}) using measured disturbance data (in the vector \texttt{d2}); below a view of the scope data}
+	\caption[Simulink Model for Offline Evaluation]{Simulink model to evaluate the designed controller together with the measurement filter (\texttt{ol1}) compared to the uncontrolled system (in \texttt{P2ZU}) using measured disturbance data (in the vector \texttt{d2}); below a view of the scope data}
 	\label{fig:Appendix-simuliunk}
 \end{figure}
 
 \begin{figure}[tbh]
 	\centering
 	\includegraphics[width=\textwidth]{chap/Appendix/ControllerDesign/qt}
-	\caption{Screenshot of the control system's GUI application}
+	\caption[Control System GUI]{Screenshot of the control system's GUI application}
 	\label{fig:Appendix-qt}
 \end{figure}
 
+\FloatBarrier
 \begin{lstlisting}[style=java,caption = Java class of the PCB421A25 charge amplifier demonstrating the command structure and checksum calculation for integration of the amplifier into \gls{css}, label = lst:Appendix-javaPcb]
 class PCB421A25 {
 	final static char STX = '\u0002';	

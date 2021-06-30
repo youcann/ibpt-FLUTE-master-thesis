@@ -73,8 +73,9 @@
 \usepackage{trfsigns}
 \usepackage{mathrsfs}
 
-\usepackage[acronym,nomain]{glossaries}
+\usepackage[acronym,nomain,toc]{glossaries}
 %\glsaddall
+\glstoctrue
 \makeglossaries
 \input{include/glossaries.tex}
 
@@ -118,21 +119,23 @@
     \tableofcontents                    % listoftables on new pages
     \listoffigures
     \listoftables
-    \clearpage\begingroup\let\newpage\relax\printglossary\endgroup
     \endgroup
     \cleardoublepage
 
     % Contents
     \MainMatter
+	\glsresetall
 	
 	\input{chap/Introduction/introduction.tex}
 	\input{chap/TheoreticalFramework/theoretical-framework.tex}
 	\input{chap/StabilityOfTheElectronGun/stability-of-the-electron-gun.tex}
 	\input{chap/InterfacingFlute/interfacing-flute.tex}
 	\input{chap/ControllerDesignAndEvaluation/controller-design-and-evaluation.tex}
+	\glsresetall
 	\input{chap/SummaryAndOutlook/summary-and-outlook.tex}
 
     \Appendix
+    \glsresetall
     \addtocontents{toc}{\protect\setcounter{tocdepth}{1}}
     \chapter*{\appendixname} \addcontentsline{toc}{chapter}{\appendixname}
     % to make the appendix appear in ToC without number. \appendixname = 
@@ -140,6 +143,7 @@
     \input{./chap/Appendix/Appendix0.tex}
     \input{./chap/Appendix/Appendix1.tex} %\cleardoublepage
 	\input{./include/acknowledgements.tex}
+	\clearpage\begingroup\let\newpage\relax\printglossary\endgroup\addcontentsline{toc}{chapter}{Acronyms}
     \TheBibliography
     \printbibliography
 \end{document}

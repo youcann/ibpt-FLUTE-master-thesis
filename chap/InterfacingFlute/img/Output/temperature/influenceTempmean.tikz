@@ -10,11 +10,11 @@ legend style={fill opacity=0.8, draw opacity=1, text opacity=1, draw=white!80!bl
 tick align=outside,
 tick pos=left,
 x grid style={white!69.0196078431373!black},
-xlabel={Case temperature \(\displaystyle \vartheta_{case}\) (in \si{\celsius})},
+xlabel={Case temperature \(\displaystyle \vartheta_{case}\) (\si{\celsius})},
 xmin=21, xmax=29,
 xtick style={color=black},
 y grid style={white!69.0196078431373!black},
-ylabel={Attenuation \(\displaystyle A(\vartheta_{case})\) (in \si{\dB})},
+ylabel={Attenuation \(\displaystyle A(\vartheta_{case})\) (\si{\dB})},
 ymin=7.455, ymax=7.51,
 ytick style={color=black}
 ]

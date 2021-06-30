@@ -3,7 +3,7 @@
 
 \begin{axis}[
 colorbar,
-colorbar style={ylabel={Elapsed time (in \si{\minute})}},
+colorbar style={ylabel={Elapsed time (\si{\minute})}},
 colormap={mymap}{[1pt]
   rgb(0pt)=(0,0,0.5);
   rgb(22pt)=(0,0,1);
@@ -23,11 +23,11 @@ point meta min=0,
 tick align=outside,
 tick pos=left,
 x grid style={white!69.0196078431373!black},
-xlabel={Case temperature \(\displaystyle \vartheta_{case}\) (in \si{\celsius})},
+xlabel={Case temperature \(\displaystyle \vartheta_{case}\) (\si{\celsius})},
 xmin=20.3385532238616, xmax=29.6954467761384,
 xtick style={color=black},
 y grid style={white!69.0196078431373!black},
-ylabel={Attenuation \(\displaystyle A(\vartheta_{case})\) (in \si{\dB})},
+ylabel={Attenuation \(\displaystyle A(\vartheta_{case})\) (\si{\dB})},
 ymin=7.45390800719777, ymax=7.50944390280223,
 ytick style={color=black}
 ]

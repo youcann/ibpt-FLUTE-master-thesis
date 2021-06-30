@@ -86,12 +86,12 @@ In addition the sample times of the process variables is examined if the method 
 \begin{equation}
 \Delta=t_{n+1}-t_n.
 \end{equation}
-Then a histogram with the relative frequency on the y axis is used as an estimator for the probability density function of the sample time intervals (see \autoref{fig:interfacingFlute_sampleTimesHist}). The histogram shows that the time series resulting from recording process variables out of the EPICS system are highly unevenly spaced. Thus the data needs to be converted to posses evenly spaced sample times to use common signal processing methods like the \gls{dft} or digital \gls{lti} filters. For offline analysis of prerecorded data, it can easily be resampled to a fixed time grid. But for online operation of a filter or a whole control system it is not possible to use an arbitrary resample method because they are often non causal or introduce significant group delay when made causal. Instead calling \texttt{caget()} with a (software-) timer can be used to get evenly spaced samples online.
+Then a histogram with the relative frequency on the y axis is used as an estimator for the probability density function of the sample time intervals (see \autoref{fig:interfacingFlute_sampleTimesHist}). The histogram shows that the time series resulting from recording process variables out of the EPICS system are highly unevenly spaced. Thus the data needs to be converted to have evenly spaced sample times to use common signal processing methods like the \gls{dft} or digital \gls{lti} filters. For offline analysis of prerecorded data, it can easily be resampled to a fixed time grid. But for online operation of a filter or a whole control system it is not possible to use an arbitrary resample method because they are often non causal or introduce significant group delay when made causal. Instead calling \texttt{caget()} with a (software-) timer can be used to get evenly spaced samples online.
 
 \begin{figure}[tb]
 \centering
 \includegraphics[width=\textwidth,height=0.5\textwidth]{chap/InterfacingFlute/img/Inputs/dtHistogram.tikz}
-\caption{Histogram of the sample time intervals $\Delta$ of the plots in \autoref{fig:quantNoise}}
+\caption[Histogram of EPICS CA sample times]{Histogram of the sample time intervals $\Delta$ of the plots in \autoref{fig:quantNoise}}
 \label{fig:interfacingFlute_sampleTimesHist}
 \end{figure}
 
@@ -157,14 +157,14 @@ The \textit{ZX73-2500-S+} is a voltage controllable \gls{rf} attenuator with coa
 		\subfloat[left: ZX73-2500-S+ with cover; right: cover removed showing RVA-2500+ and a buffer capacitor ]{\input{chap/InterfacingFlute/img/Output/attenuatorOverview/attenPhoto.tikz}}
 		\\
 		\subfloat[equivalent circuit from the manufacturer (redrawn from  \cite{mini-circuitsZX732500VoltageVariable})]{\input{chap/InterfacingFlute/img/Output/attenuatorOverview/attenCequi.tikz}}
-		\caption{The ZX73-2500-S+ controllable \gls{rf} attenuator by Mini-Circuits}
+		\caption[The controllable attenuator]{The ZX73-2500-S+ controllable \gls{rf} attenuator by Mini-Circuits}
     \label{fig:attenPhotoAndEquiC}
 \end{figure}
 
 \begin{figure}[tb]
     \centering
 	\input{chap/InterfacingFlute/img/Output/attenuatorOverview/quadPiCequi.tikz}
-	\caption{Controllable attenuator design around the HP HSMP-3814 \gls{rf} PIN diodes (redrawn and simplified from \cite{waughLowCostSurfaceMount1992})}
+	\caption[Design of a controllable attenuator]{Controllable attenuator design around the HP HSMP-3814 \gls{rf} PIN diodes (redrawn and simplified from \cite{waughLowCostSurfaceMount1992})}
     \label{fig:quadPiequiC}
 \end{figure}
 
@@ -186,7 +186,7 @@ When comparing the measured plots to the plots in the data sheet, there are obvi
 \begin{figure}[tb]
 	\centering
 	\includegraphics[width=\textwidth,height=0.5\textwidth]{chap/InterfacingFlute/img/Output/attenuationOverFrequency_Vctrl.tikz}
-	\caption{Attenuation vs. frequency over DC control voltage; measured with network analyzer (see \ref{app:agilent-e5071c}, parameters: $\#AVG$: 16, $IF\text{-}BW$: \SI{10}{\kHz}); plotted in dashed lines are the measurements from the data sheet (see \cite[p.~2]{mini-circuitsZX732500VoltageVariable})}
+	\caption[Attenuation vs. frequency plot of the attenuator]{Attenuation vs. frequency over DC control voltage; measured with network analyzer (see \ref{app:agilent-e5071c}, parameters: $\#AVG$: 16, $IF\text{-}BW$: \SI{10}{\kHz}); plotted in dashed lines are the measurements from the data sheet (see \cite[p.~2]{mini-circuitsZX732500VoltageVariable})}
 	\label{fig:interfacingFlute_atteneval-overview-NA}
 \end{figure}
 
@@ -248,7 +248,7 @@ All measurements are performed in the ``\gls{rf} lab'' in building 348 (\gls{kar
 \begin{figure}[tb]
 	\centering
 	\includegraphics[]{chap/InterfacingFlute/img/Output/schematic.tikz}
-	\caption{Measurement setup: DUT(red), \gls{rf} generator/power splitter/meter(blue),\\ DC sources/meters(green), temperature probe(yellow)}
+	\caption[Measurement setup to evaluate the attenuator]{Measurement setup: DUT(red), \gls{rf} generator/power splitter/meter(blue),\\ DC sources/meters(green), temperature probe(yellow)}
 	\label{fig:interfacingFlute_atteneval-setup}
 \end{figure}
 
@@ -307,14 +307,14 @@ For further error calculations, the maximum $\nicefrac{\Delta A(V_{control})}{\D
 \begin{figure}[tb]
 	\centering
 	\includegraphics[width=\textwidth,height=0.5\textwidth]{chap/InterfacingFlute/img/Output/attenAndDattten.tikz}
-	\caption{Measured attenuation $A(V_{control},f=\SI{3}{\GHz})$ of the ZX73-2500-S+ as a function of the control voltage input $V_{control}$ along with the sensitivity $S(V_{control},f=\SI{3}{\GHz})$}
+	\caption[Attenuation vs control voltage]{Measured attenuation $A(V_{control},f=\SI{3}{\GHz})$ of the ZX73-2500-S+ as a function of the control voltage input $V_{control}$ along with the sensitivity $S(V_{control},f=\SI{3}{\GHz})$}
 	\label{fig:interfacingFlute_attenDatten}
 \end{figure}
 
 \begin{figure}[tb]
 	\centering
 	\includegraphics[width=\textwidth,height=0.5\textwidth]{chap/InterfacingFlute/img/Output/attenAndDatttenZoomed.tikz}
-	\caption{Zoomed in version of \autoref{fig:interfacingFlute_attenDatten} shows the attenuation and sensitivity around the operating point $V_{control,o}=\SI{10}{\volt}$}
+	\caption[Detailed version of \autoref{fig:interfacingFlute_attenDatten}]{Zoomed in version of \autoref{fig:interfacingFlute_attenDatten} shows the attenuation and sensitivity around the operating point $V_{control,o}=\SI{10}{\volt}$}
 	\label{fig:interfacingFlute_attenDattenZoomed}
 \end{figure}
 
@@ -328,7 +328,7 @@ To assess the stability of $V_{control}$, delivered from the Keysight 34972A (se
 \begin{figure}[tb]
 	\centering
 	\includegraphics[width=\textwidth,height=0.5\textwidth]{chap/InterfacingFlute/img/Output/Vcontrolstab.tikz}
-	\caption{Long term stability of $V_{control}$ as delivered by the Keysight 34972A DAC (ch. 205); measured with Keysight 34470A;\\room temperature during measurement: $\mu_\vartheta=\SI{19.12}{\degreeCelsius}$, $\sigma_\vartheta=\SI{0.28}{\degreeCelsius}$}
+	\caption[Long term stability of the control voltage]{Long term stability of $V_{control}$ as delivered by the Keysight 34972A DAC (ch. 205); measured with Keysight 34470A;\\room temperature during measurement: $\mu_\vartheta=\SI{19.12}{\degreeCelsius}$, $\sigma_\vartheta=\SI{0.28}{\degreeCelsius}$}
 	\label{fig:interfacingFlute_vcontrolstab_longterm}
 \end{figure}
 
@@ -362,7 +362,7 @@ for that the stability over the course of one day is measured. The voltage is ta
 \begin{figure}[tb]
 	\centering
 	\includegraphics[width=\textwidth,height=0.5\textwidth]{chap/InterfacingFlute/img/Output/VsuppStab/stabilityVplus.tikz}
-	\caption{Long term stability of $V_{+}$ as delivered by the Keysight 34972A DAC (ch. 204); measured with Keysight 34470A;\\room temperature during measurement: $\mu_\vartheta=\SI{19.12}{\degreeCelsius}$, $\sigma_\vartheta=\SI{0.28}{\degreeCelsius}$}
+	\caption[Long term stability of the supply voltage]{Long term stability of $V_{+}$ as delivered by the Keysight 34972A DAC (ch. 204); measured with Keysight 34470A;\\room temperature during measurement: $\mu_\vartheta=\SI{19.12}{\degreeCelsius}$, $\sigma_\vartheta=\SI{0.28}{\degreeCelsius}$}
 	\label{fig:interfacingFlute_atteneval-vsupp-stability}
 \end{figure}
 
@@ -392,7 +392,7 @@ In this section the influence of a varying \gls{rf} frequency on attenuation $\n
         \subfloat[$f=f_o \SI{+-30}{\kHz}$]{\input{chap/InterfacingFlute/img/Output/bunkerRF/influenceRFbunkerFull.tikz}}
         \qquad
         \subfloat[$f=f_o \SI{+-1}{\kHz}$]{\input{chap/InterfacingFlute/img/Output/bunkerRF/influenceRFbunkerZoomed.tikz}}
-       \caption{Influence of an offset frequency $f-\SI{3}{\GHz}$ on the attenuation }
+       \caption[Influence of an offset frequency on attenuation]{Influence of an offset frequency $f-\SI{3}{\GHz}$ on the attenuation }
     \label{fig:interfacingFlute_atteneval-rf}
 \end{figure}
 
@@ -423,7 +423,7 @@ The bottom of the attenuator is fixed to a rectangular iron profile with zip tie
 \begin{figure}[tb]
 	\centering
 	\includegraphics[width=\textwidth,height=0.5\textwidth]{chap/InterfacingFlute/img/Output/temperature/influenceTemp.tikz}
-	\caption{Raw measurement result of the influence of the case temperature $\vartheta_{case}$ on the attenuation; color coded is the relative elapsed time of the measurement}
+	\caption[Influence of the case temperature on attenuation]{Raw measurement result of the influence of the case temperature $\vartheta_{case}$ on the attenuation; color coded is the relative elapsed time of the measurement}
 	\label{fig:interfacingFlute_atteneval-tempstab-influence}
 \end{figure}
 
@@ -438,7 +438,7 @@ To get $\nicefrac{\Delta A}{\Delta \vartheta_{case}} (\vartheta_{case})$ from th
 \begin{figure}[tb]
 	\centering
 	\includegraphics[width=\textwidth,height=0.5\textwidth]{chap/InterfacingFlute/img/Output/temperature/influenceTempmean.tikz}
-	\caption{Influence of the case temperature $\vartheta_{case}$ on the attenuation}
+	\caption[Processed data from \autoref{fig:interfacingFlute_atteneval-tempstab-influence}]{Influence of the case temperature $\vartheta_{case}$ on the attenuation}
 	\label{fig:interfacingFlute_atteneval-tempstab-influenceMean}
 \end{figure}
 
@@ -447,7 +447,7 @@ Next, the temperature stability in both the ``\gls{rf} lab'' and in the FLUTE \g
 \begin{figure}[tb]
 	\centering
 	\includegraphics[width=\textwidth,height=0.5\textwidth]{chap/InterfacingFlute/img/Output/temperature/tempStability.tikz}
-	\caption{Comparison between the temperature stability in the ``\gls{rf} lab'' and inside the FLUTE \gls{llrf} cabinet}
+	\caption[Measured temperature stability]{Comparison between the temperature stability in the ``\gls{rf} lab'' and inside the FLUTE \gls{llrf} cabinet}
 	\label{fig:interfacingFlute_atteneval-tempstab-time}
 \end{figure}
 
@@ -470,7 +470,7 @@ This is at several orders of magnitude bigger than the control system can input,
 \begin{figure}[tb]
 	\centering
 	\includegraphics[width=\textwidth,height=0.6\textwidth]{chap/InterfacingFlute/img/Output/holzworth.tikz}
-	\caption{Spectrum (measured with Holzworth HA7062A (\autoref{app:holzworth-ha7062c})) showing the effect of modulating $V_{control}$ with different frequencies (Modulation amplitude: \SI{1}{\volt})}
+	\caption[Spectrum showing maximum modulation speed]{Spectrum (measured with Holzworth HA7062A (\autoref{app:holzworth-ha7062c})) showing the effect of modulating $V_{control}$ with different frequencies (Modulation amplitude: \SI{1}{\volt})}
 	\label{fig:interfacingFlute_atteneval-freqresp}
 \end{figure}
 
@@ -494,7 +494,7 @@ This shows even in the worst case, the ZX73-2500-S+ attenuator is stable within 
 The other requirements from \autoref{tab:interfacingFlute_rfattenrequirements} are also fulfilled, see \autoref{tab:interfacingFlute_rfattenrequirements_result}.
 
 \begin{table}[tbh]
-\caption{Controllable \gls{rf} attenuator evaluation test results}
+\caption[Evaluation results]{ZX73-2500-S+ controllable \gls{rf} attenuator evaluation test results}
 \label{tab:interfacingFlute_rfattenrequirements_result}
 \centering
 \begin{tabular}{lccl}
@@ -524,21 +524,21 @@ To do so, the control voltage $V_\text{control}$ is varied in \SI{0.5}{\volt} st
 \begin{figure}[tb]
 	\centering
 	\includegraphics[width=\textwidth,height=0.4\textwidth]{chap/InterfacingFlute/img/Output/cal/cal_V.tikz}
-	\caption{Time signal $V_\text{control}$ used to calculate \autoref{fig:interfacingFlute_finalTest}}
+	\caption[Evaluation control voltage signal]{Time signal $V_\text{control}$ used to calculate \autoref{fig:interfacingFlute_finalTest}}
 	\label{fig:interfacingFlute_finalTest_calv}
 \end{figure}
 
 \begin{figure}[tb]
 	\centering
 	\includegraphics[width=\textwidth,height=0.4\textwidth]{chap/InterfacingFlute/img/Output/cal/cal_P.tikz}
-	\caption{Time signal $A(V_\text{control})$ used to calculate \autoref{fig:interfacingFlute_finalTest}}
+	\caption[Evaluation measured attenuation]{Time signal $A(V_\text{control})$ used to calculate \autoref{fig:interfacingFlute_finalTest}}
 	\label{fig:interfacingFlute_finalTest_calp}
 \end{figure}
 
 \begin{figure}[tb]
 	\centering
 	\includegraphics[width=\textwidth,height=0.7\textwidth]{chap/InterfacingFlute/img/Output/attenFluteErrorbars.tikz}
-	\caption{Measured $A(V_\text{control})$ with \gls{flute}; error bars show the span between minimum and maximum values in each $V_\text{control}$ step}
+	\caption[Evaluation attenuation vs control voltage]{Measured $A(V_\text{control})$ with \gls{flute}; error bars show the span between minimum and maximum values in each $V_\text{control}$ step}
 	\label{fig:interfacingFlute_finalTest}
 \end{figure}
 

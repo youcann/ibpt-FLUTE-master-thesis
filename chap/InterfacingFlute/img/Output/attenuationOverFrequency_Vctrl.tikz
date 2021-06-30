@@ -14,11 +14,11 @@ legend style={fill opacity=0.8, draw opacity=1, text opacity=1, draw=white!80!bl
 tick align=outside,
 tick pos=left,
 x grid style={white!69.0196078431373!black},
-xlabel={Frequency (in \si{\GHz})},
+xlabel={Frequency (\si{\GHz})},
 xmin=0, xmax=4,
 xtick style={color=black},
 y grid style={white!69.0196078431373!black},
-ylabel={Attenuation (in \si{\dB})},
+ylabel={Attenuation (\si{\dB})},
 ymin=-0.899999572770029, ymax=86.9002649840706,
 ytick style={color=black}
 ]

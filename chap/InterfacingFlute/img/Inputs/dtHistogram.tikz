@@ -5,12 +5,12 @@
 tick align=outside,
 tick pos=left,
 x grid style={white!69.0196078431373!black},
-xlabel={difference between consecutive samples \(\displaystyle t_{n+1}-t_n\) (in \si{\milli\second})},
+xlabel={difference between consecutive samples \(\displaystyle t_{n+1}-t_n\) (\si{\milli\second})},
 xmin=-9.9969955488632, xmax=210.01839454475,
 xtick style={color=black},
 xticklabel style={/pgf/number format/precision=3,/pgf/number format/fixed},yticklabel style={/pgf/number format/precision=3,/pgf/number format/fixed},,
 y grid style={white!69.0196078431373!black},
-ylabel={Relative Frequency},
+ylabel={Relative frequency},
 ymin=0, ymax=0.617632514129545,
 ytick style={color=black}
 ]

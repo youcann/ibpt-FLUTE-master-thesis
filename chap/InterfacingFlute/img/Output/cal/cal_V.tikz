@@ -7,11 +7,11 @@
 tick align=outside,
 tick pos=left,
 x grid style={white!69.0196078431373!black},
-xlabel={Time (in \si{\hour})},
+xlabel={Time (\si{\hour})},
 xmin=-0.215830547444444, xmax=4.53244149633333,
 xtick style={color=black},
 y grid style={white!69.0196078431373!black},
-ylabel={$V_{control}$ (in \si{\volt})},
+ylabel={$V_{control}$ (\si{\volt})},
 ymin=5.7, ymax=12.3,
 ytick style={color=black}
 ]

@@ -2,9 +2,9 @@
 \section{Relativistic Electrons}
 In a (linear) particle accelerator, charged particles, such as electrons, are accelerated to increase their total energy over their energy at rest.
 
-Compared to heavier particles, such as protons ($m_p=\SI{938.27}{\mega\eV\per c\squared}$), electrons are light particles ($m_p=\SI{0.511}{\mega\eV\per c\squared}$). They are typically accelerated to speeds comparable to the speed of light to achieve kinetic energies usable for scientific experiments. For this reason, relativistic mechanics are needed to describe their movements.\footnote{As relativistic mechanics are a super set of classical mechanics, the equations also apply for slower particles.} \cite{Hinterberger1997}
+Compared to heavier particles, such as protons ($m_p=\SI{938.27}{\mega\eV\per c\squared}$), electrons are light particles ($m_e=\SI{0.511}{\mega\eV\per c\squared}$). They are typically accelerated to speeds comparable to the speed of light to achieve kinetic energies usable for scientific experiments. For this reason, relativistic mechanics are needed to describe their movements.\footnote{As relativistic mechanics are a super set of classical mechanics, the equations also apply for slower particles.} \cite{Hinterberger1997}
 
-With the speed of light $c=\SI{2.998e8}{\m\per\s}$ and the particle velocity $v$, it is common to define \cite{Wangler2008}:
+With the speed of light $c=\SI{2.99792458e8}{\m\per\s}$ and the particle velocity $v$, it is common to define \cite{Wangler2008}:
 \begin{align}\label{eq:theoreticalFramework_gammabeta}
 \text{(normalized velocity)}\qquad\beta &= \frac{v}{c}\\
 \text{(relativistic mass factor)}\qquad\gamma &= \frac{1}{\sqrt{1-\beta^2}} \\
@@ -17,13 +17,13 @@ W=\sqrt{(mc^2)^2+(pc)^2},
 \end{equation}
 with the rest energy $mc^2$ and the kinetic energy is
 \begin{equation}
-W=E-mc^2.
+T=W-mc^2.
 \end{equation}
 
 With electrons (mass $m_e$) leaving the \gls{flute} electron gun with a momentum of $p=\SI{7}{\MeV\per c}$, this is equivalent to
 \begin{align}
-W=\sqrt{(m_ec^2)^2+(pc)^2} &= \SI{7.0186271886}{\MeV}\\
-\gamma = \frac{W}{m_ec^2} &= \num{13.73511}\\
+W=\sqrt{(m_ec^2)^2+(pc)^2} &= \SI{7.0186}{\MeV}\\
+\gamma = \frac{W}{m_ec^2} &= \num{13.7351}\\
 \beta = \sqrt{1-\gamma^{-2}} &= 0.9973
 \end{align}
 
@@ -31,7 +31,7 @@ The force exerted on an electron (charge $q$) by an electric field $E$ and a mag
 \begin{equation}\label{eq:fl}
 F_L = q\left(E+v\times B\right).
 \end{equation}
-As the force due to the magnetic field is scaled with the velocity $v$, it is technically more viable to steer and focus an electron beam with magnets instead of electric fields. This is mainly because strong magnetic fields are easier to create and work with than high electric fields, which are difficult to handle. \cite[p.~27]{Krieger2013}
+As the force due to the magnetic field is scaled with the velocity $v$, it is technically more viable to steer and focus a relativistic electron with magnets instead of electric fields. This is mainly because strong magnetic fields are easier to create and work with than high electric fields, which are difficult to handle. \cite[p.~27]{Krieger2013}
 
 \autoref{eq:fl} also motivates the use need for stable electron energies. Since the velocity depends on the energy, the force on the electrons is also a function of their energy. The magnetic fluxes of electromagnets can only be changed slowly compared to the repetition rate of an accelerator, so corrections to $B$ are not possible, so $v$/$E$ needs to be stable for a stable trajectory/focusing.
 
@@ -49,7 +49,7 @@ For the special case of $y[n]:=x[n]$, $r_{xx}[n_1,n_2]$ is called \textit{auto c
 
 The processes $x[n]$ and $y[n]$ are called \textit{\gls{wss}} if the following two properties hold. \cite[p.~167]{Park2017}
 First, their means $\mu_{\xi}[n]$ are constant, i.e. they do not depend on the sample index:
-\begin{align}
+\begin{align}\label{eq:wss}
 \mu_{x}[n] &= \mu_x\\
 \mu_{y}[n] &= \mu_y
 \end{align}
@@ -154,7 +154,7 @@ Compared to the Barlett method, the overlapping of up to \SI{50}{\percent} (see 
 
 
 \paragraph{Spectogram}
-In case of a non-stationary signal $x[n]$, one possibility to analyze and display the spectral content is the use of the \gls{stft} and the spectrogram, which is a two dimensional power spectral density function mapping frequency and time to a third coordinate like height, intensity or color.
+If a stochastic process or a signal as a realization of that process $x[n]$ is not \gls{wss}, one possibility to analyze and display the spectral content is the use of the \gls{stft} and the spectrogram, which is a two dimensional power spectral density function mapping frequency and time to a third coordinate like height, intensity or color.
 
 To calculate the spectrogram, the signal is split into segments with the sliding window $w[n-m]$ for which duration the signal is assumed to be stationary. For each segment at time index $m$, the periodogram is calculated according to
 \begin{equation}
@@ -234,7 +234,7 @@ The relative, or percentual, standard deviation of the stationary stoachastic pr
 \begin{equation}
 \op{\%STD_X} := \frac{\sigma_X}{\mu_X}.
 \end{equation}
-Is the process $X$ non stationary, $\op{\%STD_X}$ depends on the absolute time $t$ and the window size $T$ for which the process is assumed to be stationary:
+In general, especially if $X$ is non-stationary (see \autoref{eq:wss}), $\op{\%STD_X}$ depends on the absolute time $t$ and the window size $T$ for which the process is assumed to be stationary:
 \begin{equation}
 \op{\%STD_X} = \op{\%STD_X}(t,T)
 \end{equation}

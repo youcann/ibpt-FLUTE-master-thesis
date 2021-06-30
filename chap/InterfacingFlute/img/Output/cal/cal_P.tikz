@@ -7,11 +7,11 @@
 tick align=outside,
 tick pos=left,
 x grid style={white!69.0196078431373!black},
-xlabel={Time (in \si{\hour})},
+xlabel={Time (\si{\hour})},
 xmin=-0.215830547444444, xmax=4.53244149633333,
 xtick style={color=black},
 y grid style={white!69.0196078431373!black},
-ylabel={$P_\text{cavity}$ (in \si{\mega\watt})},
+ylabel={$P_\text{cavity}$ (\si{\mega\watt})},
 ymin=5.83711102913459, ymax=7.74046148943067,
 ytick style={color=black}
 ]

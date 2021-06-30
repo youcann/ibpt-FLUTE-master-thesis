@@ -7,7 +7,7 @@
 \node[align=center,font=\scriptsize,fill=white,inner sep=1mm] at(1.89,-3.28) {Iron Yoke};
 \node[align=center,font=\scriptsize] at(0.13,1.79) {Wave\\Guide};
 
-\draw[->,thick,blue] (-1.29,0.62) -- +(7.5,-0.005) node[anchor=south east] {Electron Beam};
-\draw[-<,thick,green] (-1.29,0.62) -- +(7.5,-0.19) node[anchor=north east] {Laser Beam};
+\draw[->,thick,blue] (-1.29,0.62) -- +(9.5,-0.005) node[anchor=south east] {Electron Beam};
+\draw[-<,thick,green] (-1.29,0.62) -- +(9.5,-0.29) node[anchor=north east] {Laser Beam};
 
 \end{tikzpicture}

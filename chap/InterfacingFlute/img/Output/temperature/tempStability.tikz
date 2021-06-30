@@ -8,11 +8,11 @@
 tick align=outside,
 tick pos=left,
 x grid style={white!69.0196078431373!black},
-xlabel={Relative time (in \si{\hour})},
+xlabel={Relative time (\si{\hour})},
 xmin=0, xmax=8,
 xtick style={color=black},
 y grid style={white!69.0196078431373!black},
-ylabel={\(\displaystyle \vartheta_{ambient,in RF lab}\) (in \si{\celsius})},
+ylabel={\(\displaystyle \vartheta_{ambient,in RF lab}\) (\si{\celsius})},
 ymin=19.12495, ymax=19.67605,
 ytick style={color=black}
 ]
@@ -4023,7 +4023,7 @@ xmin=0, xmax=8,
 xtick pos=left,
 xtick style={color=black},
 y grid style={white!69.0196078431373!black},
-ylabel={\(\displaystyle \vartheta_{ambient,in LLRF cabinet}\) (in \si{\celsius})},
+ylabel={\(\displaystyle \vartheta_{ambient,in LLRF cabinet}\) (\si{\celsius})},
 ymin=25.22455, ymax=25.41045,
 ytick pos=right,
 ytick style={color=black}

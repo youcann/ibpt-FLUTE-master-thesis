@@ -20,7 +20,7 @@ That is why when there is no prior knowledge of the system, the identification i
 To get the transfer function $P(s)=\mathcal{L}\left\{p(t)\right\}$ of the plant from its step response(s), several methods are common, including correlation based and frequency response based algorithms.
 
 \subsection{Identifying the Plant Attenuator+RF}
-The input PRBS signal is generated with the Python script in \autoref{lst:controllerDesignAndEvaluation-randomSequence}.
+The input \gls{prbs} signal is generated with the Python script in \autoref{lst:controllerDesignAndEvaluation-randomSequence}.
 Based on the value of a pseudo random number generator, the sequence toggles the attenuator between $V_\text{control}=\SI{7}{\volt}$ and $V_\text{control}=\SI{11}{\volt}$.
 Using \autoref{fig:interfacingFlute_attenDatten}, this equals a span in attenuation of \SIrange{6.892}{6.4026}{\dB}.
 With the parameter \texttt{toggleP}, the average length of one constant voltage level can be controlled. 
@@ -41,7 +41,7 @@ In a test run over six hours (after all \gls{flute} subsystems had stabilized), 
 \begin{figure}[tb]
 	\centering
 	\includegraphics[width=\textwidth,height=0.5\textwidth]{chap/ControllerDesignAndEvaluation/img/identification/excitation.tikz}
-	\caption{Section of the input sequence (blue) and the system response (orange); Note the inverse relation: A higher attenuation $A$ causes a lower cavity power $P_\text{cavity}$}
+	\caption[Identification sequence and response]{Section of the input sequence (blue) and the system response (orange); Note the inverse relation: A higher attenuation $A$ causes a lower cavity power $P_\text{cavity}$}
 	\label{fig:controllerDesignAndEvaluation-identify-excitation}
 \end{figure}
 
@@ -56,12 +56,12 @@ Using the Matlab function \texttt{zpk()} the models are converted into the zero-
 \begin{figure}[tb]
 	\centering
 	\includegraphics[width=\textwidth,height=0.5\textwidth]{chap/ControllerDesignAndEvaluation/img/identification/modelOutputs.tikz}
-	\caption{Validation of the estimated process models for the plant; the legend also shows the model fits in percent}
+	\caption[Validation of the process model]{Validation of the estimated process models for the plant; the legend also shows the model fits in percent}
 	\label{fig:controllerDesignAndEvaluation-identify-mo}
 \end{figure}
 
 \begin{table}[tb]
-\caption{Process models of the plant as estimated by the Matlab System Identification Toolboxes process model estimator}
+\caption[Estimated process models]{Process models of the plant as estimated by the Matlab System Identification Toolboxes process model estimator}
 \label{tab:controllerDesignAndEvaluation-identify-models}
 \centering
 \begin{tabular}{lcccc}
@@ -160,7 +160,7 @@ For an \gls{iir} filter, the group delay cannot be calculated with \autoref{eq:g
 \begin{figure}[tb]
 	\centering
 	\includegraphics[width=\textwidth,height=0.5\textwidth]{chap/ControllerDesignAndEvaluation/img/measurementFilter/firVsMa_impulseresponses.tikz}
-	\caption{Impulse responses of a moving average filter ($N=100$), a \gls{fir} lowpass ($N=50$, $f_c=\SI{0.1}{\hertz}$) and a \gls{iir} Butterworth lowpass ($N=50$, $f_c=\SI{0.1}{\hertz}$)}
+	\caption[Impulse Responses of different time discrete filters]{Impulse responses of a moving average filter ($N=100$), a \gls{fir} lowpass ($N=50$, $f_c=\SI{0.1}{\hertz}$) and a \gls{iir} Butterworth lowpass ($N=50$, $f_c=\SI{0.1}{\hertz}$)}
 	\label{fig:controllerDesignAndEvaluation-impulseresponses}
 \end{figure}
 
@@ -169,7 +169,7 @@ In \autoref{fig:controllerDesignAndEvaluation-filterResults}, the three filter t
 \begin{figure}[tb]
 	\centering
 	\includegraphics[width=\textwidth,height=0.65\textwidth]{chap/ControllerDesignAndEvaluation/img/measurementFilter/firVsMa.tikz}
-	\caption{Effects of the three different lowpass filters in \autoref{fig:controllerDesignAndEvaluation-impulseresponses} on noisy data}
+	\caption[Filter effects of different time discrete filters]{Effects of the three different lowpass filters in \autoref{fig:controllerDesignAndEvaluation-impulseresponses} on noisy data}
 	\label{fig:controllerDesignAndEvaluation-filterResults}
 \end{figure}
 
@@ -202,14 +202,14 @@ For the controller design in the next section and the later implemented real-tim
         \subfloat[$N=10$]{\input{chap/ControllerDesignAndEvaluation/img/measurementFilter/lpFiltZPplane10.tikz}}
         \qquad
         \subfloat[$N=40$]{\input{chap/ControllerDesignAndEvaluation/img/measurementFilter/lpFiltZPplane40.tikz}}
-       \caption{Pole-Zero maps for two \gls{fir} filters with a common cutoff frequency $f_c=\SI{10}{\milli\hertz}$ but different filter orders $N$;\\ $\circ$ denotes zeros, $\times$ denotes poles, $(k)$ is a $k$-times pole}
+       \caption[FIR pole zero maps]{Pole-Zero maps for two \gls{fir} filters with a common cutoff frequency $f_c=\SI{10}{\milli\hertz}$ but different filter orders $N$;\\ $\circ$ denotes zeros, $\times$ denotes poles, $(k)$ is a $k$-times pole}
     \label{fig:controllerDesignAndEvaluation-zplane}
 \end{figure}
 
 \begin{figure}[tb]
 	\centering
 	\includegraphics[width=\textwidth,height=0.6\textwidth]{chap/ControllerDesignAndEvaluation/img/measurementFilter/lpFiltMagnitude.tikz}
-	\caption{Magnitude response of two \gls{fir} filters with a common cutoff frequency $f_c=\SI{10}{\milli\hertz}$ but different filter orders $N$}
+	\caption[FIR magnitude response]{Magnitude response of two \gls{fir} filters with a common cutoff frequency $f_c=\SI{10}{\milli\hertz}$ but different filter orders $N$}
 	\label{fig:controllerDesignAndEvaluation-magn}
 \end{figure}
 
@@ -349,7 +349,7 @@ The manual of the PID Tuner\cite{pidTunerMan} describes the expected input (see 
 \begin{figure}[tb]
 	\centering
 	\includegraphics[]{chap/ControllerDesignAndEvaluation/img/controller/pidTunerArch.tikz}
-	\caption{Required system architecture for the Matlab PID Tuner; PID Tuner input is the system block $Sys[z]$ (green), generated output is the controller $G[z]$ (blue)}
+	\caption[System architecture for the Matlab PID tuner]{Required system architecture for the Matlab PID Tuner; PID Tuner input is the system block $Sys[z]$ (green), generated output is the controller $G[z]$ (blue)}
 	\label{fig:controllerDesignAndEvaluation-pidTunersys}
 \end{figure}
 
@@ -387,7 +387,7 @@ Using the PID Tuner \gls{gui} (see \autoref{fig:Appendix-pidTuner}), the control
 With this tool four different controllers are designed, two for each measurement filter's order of $N=10$ and $N=40$. The transient behavior with $0.2$ for all controllers is chosen as a compromise between speed and overshoot behavior. The optimized \gls{pid} parameters (for a discrete time \gls{pid} controller in parallel form) are listed in \autoref{tab:controllerDesignAndEvaluation-pidTunerResults}.
 
 \begin{table}[tb]
-\caption{Parameters of a discrete time \gls{pid} controller in parallel form calculated with the Matlab PID Tuner; $N$ is the order of the used measurement filter}
+\caption[Calculated PID parameters]{Parameters of a discrete time \gls{pid} controller in parallel form calculated with the Matlab PID Tuner; $N$ is the order of the used measurement filter}
 \label{tab:controllerDesignAndEvaluation-pidTunerResults}
 \centering
 \begin{tabular}{lSSSSSS}
@@ -412,14 +412,14 @@ Especially \autoref{fig:controllerDesignAndEvaluation-pidTunerITN40} shows that 
 \begin{figure}[tb]
 	\centering
 	\includegraphics[width=\textwidth,height=0.5\textwidth]{chap/ControllerDesignAndEvaluation/img/controller/pidTuner/trackingN10.tikz}
-	\caption{Step response of the input tracking $F_T$ for controller $G_1[z]$ and $G_2[z]$, designed with the plant $P[z]$ and a measurement filter of order $N=10$, response time goal to \SI{5}{\second} and \SI{10}{\second}}
+	\caption[Input tracking of controller one and two]{Step response of the input tracking $F_T$ for controller $G_1[z]$ and $G_2[z]$, designed with the plant $P[z]$ and a measurement filter of order $N=10$, response time goal to \SI{5}{\second} and \SI{10}{\second}}
 	\label{fig:controllerDesignAndEvaluation-pidTunerITN10}
 \end{figure}
 
 \begin{figure}[tb]
 	\centering
 	\includegraphics[width=\textwidth,height=0.5\textwidth]{chap/ControllerDesignAndEvaluation/img/controller/pidTuner/trackingN40.tikz}
-	\caption{Step response of the input tracking $F_T$ for controller $G_3[z]$ and $G_4[z]$, designed with the plant $P[z]$ and a measurement filter of order $N=40$, response time goal to \SI{5}{\second} and \SI{10}{\second}}
+	\caption[Input tracking of controller three and four]{Step response of the input tracking $F_T$ for controller $G_3[z]$ and $G_4[z]$, designed with the plant $P[z]$ and a measurement filter of order $N=40$, response time goal to \SI{5}{\second} and \SI{10}{\second}}
 	\label{fig:controllerDesignAndEvaluation-pidTunerITN40}
 \end{figure}
 
@@ -434,14 +434,14 @@ Especially when looking a the plots of $G_3[z]$, it is obvious that there can be
 \begin{figure}[tb]
 	\centering
 	\includegraphics[width=\textwidth,height=0.5\textwidth]{chap/ControllerDesignAndEvaluation/img/controller/pidTuner/rejectionN10.tikz}
-	\caption{Step response of the disturbance rejection $F_{DR}$ for controller $G_1[z]$ and $G_2[z]$, designed with the plant $P[z]$ and a measurement filter of order $N=10$, response time goal to \SI{5}{\second} and \SI{10}{\second}}
+	\caption[Disturbance rejection of controller one and two]{Step response of the disturbance rejection $F_{DR}$ for controller $G_1[z]$ and $G_2[z]$, designed with the plant $P[z]$ and a measurement filter of order $N=10$, response time goal to \SI{5}{\second} and \SI{10}{\second}}
 	\label{fig:controllerDesignAndEvaluation-pidTunerDRN10}
 \end{figure}
 
 \begin{figure}[tb]
 	\centering
 	\includegraphics[width=\textwidth,height=0.5\textwidth]{chap/ControllerDesignAndEvaluation/img/controller/pidTuner/rejectionN40.tikz}
-	\caption{Step response of the disturbance rejection $F_{DR}$ for controller $G_3[z]$ and $G_4[z]$, designed with the plant $P[z]$ and a measurement filter of order $N=40$, response time goal to \SI{5}{\second} and \SI{10}{\second}}
+	\caption[Disturbance rejection of controller three and four]{Step response of the disturbance rejection $F_{DR}$ for controller $G_3[z]$ and $G_4[z]$, designed with the plant $P[z]$ and a measurement filter of order $N=40$, response time goal to \SI{5}{\second} and \SI{10}{\second}}
 	\label{fig:controllerDesignAndEvaluation-pidTunerDRN40}
 \end{figure}
 
@@ -460,7 +460,7 @@ This shows the gain margin for $G_3[z]$ (in combination with the $N=40$ filter),
 \begin{figure}[tb]
 	\centering
 	\includegraphics[]{chap/ControllerDesignAndEvaluation/img/controller/pidTuner/nyquist1.tikz}
-	\caption{Nyquist plot to analyze the stability of the closed-loop control system based on the locus plot of the open-loop system; Note the critical point $(-1,\,0j)$ is always on ``left'' of the curve indicating stability}
+	\caption[Nyquist plot for all controllers]{Nyquist plot to analyze the stability of the closed-loop control system based on the locus plot of the open-loop system; Note the critical point $(-1,\,0j)$ is always on ``left'' of the curve indicating stability}
 	\label{fig:controllerDesignAndEvaluation-pidTunerNyq}
 \end{figure}
 
@@ -471,7 +471,7 @@ In \autoref{fig:controllerDesignAndEvaluation-pidTunerfails} another issue is hi
         \subfloat[Step response of the disturbance rejection; amplitude of oscillations grow over time]{\input{chap/ControllerDesignAndEvaluation/img/controller/pidTuner/rejectionFail.tikz}}
         \qquad
         \subfloat[Nyquist plot; critical point $(-1,\,0j)$ is encircled]{\input{chap/ControllerDesignAndEvaluation/img/controller/pidTuner/nyquistfail.tikz}}
-       \caption{Two signs of an unstable closed loop system, in this case caused by a measurement filter with too high order and/or a too aggressive controller}
+       \caption[Unstable system]{Two signs of an unstable closed loop system, in this case caused by a measurement filter with too high order and/or a too aggressive controller}
     \label{fig:controllerDesignAndEvaluation-pidTunerfails}
 \end{figure}
 
@@ -493,7 +493,7 @@ With the simulation the effect of adding $d[n]$ to a system without any feedback
 \begin{figure}[tb]
 	\centering
 	\includegraphics[width=\textwidth,height=0.5\textwidth]{chap/ControllerDesignAndEvaluation/img/controller/simulink/offlineSimulation.tikz}
-	\caption{Output of the Simulink model in \autoref{fig:Appendix-simuliunk}; step size $T=\SI{0.2}{\second}$, end time $\SI{3600}{\second}$. Simulation time on a computer equipped with an Intel i7-3770: \SI{3.5}{\second}}
+	\caption[Output offline evaluation]{Output of the Simulink model in \autoref{fig:Appendix-simuliunk}; step size $T=\SI{0.2}{\second}$, end time $\SI{3600}{\second}$. Simulation time on a computer equipped with an Intel i7-3770: \SI{3.5}{\second}}
 	\label{fig:controllerDesignAndEvaluation-simulinkResult}
 \end{figure}
 
@@ -570,14 +570,14 @@ Note, that in this test about \SI{7}{\hour} into the experiment there was an une
 \begin{figure}[tb]
 	\centering
 	\includegraphics[width=\textwidth,height=0.5\textwidth]{chap/ControllerDesignAndEvaluation/img/results/result_timesignal.tikz}
-	\caption{Cavity power over about \SI{15}{\hour} (about three hours of downtime removed for clarity around the \SI{7}{\hour} mark); control system switched off at \SI{6}{\hour} (recording started 2021/05/01 20:00)}
+	\caption[Time signal whole experiment]{Cavity power over about \SI{15}{\hour} (about three hours of downtime removed for clarity around the \SI{7}{\hour} mark); control system switched off at \SI{6}{\hour} (recording started 2021/05/01 20:00)}
 	\label{fig:controllerDesignAndEvaluation_resultTime}
 \end{figure}
 
 \begin{figure}[tb]
 	\centering
 	\includegraphics[width=\textwidth,height=0.5\textwidth]{chap/ControllerDesignAndEvaluation/img/results/result_spectrogram.tikz}
-	\caption{Spectrogram of the cavity power in \autoref{fig:controllerDesignAndEvaluation_resultTime}}
+	\caption[Spectogram of \autoref{fig:controllerDesignAndEvaluation_resultTime}]{Spectrogram of the cavity power in \autoref{fig:controllerDesignAndEvaluation_resultTime}}
 	\label{fig:controllerDesignAndEvaluation_resultSpectg}
 \end{figure}
 
@@ -587,14 +587,14 @@ This allows the spectrum for these two blocks to be estimated using a periodogra
 \begin{figure}[tb]
 	\centering
 	\includegraphics[width=\textwidth,height=0.7\textwidth]{chap/ControllerDesignAndEvaluation/img/results/controllerOnVsOff.tikz}
-	\caption{Time plots comparing between the control system on and off}
+	\caption[Controller success time signal]{Time plots comparing between the control system on and off}
 	\label{fig:controllerDesignAndEvaluation_resultComp}
 \end{figure}
 
 \begin{figure}[tb]
 	\centering
 	\includegraphics[width=\textwidth,height=0.7\textwidth]{chap/ControllerDesignAndEvaluation/img/results/controllerOnVsOffSpectrumErrorBand.tikz}
-	\caption{Power spectrum of the plots in \autoref{fig:controllerDesignAndEvaluation_resultTime} computed with Welch's method; shaded areas show the uncertainty according to \autoref{eq:varWelch}}
+	\caption[Controller success spectrum]{Power spectrum of the plots in \autoref{fig:controllerDesignAndEvaluation_resultTime} computed with Welch's method; shaded areas show the uncertainty according to \autoref{eq:varWelch}}
 	\label{fig:controllerDesignAndEvaluation_resultPeriodo}
 \end{figure}
 
@@ -616,7 +616,7 @@ For that reason, for small window sizes, time averages of $STD\%$ should be used
 \begin{figure}[tb]
 	\centering
 	\includegraphics[width=\textwidth,height=0.5\textwidth]{chap/ControllerDesignAndEvaluation/img/stdp_means.tikz}
-	\caption{Relative standard deviation $STD\%(T)$, shaded areas show $\operatorname{min}\{STD\%(t,T_0)\}$ and $\operatorname{max}\{STD\%(t,T_0)\}$, solid lines show $\operatorname{mean}\{STD\%(t,T_0)\}$ for a fixed window size $T=T_0$}
+	\caption[Relative standard deviation $STD\%(T)$]{Relative standard deviation $STD\%(T)$, shaded areas show $\operatorname{min}\{STD\%(t,T_0)\}$ and $\operatorname{max}\{STD\%(t,T_0)\}$, solid lines show $\operatorname{mean}\{STD\%(t,T_0)\}$ for a fixed window size $T=T_0$}
 	\label{fig:controllerDesignAndEvaluation_resultSTDp_means}
 \end{figure}
 
@@ -666,7 +666,7 @@ The new controller architecture is shown in \autoref{fig:controllerDesignAndEval
 \begin{figure}[tb]
 	\centering
 	\includegraphics[]{chap/ControllerDesignAndEvaluation/img/optimization/newArch.tikz}
-	\caption{Schematic for a control system that uses disturbance feed-forward of the measurable disturbance $d(t)$ in addition to the feed-back loop; changes to the classical control system architecture in \autoref{fig:theoreticalFramework-feedback-architecture} highlighted in yellow(changed) and green(added) (based on \cite[p.~221]{Foellinger2016})}
+	\caption[Feed-forward schematic]{Schematic for a control system that uses disturbance feed-forward of the measurable disturbance $d(t)$ in addition to the feed-back loop; changes to the classical control system architecture in \autoref{fig:theoreticalFramework-feedback-architecture} highlighted in yellow(changed) and green(added) (based on \cite[p.~221]{Foellinger2016})}
 	\label{fig:controllerDesignAndEvaluation-distfeedforwardArchitecture}
 \end{figure}
 
@@ -740,19 +740,19 @@ At the moment, the Faraday cup mounted at the end of the low energy section. The
 
 To set the range of the \gls{csa}, its serial interface together with a serial to Ethernet adapter is used (See an example of the command structure in \autoref{lst:Appendix-javaPcb}).
 
-\autoref{fig:controllerDesignAndEvaluation-optimCav} and \autoref{fig:controllerDesignAndEvaluation-optimFaraday} show the cavity power and the (uncalibrated) charge reading of the Faraday cup for three different cases: the control system switched off, the control system on with the cavity power used as control input and the control system with the Faraday cup's readout (via the \gls{csa}) as an input.
+\autoref{fig:controllerDesignAndEvaluation-optimCav} and \autoref{fig:controllerDesignAndEvaluation-optimFaraday} show the cavity power and the (un-calibrated) charge reading of the Faraday cup for three different cases: the control system switched off, the control system on with the cavity power used as control input and the control system with the Faraday cup's readout (via the \gls{csa}) as an input.
 
 \begin{figure}[tb]
 	\centering
 	\includegraphics[width=\textwidth,height=0.65\textwidth]{chap/ControllerDesignAndEvaluation/img/optimization/cavityPower.tikz}
-	\caption{Cavity power without control interaction, with the controller acting on the cavity power and with the controller acting on charge; Note the three curves are measured at different times and have no relation to one another}
+	\caption[Cavity power]{Cavity power without control interaction, with the controller acting on the cavity power and with the controller acting on charge; Note the three curves are measured at different times and have no relation to one another}
 	\label{fig:controllerDesignAndEvaluation-optimCav}
 \end{figure}
 
 \begin{figure}[tb]
 	\centering
 	\includegraphics[width=\textwidth,height=0.65\textwidth]{chap/ControllerDesignAndEvaluation/img/optimization/faradayCharge.tikz}
-	\caption{Electron charge without control interaction, with the controller acting on the cavity power and with the controller acting on charge; Note the three curves are measured at different times and have no relation to one another}
+	\caption[Electron charge]{Electron charge without control interaction, with the controller acting on the cavity power and with the controller acting on charge; Note the three curves are measured at different times and have no relation to one another}
 	\label{fig:controllerDesignAndEvaluation-optimFaraday}
 \end{figure}
 
