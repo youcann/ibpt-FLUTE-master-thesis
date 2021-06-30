@@ -33,7 +33,7 @@ F_L = q\left(E+v\times B\right).
 \end{equation}
 As the force due to the magnetic field is scaled with the velocity $v$, it is technically more viable to steer and focus a relativistic electron with magnets instead of electric fields. This is mainly because strong magnetic fields are easier to create and work with than high electric fields, which are difficult to handle. \cite[p.~27]{Krieger2013}
 
-\autoref{eq:fl} also motivates the use need for stable electron energies. Since the velocity depends on the energy, the force on the electrons is also a function of their energy. The magnetic fluxes of electromagnets can only be changed slowly compared to the repetition rate of an accelerator, so corrections to $B$ are not possible, so $v$/$E$ needs to be stable for a stable trajectory/focusing.
+\autoref{eq:fl} also motivates the use need for stable electron energies. Since the velocity depends on the energy, the force on the electrons is also a function of their energy. The magnetic fluxes of electromagnets can only be changed slowly compared to the repetition rate of an accelerator, so corrections to $B$ are not possible, which is why $v$/$E$ needs to be stable for a stable trajectory/focusing.
 
 
 
@@ -53,7 +53,7 @@ First, their means $\mu_{\xi}[n]$ are constant, i.e. they do not depend on the s
 \mu_{x}[n] &= \mu_x\\
 \mu_{y}[n] &= \mu_y
 \end{align}
-Also the auto covariance does not depend on the absolute sample indices $n_1$ and $n_2$, but merely on the difference between them:
+Also, the auto covariance does not depend on the absolute sample indices $n_1$ and $n_2$, but merely on the difference between them:
 \begin{equation}
 r_{xy}[n_1,n_2] = r_{xy}[m],\qquad \text{with: } m:=n_2-n_1
 \end{equation}
@@ -118,11 +118,11 @@ Both methods yield equal results, if $r[m]$ is estimated with the biased estimat
 \hat{r}_{\text{unbiased}}[m] = \frac{1}{N-m} \sum_{n=m+1}^{N} x[n]\,x^\ast[n-m]\qquad m \in [0,\,N-1].
 \end{equation}
 
-\cite{Rowell2008} shows one key weakness of the unmodified periodogram method in \autoref{eq:periodogram}: The variance does not decrease significantly with more samples $N$. Instead the variance of the periodogram for each frequency approaches the square of the actual \gls{psd}:
+\cite{Rowell2008} shows one key weakness of the unmodified periodogram method in \autoref{eq:periodogram}: The variance does not decrease significantly with more samples $N$. Instead. the variance of the periodogram for each frequency approaches the square of the actual \gls{psd}:
 \begin{equation}
 \lim_{N\rightarrow\infty} \text{Var}\left\{\hat{\Phi}_{p,\,xx}[k]\right\} = \Phi_{xx}^2[k]
 \end{equation}
-Furthermore the periodogram/correlogram suffer from the smearing and leakage effects because the limited length of the data samples always causes an implicit windowing, thus reducing frequency resolution.\\
+Furthermore, the periodogram/correlogram suffer from the smearing and leakage effects because the limited length of the data samples always causes an implicit windowing, thus reducing frequency resolution.\\
 
 There are several popular methods that improve on the periodogram/correlogram concepts:
 
@@ -224,7 +224,7 @@ For the special case of a stable open loop $F_o(s)$ \footnote{The stability of $
 \newpage
 \section{Metrics to Quantify the Stability of a Signal}\label{sec:metrics}
 ``Stability'' can have different meanings depending on the context. In case of signal processing, a signal is usually said to be \textit{stable} if it has only little variation around its mean or some target value, i.e. the mean has to be constant and the variance stays below some threshold. 
-Stability is not to be confused with stationarity, which requires the mean and the variance and the autocorrelation stay constant over time. \cite{Guthrie2020} 
+Stability is not to be confused with stationarity, which requires the mean, the variance and the autocorrelation to stay constant over time. \cite{Guthrie2020} 
 To express stability as a single numerical value, there are several possibilities, some are described in the following.
 
 \paragraph{Relative Standard Deviation}
@@ -245,7 +245,7 @@ In that case, for a fixed window size $T=T_0$, a mean percentual standard deviat
 This assumes discrete time steps $t_n$, $n\in[0,N-1]$.
 
 \paragraph{Mean Squared Error}
-A similar measure to the percentual standard deviation is the \gls{mse}, if instead of the mean $\mu_X$, a fixed target $x_t$ is used.
+A similar measure to the percentual standard deviation is the \gls{mse}, if, instead of the mean $\mu_X$, a fixed target $x_t$ is used.
 
 The mean squared error sums up the squared errors $\left(x[n] - x_t[n]\right)^2$ of $x[n]$ from a set value $x_t$. To remove the effect of the length of the data sequence, the sum is devided by the length of the sequence $N$:
 \begin{equation}
@@ -261,9 +261,9 @@ This novel approach compares the power of the most prominent noise power source 
 Compared to the relative standard deviation $\op{\%STD}(t,T)$, this method has the advantage of being time-independent and keeping periodic noise structures:\\
 
 \paragraph{Comparison}
-To make $\op{\%STD}(t,T)$ independent of time, it could be tempting to choose $T=T_\text{total}$ with $T_\text{toal}$ being the time span of the data set. But because of the averaging effect of the standard deviation estimator, this washes out the maxima and thus could lead to an under-estimation of $\op{\%STD}$, so an over-estimation of the stability.
+To make $\op{\%STD}(t,T)$ independent of time, it could be tempting to choose $T=T_\text{total}$ with $T_\text{total}$ being the time span of the data set. But because of the averaging effect of the standard deviation estimator, this washes out the maxima and thus could lead to an under-estimation of $\op{\%STD}$, so an over-estimation of the stability.
 
-The $\op{MSE}$ uses the whole data set, but due to normalizing, maxima can also be hidden.
+The $\op{MSE}$ uses the whole data set, but due to normalizing maxima can also be hidden.
 
 Periodogram-based method have the advantage that for a fixed target value $x_t$, they are very easy to interpret: All power that is not in the $f=0$ frequency bin, is definitely noise. Integrating over these noise bins yields the error power comparable to the $\op{MSE}$.
 The described $\op{MPN}$ metric has the advantage of showing the largest contributor to the noise and allows for an easy validation of a controllers success on this noise component.

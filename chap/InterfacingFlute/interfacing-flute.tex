@@ -3,12 +3,12 @@ This chapter covers methods on interfacing the FLUTE accelerator, that is how to
 In this chapter \textit{input} and \textit{output} refer to the view from the control system.
 
 \section{Inputs}
-FLUTE uses the \textit{\gls{epics}}\cite{Dalesio1991} for control of various parts of the accelerator, to archived time series data and to build user interfaces via \textit{\gls{css}}\cite{CSS2021}, a development studio based on the Java \gls{ide} Eclipse. \cite{Mexner2018}
+FLUTE uses the \textit{\gls{epics}}\cite{Dalesio1991} for control of various parts of the accelerator, to archive time series data and to build user interfaces via \textit{\gls{css}}\cite{CSS2021}, a development studio based on the Java \gls{ide} Eclipse. \cite{Mexner2018}
 
 \Gls{epics} offers client/server and publish/subscribe paradigms to access data in so called \gls{pv} through channels. Modules are usually written in the C programming language. To ease the access to \gls{epics} channels in programs written with the Python language, the package \textit{PyEpics}\cite{Newville2019} can be used. Since all data of interest as input for the control system can be extracted through an \gls{epics} channel, the next section deals with using PyEpics to obtain the data.
 
 \subsection{Accessing EPICS channels in Python with PyEpics}
-Before usage PyEpics needs to be installed, e.g. with \texttt{pip3 install pyepics} from the \textit{PyPi} repository. If the computer running the Python code can reach the \gls{epics} \gls{ca} repeater on the machine network, the connection is established automatically in the background. To get a channel value asynchronously, i.e. at an arbitrary time, the function \texttt{caget(pvname)} can be used with the name of the desired process value, see \autoref{lst:caget}.
+Before usage, PyEpics needs to be installed, e.g. with \texttt{pip3 install pyepics} from the \textit{PyPi} repository. If the computer running the Python code can reach the \gls{epics} \gls{ca} repeater on the machine network, the connection is established automatically in the background. To get a channel value asynchronously, i.e. at an arbitrary time, the function \texttt{caget(pvname)} can be used with the name of the desired process value, see \autoref{lst:caget}.
 
 \begin{lstlisting}[style=python,caption = Using \texttt{caget()} to get the value of an EPICS process value, label = lst:caget]
 from epics import caget
@@ -82,11 +82,11 @@ F:INJ-1:Gun:01:Temperature:Body Value & 18 & 0.1294 & 0.05555\\
 \end{table}
 
 
-In addition the sample times of the process variables is examined if the method with a custom callback is used (see \autoref{lst:create_subscription}) or the data is extracted from the archive. The differences in the sample times are calculated according to
+In addition, the sample times of the process variables are examined if the method with a custom callback is used (see \autoref{lst:create_subscription}) or the data is extracted from the archive. The differences in the sample times are calculated according to
 \begin{equation}
 \Delta=t_{n+1}-t_n.
 \end{equation}
-Then a histogram with the relative frequency on the y axis is used as an estimator for the probability density function of the sample time intervals (see \autoref{fig:interfacingFlute_sampleTimesHist}). The histogram shows that the time series resulting from recording process variables out of the EPICS system are highly unevenly spaced. Thus the data needs to be converted to have evenly spaced sample times to use common signal processing methods like the \gls{dft} or digital \gls{lti} filters. For offline analysis of prerecorded data, it can easily be resampled to a fixed time grid. But for online operation of a filter or a whole control system it is not possible to use an arbitrary resample method because they are often non causal or introduce significant group delay when made causal. Instead calling \texttt{caget()} with a (software-) timer can be used to get evenly spaced samples online.
+Then a histogram with the relative frequency on the y axis is used as an estimator for the probability density function of the sample time intervals (see \autoref{fig:interfacingFlute_sampleTimesHist}). The histogram shows that the time series resulting from recording process variables out of the EPICS system are highly unevenly spaced. Thus the data needs to be converted to have evenly spaced sample times to use common signal processing methods like the \gls{dft} or digital \gls{lti} filters. For offline analysis of prerecorded data, it can easily be resampled to a fixed time grid. But for online operation of a filter or a whole control system it is not possible to use an arbitrary resample method because they are often non causal or introduce significant group delay when made causal. Instead of calling \texttt{caget()} with a (software-) timer can be used to get evenly spaced samples online.
 
 \begin{figure}[tb]
 \centering
@@ -98,9 +98,9 @@ Then a histogram with the relative frequency on the y axis is used as an estimat
 \subsection{Filtering the RF power Signals}
 In case of the klystron output \gls{rf} power or the power at the cavity, filtering of the signal is needed to remove zero outliers.
 These outliers occur if a high voltage arc occurs inside the cavity. This is detected and the \gls{llrf} control system shuts off the \gls{rf} power for the current pulse (called a ``breakdown'').
-These outliners are not representative of the average \gls{rf} power inside the cavity over multiple pulses and thus would greatly impair the controller performance.
+These outliers are not representative of the average \gls{rf} power inside the cavity over multiple pulses and thus would greatly impair the controller performance.
 For that reason, before any further filtering to remove noise etc, a breakdown removal filter is used (\autoref{lst:control-system-breakdownremoval}).
-In principle the new power value is checked to be inside a band the size of which is determined by the mean deviation of the $N_{filt}$ previous values and a scaling $m$.
+In principle, the new power value is checked to be inside a band, the size of which is determined by the mean deviation of the $N_{filt}$ previous values and a scaling $m$.
 The percentile differences are used here as they are robust against outliers (i.e. other breakdowns) in the $N_{filt}$ previous values opposed to a normal standard deviation.
 The scaling with $(2*1.2815)^{-1}$ is used to make the mean deviation comparable to a standard deviation.
 
@@ -171,7 +171,7 @@ The \textit{ZX73-2500-S+} is a voltage controllable \gls{rf} attenuator with coa
 
 
 
-The ZX73-2500-S+ attenuator consists of a brass housing/shielding containing the Mini-Circuits RVA-2500+, a variable SMD attenuator in the DV874 case form factor. The \gls{rf} input and output are connected with female SMA screw connectors. The power supply and control voltage are connected with solder pins. In order to use shielded cables and a reliable connection, for all measurements SMA connectors are soldered to the supply and control pins. According to equivalent circuit in the data sheet \cite{mini-circuitsZX732500VoltageVariable}, it can be assumed it is based on the common quad-$\pi$ pin diode design introduced in \cite{waughLowCostSurfaceMount1992}. In this attenuator design, the resistors in a fixed $\pi$-configuration attenuator are switched out for \gls{rf} PIN diodes with the appropriate biasing and matching resistors and capacitors, see \autoref{fig:quadPiequiC}. At high frequencies, PIN diodes behave like resistors with the differential resistance
+The ZX73-2500-S+ attenuator consists of a brass housing/shielding containing the Mini-Circuits RVA-2500+, a variable SMD attenuator in the DV874 case form factor. The \gls{rf} input and output are connected with female SMA screw connectors. The power supply and control voltage are connected with solder pins. In order to use shielded cables and a reliable connection, for all measurements SMA connectors are soldered to the supply and control pins. According to the equivalent circuit in the data sheet \cite{mini-circuitsZX732500VoltageVariable}, it can be assumed it is based on the common quad-$\pi$ pin diode design introduced in \cite{waughLowCostSurfaceMount1992}. In this attenuator design, the resistors in a fixed $\pi$-configuration attenuator are switched out for \gls{rf} PIN diodes with the appropriate biasing and matching resistors and capacitors, see \autoref{fig:quadPiequiC}. At high frequencies, PIN diodes behave like resistors with the differential resistance
 \begin{equation}
 r_d = f(I_F)
 \end{equation}
@@ -366,7 +366,7 @@ for that the stability over the course of one day is measured. The voltage is ta
 	\label{fig:interfacingFlute_atteneval-vsupp-stability}
 \end{figure}
 
-Comparing \autoref{fig:interfacingFlute_atteneval-vsupp-stability} with \autoref{fig:interfacingFlute_vcontrolstab_longterm} suggest a relation between the deviations in $V_{control}$ and $V_+$. Since they are both generated by the same Keysight 34907A module, this is plausible. The slightly changing room temperature is assumed to be the common cause.
+Comparing \autoref{fig:interfacingFlute_atteneval-vsupp-stability} with \autoref{fig:interfacingFlute_vcontrolstab_longterm} suggests a relation between the deviations in $V_{control}$ and $V_+$. Since they are both generated by the same Keysight 34907A module, this is plausible. The slightly changing room temperature is assumed to be the common cause.
 By calculating the correlation coefficients between $\Delta V_+$ and $\Delta V_{control}$ and also between $\Delta V_+$ and $\Delta \vartheta_{ambient}$, this can be verified:
 \begin{align}
 \text{Corr}(\Delta V_+,\Delta V_{control})         &= \num{0.99204} \\
@@ -489,7 +489,7 @@ Using \autoref{eq:interfacingFlute_maxerror} and setting $\Delta x_j = \sigma_{x
                       &= \SI{518}{\micro\dB\relax} = \SI{0.000518}{\dB}
 \end{align}
 
-This shows even in the worst case, the ZX73-2500-S+ attenuator is stable within the requirement.
+This shows that even in the worst case, the ZX73-2500-S+ attenuator is stable within the requirement.
 
 The other requirements from \autoref{tab:interfacingFlute_rfattenrequirements} are also fulfilled, see \autoref{tab:interfacingFlute_rfattenrequirements_result}.
 
