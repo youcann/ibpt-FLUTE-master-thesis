@@ -3,7 +3,7 @@ In this chapter a control system is designed and evaluated to stabilize \gls{flu
 Referring back to the block diagram of a generic control system in \autoref{fig:theoreticalFramework-feedback-architecture}, there are three blocks to determine.
 First the plant transfer function, which describes the system that is to be controlled.
 Second, based on the plant, an appropriate controller type is chosen and its parameters are calculated.
-Third a measurement filter is used to improve the quality of the feedback signal path. As the choice of the measurement filter influences the controller design, its design is treated before the controller.
+Third, a measurement filter is used to improve the quality of the feedback signal path. As the choice of the measurement filter influences the controller design, its design is treated before the controller.
 
 \section{Plant Identification}\label{sec:plantIdenti}
 \subsection{Principle}
@@ -45,10 +45,10 @@ In a test run over six hours (after all \gls{flute} subsystems had stabilized), 
 	\label{fig:controllerDesignAndEvaluation-identify-excitation}
 \end{figure}
 
-The time signals $A(t)$ and $P_\text{cavity}(t)$ are then split into a \textit{estimation} data set (about \SI{80}{\percent} of the samples) and a \textit{validation} data set (the remaining $\approx$ \SI{20}{\percent}). This is done so the bulk of the available information is used to estimate the model, but there is data left that the model hasn't seen before. This smaller portion is used to validate the models performance, hence it is called the validation data set.
+The time signals $A(t)$ and $P_\text{cavity}(t)$ are then split into an \textit{estimation} data set (about \SI{80}{\percent} of the samples) and a \textit{validation} data set (the remaining $\approx$ \SI{20}{\percent}). This is done so the bulk of the available information is used to estimate the model, but there is data left that the model hasn't seen before. This smaller portion is used to validate the model's performance, hence it is called the validation data set.
 
 The two data sets are then loaded into the \textsc{Matlab} \textit{System Identification Toolbox}. With the toolboxes pre-processing tools, first the means of both the input and output are removed, which is required by the estimators used.
-Then, using the ``process model'' estimator, linear, continuous time transfer functions with different numbers of zeros and poles are estimated (See screenshot of the \gls{gui} in \autoref{fig:Appendix-identify}). After that, to check the accuracy of the estimations, the System Identification Toolbox is used to simulate the output of the estimated systems (see \autoref{fig:controllerDesignAndEvaluation-identify-mo}). For that the aforementioned validation data set is used: The measured output is compared with the outputs predicted by the models.
+Then, using the ``process model'' estimator, linear, continuous time transfer functions with different numbers of zeros and poles are estimated (See screenshot of the \gls{gui} in \autoref{fig:Appendix-identify}). After that, to check the accuracy of the estimations, the System Identification Toolbox is used to simulate the output of the estimated systems (see \autoref{fig:controllerDesignAndEvaluation-identify-mo}). For that the aforementioned validation data set is used. The measured output is compared with the outputs predicted by the models.
 
 Using the Matlab function \texttt{zpk()} the models are converted into the zero-pole-gain representation. In
 \autoref{tab:controllerDesignAndEvaluation-identify-models} the estimated models are listed with their zeros, poles, gains and the model fit, as it is computed by the System Identification Toolbox. \texttt{P1}, \texttt{P2} and \texttt{P3} are models with one, two and three poles and a gain as free parameters. \texttt{P2ZU} consists of a complex pole pair, a zero and a gain. 
@@ -103,11 +103,11 @@ To account for errors in the estimated model (and possible other errors), when d
 \newpage
 \section{Measurement Filter}\label{sec:measurementFilter}
 Like all measurements of physical quantities, the measuring of the system output of the control system is subjected to noise.
-In addition to these disturbances of thermal or electrical origins, also high frequency variations of the system output has detrimental effects on the control systems performance.
+In addition to these disturbances of thermal or electrical origins, also high frequency variations of the system output have detrimental effects on the control systems performance.
 For example the magnitudes of the bunch-by-bunch changes of the measured cavity power are often in the same order as the long-term drifts.
-Trying to correct for them instead of the long term drifts often leads to overcompensating and can even make the system unstable.
+Trying to correct for them, instead of the long term drifts, often leads to overcompensating and can even make the system unstable.
 
-To remove the high frequency components a low pass filter is used as the measurement block $H(s)$.
+To remove the high frequency components, a low pass filter is used as the measurement block $H(s)$.
 
 In pre-tests the incoming signal was simply filtered with a moving average filter.
 Commonly, the moving average is defined as the mean of a signal $x$ inside a window of length $L$, centered around the current time or sample index $n$, that is shifted along the signal. This smooths out small variations thus the moving average acts as a low pass filter.
@@ -353,7 +353,7 @@ The manual of the PID Tuner\cite{pidTunerMan} describes the expected input (see 
 	\label{fig:controllerDesignAndEvaluation-pidTunersys}
 \end{figure}
 
-The manufactures documentation \cite{pidTuner} does not disclose any internals of the PID Tuner nor state which optimization technique is used, but three tuning objectives are stated:
+The manufacture's documentation \cite{pidTuner} does not disclose any internals of the PID Tuner nor state which optimization technique is used, but three tuning objectives are stated:
 \begin{itemize}
 \item Stability: The closed loop should be stable (that is BIBO stable as defined in \autoref{def:bibo})
 \item Performance: The closed loop system tracks the input well and rejects disturbances as rapidly as possible (see \autoref{sec:drandtrack})
@@ -382,7 +382,7 @@ Sys1=tf1*H1; %Combine plant P and measurement filter H
 pidTuner(Sys1); %Launch pidTuner
 \end{lstlisting}
 
-Using the PID Tuner \gls{gui} (see \autoref{fig:Appendix-pidTuner}), the controller is designed by changing the design parameters \texttt{Response Time} (RT) and \texttt{Transient Behavior} (TB). Changing the response time (in seconds) influences how fast the controller acts on changes. With the transient behavior setting, the allowed over- and under-shoots, that is the deviation above and below the final value for $t \rightarrow \infty$ can be set qualitatively.
+Using the PID Tuner \gls{gui} (see \autoref{fig:Appendix-pidTuner}), the controller is designed by changing the design parameters \texttt{Response Time} (RT) and \texttt{Transient Behavior} (TB). Changing the response time (in seconds) influences how fast the controller acts on changes. With the transient behavior setting, the allowed over- and under-shoots, that is, the deviation above and below the final value for $t \rightarrow \infty$ can be set qualitatively.
 
 With this tool four different controllers are designed, two for each measurement filter's order of $N=10$ and $N=40$. The transient behavior with $0.2$ for all controllers is chosen as a compromise between speed and overshoot behavior. The optimized \gls{pid} parameters (for a discrete time \gls{pid} controller in parallel form) are listed in \autoref{tab:controllerDesignAndEvaluation-pidTunerResults}.
 
@@ -549,7 +549,7 @@ while(true) {
 
 To get the timing right and to allow the \gls{gui} to be responsive while the control algorithm runs in the background, a scheduler that activates a callback function every \SI{0.2}{\second} should be used. Since in \autoref{sec:atteneval} the Advanced Python Scheduler (AP scheduler) is used successfully, it should also be used for the control system. Unfortunately the AP scheduler is not compatible with PyQt and using it interferes with the internal Qt timing systems. For this reason, a timer is constructed instead with the  \texttt{QTimer} class.\cite{qtimer}
 
-Logging the data to disk is done by using the same \texttt{QTimer}, as is used for the control algorithm, to write one line of CSV data to disk each time the timer is triggered.
+Logging the data to disk is done by using the same \texttt{QTimer} as is used for the control algorithm, to write one line of CSV data to disk each time the timer is triggered.
 
 With these building blocks ready, the \gls{gui} is build with Qt Designer and based on the \texttt{.ui} file generated from Qt Designer the \gls{gui} Application is implemented. For a screenshot of the program running see \autoref{fig:Appendix-qt}.
 
@@ -643,7 +643,7 @@ In this section, two method for improving the control system's performance are e
 \subsection{Changing the Controller Architecture: Disturbance Feed-Forward of the Gun Temperature}
 Instead of changing only the parameter of the \gls{pid} controller or switching to another type of controller, the strategy presented here relies on changing the architecture over the standard form (see \autoref{fig:theoreticalFramework-feedback-architecture}) to include a feed-forward path\footnote{The calculations here are done in continuous time to be comparable with the control system model in \autoref{sec:feedbackcontrol}}.
 
-To use the disturbance $d(t)$ ($|d(t)|<\infty$) explicitly in the control system, it has to be measurable separately from the control system's output $y(t)$. This can practically only be done if either all disturbance sources or the dominant ones can be identified and measured with some physical sensor. If the signal $d(t)$ is obtainable, it can be fed into the signal path near the controller. In the literature, two locations for the disturbance signal to be injected to are described. The method used decides, among other things, which (if any) filtering of $d(t)$ has to be done.
+To use the disturbance $d(t)$ ($|d(t)|<\infty$) explicitly in the control system, it has to be measurable separately from the control system's output $y(t)$. This can be only done practically if either all disturbance sources or the dominant ones can be identified and measured with some physical sensor. If the signal $d(t)$ is obtainable, it can be fed into the signal path near the controller. In literature, two locations for the disturbance signal to be injected into are described. The method used decides, among other things, which (if any) filtering of $d(t)$ has to be done.
 
 One technique is to regard the disturbance to be similar to the error signal $e(t)$, i.e. the controller input. \cite{Brosilow2002} In this case, the pre-processing, in general, has to include a scaling operation, because the units and magnitudes of $e(t)$ and $d(t)$ are different. If $d(t)$ has non-zero mean, it needs to be subtracted to achieve linear behavior. This means, the needed disturbance filter is
 \begin{equation}
@@ -661,7 +661,7 @@ In both cases it is common to add another filter to $D_{1,\,2}$. This is often a
 D(s) = k_\text{disturbance} \cdot H_d(s).
 \end{equation}
 
-The new controller architecture is shown in \autoref{fig:controllerDesignAndEvaluation-distfeedforwardArchitecture}. Drawn there is the plant $P(s)$ being split into $P_1(s)$ and $P_2(s)$. This is neither necessary nor possible under all circumstances but feeding forward the disturbance that acts earlier on the plant would lessen the delay of $d(t)$\footnote{A disturbance that acts on the middle of the plant is different from the one that acts on the end.}. Besides its main purpose of quickly reacting to a disturbance change, the feed-forward also has the inherent benefit of having no influence of the systems stability. Since $d(t)$ is assumed to be finite, the output has to react to $d(t)$ also with a finite response, as the filtered $d(t)$ is only added to $y(t)$.
+The new controller architecture is shown in \autoref{fig:controllerDesignAndEvaluation-distfeedforwardArchitecture}. Drawn there is the plant $P(s)$ being split into $P_1(s)$ and $P_2(s)$. This is neither necessary nor possible under all circumstances, but feeding forward the disturbance that acts earlier on the plant would lessen the delay of $d(t)$\footnote{A disturbance that acts on the middle of the plant is different from the one that acts on the end.}. Besides its main purpose of quickly reacting to a disturbance change, the feed-forward also has the inherent benefit of having no influence on the systems stability. Since $d(t)$ is assumed to be finite, the output has to react to $d(t)$ also with a finite response, as the filtered $d(t)$ is only added to $y(t)$.
 
 \begin{figure}[tb]
 	\centering
@@ -676,9 +676,9 @@ When testing the newly improved system, there are two observations to be made. F
 \subsection{Feedback on Faraday-Cup Charge Measurements}
 In the previous part of this chapter, the control input and the measured output was always the cavity power $P_\text{cavity}=P_\text{cavity}(t)$. This power reading is measured with a \gls{rf} power probe in the first half-cell of the electron gun.
 
-But as the electrons are accelerated not only by the half-cell but also by the second and third full-cells, regarding only $P_\text{cavity}(t)$ as a representative for the electron energy can be a misleading. Also the conversion from \gls{rf} power to electron energy depends on the (time-varying) properties of the cavity, so there is no simple linear relation between them fixed in time.
+But as the electrons are accelerated not only by the half-cell but also by the second and third full-cells, regarding only $P_\text{cavity}(t)$ as a representative for the electron energy can be misleading. Also, the conversion from \gls{rf} power to electron energy depends on the (time-varying) properties of the cavity, so there is no simple linear relation between them fixed in time.
 
-An approach that tries to circumvent these issues uses the dark current. The dark current is normally unwanted, as it is the electron emission from the gun, that is not stimulated by the laser. Without a laser pulse, the electric field, generated by the \gls{rf} inside the first half-cell, accelerates electrons from the vicinity of the cathode that are not freed by the \gls{uv} laser pulse and the photo effect but rather spontaneous by thermionic emission.
+An approach that tries to circumvent these issues uses the dark current. The dark current is normally unwanted, as it is the electron emission from the gun, that is not stimulated by the laser. Without a laser pulse, the electric field, generated by the \gls{rf} inside the first half-cell, accelerates electrons from the vicinity of the cathode that are not freed by the \gls{uv} laser pulse and the photo effect, but rather spontaneous by thermionic emission.
 
 For this dark current, the relation
 \begin{equation}
@@ -736,7 +736,7 @@ V_\text{out}(t) &= \mathscr{L}^{-1}\left\{-I_\text{in}(s) \frac{1}{sC}\right\}\\
 
 The \gls{csa} uses an adjustable capacity (to set the range of expected charges) and an analog switch to clear the accumulated charge on the capacitor.
 
-At the moment, the Faraday cup mounted at the end of the low energy section. The capacity in the \gls{csa} is resetted at the start of every pulse and outputs a voltage proportional to the range setting and the measured charge.
+At the moment, the Faraday cup is mounted at the end of the low energy section. The capacity in the \gls{csa} is resetted at the start of every pulse and outputs a voltage proportional to the range setting and the measured charge.
 
 To set the range of the \gls{csa}, its serial interface together with a serial to Ethernet adapter is used (See an example of the command structure in \autoref{lst:Appendix-javaPcb}).
 
