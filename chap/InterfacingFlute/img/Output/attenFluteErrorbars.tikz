@@ -7,7 +7,7 @@
 tick align=outside,
 tick pos=left,
 x grid style={white!69.0196078431373!black},
-xlabel={Attenuator control voltage \(\displaystyle V_{control}\) (\si{\volt})},
+xlabel={Attenuator control voltage \(\displaystyle V_\text{control}\) (\si{\volt})},
 xmin=5.7, xmax=12.3,
 xtick style={color=black},
 y grid style={white!69.0196078431373!black},

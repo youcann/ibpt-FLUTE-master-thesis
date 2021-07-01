@@ -6,14 +6,15 @@
 
 \begin{axis}[
 tick align=outside,
+legend cell align={left},
 tick pos=left,
 x grid style={white!69.0196078431373!black},
 xlabel={Relative time (\si{\hour})},
-xmin=0, xmax=8,
+xmin=0, xmax=7,
 xtick style={color=black},
 y grid style={white!69.0196078431373!black},
-ylabel={$\vartheta_\text{ambient, RF lab}$ (\si{\celsius})},
-ymin=19, ymax=20,
+ylabel={$\vartheta_\text{ambient, RF lab}$, $\vartheta_\text{ambient, LLRF cabinet}$ (\si{\celsius})},
+ymin=18, ymax=28,
 ytick style={color=black}
 ]
 \addplot [semithick, color0]
@@ -4012,24 +4013,9 @@ nan nan
 nan nan
 7.59555555555556 19.15
 7.61 19.211
-};\label{plot1}
-\end{axis}
+};
+\addlegendentry{$\vartheta_\text{ambient, RF lab}$}
 
-\begin{axis}[
-axis y line*=right,
-tick align=outside,
-axis x line=none,
-legend cell align={left},
-x grid style={white!69.0196078431373!black},
-xmin=0, xmax=8,
-xtick pos=left,
-xtick style={color=black},
-y grid style={white!69.0196078431373!black},
-ylabel={\(\displaystyle \vartheta_{ambient,in LLRF cabinet}\) (\si{\celsius})},
-ymin=25, ymax=26,
-ytick pos=right,
-ytick style={color=black}
-]
 \addplot [semithick, color1]
 table {%
 0 25.329
@@ -8034,10 +8020,8 @@ table {%
 8.74027777777778 25.292
 8.74444444444444 25.298
 8.74444444444444 25.298
-};\label{plot2}
-\addlegendimage{/pgfplots/refstyle=plot2}\addlegendentry{$\vartheta_\text{ambient, LLRF cabinet}$}
-\addlegendimage{/pgfplots/refstyle=plot1}\addlegendentry{$\vartheta_\text{ambient, RF lab}$}
-
+};
+\addlegendentry{$\vartheta_\text{ambient, LLRF cabinet}$}
 \end{axis}
 
 \end{tikzpicture}

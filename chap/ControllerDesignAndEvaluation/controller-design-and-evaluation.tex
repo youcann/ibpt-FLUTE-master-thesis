@@ -1,5 +1,5 @@
 \chapter{Controller Design and Evaluation}
-In this chapter a control system is designed and evaluated to stabilize \gls{flute}s RF system.
+In this chapter a control system is designed and evaluated to stabilize \glspl{flute} RF system.
 Referring back to the block diagram of a generic control system in \autoref{fig:theoreticalFramework-feedback-architecture}, there are three blocks to determine.
 First the plant transfer function, which describes the system that is to be controlled.
 Second, based on the plant, an appropriate controller type is chosen and its parameters are calculated.
@@ -250,7 +250,7 @@ The plant has been identified using a linear model in \autoref{sec:plantIdenti} 
 The class of \gls{lti} controllers is dominated by the \gls{pid} controller and its variants. \gls{pid} stands for ``proportional'', ``integral'' and ``derivative'', which are \gls{lti} systems themselves, performing scaling, integration or differentiation. Depending on the application, variants, such as the PI controller, or the PD controller are used as well.
 
 According to \cite[p.~111]{Aastroem1995} \gls{pid} control is applicable for plants with order two or less.
-Compared to other types of controllers, using a \gls{pid} controller has many advantages. It is is quick to design and does not depend on an accurate plant model. Also after the designing step, the few free parameters can easily be presented to an operator and online fine tuning is possible.\footnote{In contrast a compensating controller is based on an accurate model of the plant and changes on the fly are difficult.\cite{SergeZacher2010}}
+Compared to other types of controllers, using a \gls{pid} controller has many advantages. It is is quick to design and does not depend on an accurate plant model. Also after the designing step, the few free parameters can easily be presented to an operator and online fine tuning is possible.\footnote{In contrast a compensating controller is based on an accurate model of the plant and changes on the fly are difficult. \cite{SergeZacher2010}}
 
 In the next section such a \gls{pid} controller is designed. As it is to be implemented in software later, the design is done in discrete time.
 
@@ -260,7 +260,7 @@ The output signal $u(t)$ of a generic time continuous \gls{pid} controller (see 
 \begin{figure}[tb]
 	\centering
 	\includegraphics[width=0.8\textwidth]{chap/ControllerDesignAndEvaluation/img/controller/pid.tikz}
-	\caption{Block diagram of a generic \gls{pid} controller}
+	\caption[Block diagram of a PID controller]{Block diagram of a generic \gls{pid} controller}
 	\label{fig:controllerDesignAndEvaluation-genericPID}
 \end{figure}
 The first is simply the controller input error signal $e(t)$ scaled by the gain $k_p$. This is the proportional part of the \gls{pid} controller. The integral part is calculated by computing the running time integral
@@ -446,7 +446,7 @@ Especially when looking a the plots of $G_3[z]$, it is obvious that there can be
 \end{figure}
 
 
-\subsection{Analyzing the Stability}
+\subsection{Analyzing the Controller Stability}
 In this section the stability of the controllers $G_{i}[z]$ from the last section is evaluated.
 
 For that the Nyquist criterion according to \autoref{def:Nyquist} is used. With the Matlab function \texttt{nyquist()}, the locus $w=F_o[w=j2\pi f]$ of the open loops
@@ -730,7 +730,7 @@ V_\text{out}(t) &= \mathscr{L}^{-1}\left\{-I_\text{in}(s) \frac{1}{sC}\right\}\\
 \begin{figure}[tb]
 	\centering
 	\includegraphics[]{chap/ControllerDesignAndEvaluation/img/optimization/chargeAmp.tikz}
-	\caption{Schematic of an inverting integrator using an integrated operational amplifier}
+	\caption[Inverting integrator schematic]{Schematic of an inverting integrator using an integrated operational amplifier}
 	\label{fig:controllerDesignAndEvaluation-integrator}
 \end{figure}
 

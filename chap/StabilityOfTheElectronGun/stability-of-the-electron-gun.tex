@@ -88,30 +88,7 @@ using the total stored electromagnetic energy $U$ and the quality factor $Q=\nic
 This shows the gained energy also depends on the properties of the cavity.
 
 \section{Current RF Stability and Proposed Solution}
-To get an overview of the current stability of the \gls{rf} power, the deviation of the cavity power process value (\gls{epics}: F:RF:LLRF:01:GunCav1:Power:Out Value $=:P_\text{cavity}$) from its mean is plotted over one hour, see \autoref{fig:fluteEgun-deviation}.
-
-With the metrics defined in \autoref{sec:metrics}, over a time interval of $T=\SI{5}{\hour}$, the metrics $\op{\%STD}_{P_\text{cavity}}=\SI{0.15}{\percent}$, $\op{MSE}_{P_\text{cavity}}=38.54$ and $\op{MPN}_{P_\text{cavity}}=0.01677$ are calculated.
-
-By utilizing simulation data and approximate analytical calculations, it is known that for \gls{thz} generation using the chicane at the end of the compressor (see \autoref{intro}) and to generate chirped \gls{thz} pulses for \gls{cstart}, a stability of $\op{\%STD}_{P_\text{cavity}}=\SI{0.10}{\percent}$ would suffice. For time resolved \gls{thz} experiments, a higher stability of $\op{\%STD}_{P_\text{cavity}}=\SI{0.01}{\percent}$ is necessary. \cite{Nigel2021}
-
-As this is a very demanding task, the goal at the moment is 
-\begin{equation}
-\op{\%STD}_{P_\text{cavity}} \overset{!}{\in} [\SI{0.01}{\percent},\,\SI{0.10}{\percent}].
-\end{equation}
-
-
-From the time plot in \autoref{fig:fluteEgun-deviation} and the periodogram in \autoref{fig:fluteEgun-periodo} it becomes clear that there is random white noise, but also a periodic part and a slow drift in the signal. While it is not possible to counteract the random fluctuations by any means of the control system developed in this thesis, it is possible to compensate for the slower disturbances that have effects over several pulses.
-
-Hence in the next chapters, the control system is developed to counteract these noise components. 
-
-So as to be autonomous from existing components, the control system should be made up with a controllable \gls{rf} attenuator added to the existing \gls{rf} system. This way there is no modification to the proprietary \gls{llrf}\footnote{The \gls{llrf} is visualized as only the oscillator in \autoref{fig:fluteEgun-rfschematicControl} and \autoref{fig:fluteEgun-rfschematicControl} but contains also its own feedback system and a vector modulator} necessary. With the addition of the control unit (see \autoref{fig:fluteEgun-rfschematicControl}), which is designed in later chapters and contains the controller $G(s)$ and the filter $H(s)$, a closed-loop for feedback control is formed.
-
-\begin{figure}[tb]
-	\centering
-	\includegraphics[]{chap/StabilityOfTheElectronGun/img/fluteSchemControlUnit.tikz}
-	\caption[FLUTE RF schematic with control unit]{Schematic of the \gls{flute} \gls{rf} system with the proposed control unit and the controllable \gls{rf} attenuator added}
-	\label{fig:fluteEgun-rfschematicControl}
-\end{figure}
+To get an overview of the current stability of the cavity \gls{rf} power, the deviation of the cavity power process value (\gls{epics}\footnote{See \autoref{sec:inputs}} \gls{pv} name F:RF:LLRF:01:GunCav1:Power:Out Value $=:P_\text{cavity}$) from its mean is plotted over one hour, see \autoref{fig:fluteEgun-deviation}.
 
 \begin{figure}[tb]
 	\centering
@@ -126,6 +103,49 @@ So as to be autonomous from existing components, the control system should be ma
 	\caption{Periodogram of \autoref{fig:fluteEgun-deviation}; calculated using the Welch method}
 	\label{fig:fluteEgun-periodo}
 \end{figure}
+
+With the metrics defined in \autoref{sec:metrics}, over a time interval of $T=\SI{5}{\hour}$, the metrics $\op{\%STD}_{P_\text{cavity}}=\SI{0.15}{\percent}$, $\op{MSE}_{P_\text{cavity}}=38.54$ and $\op{MPN}_{P_\text{cavity}}=0.01677$ are calculated.
+
+By utilizing simulation data and approximate analytical calculations, it is known that for \gls{thz} generation using the chicane at the end of the compressor (see \autoref{sec:intro}) and to generate chirped \gls{thz} pulses for \gls{cstart}, a stability of $\op{\%STD}_{P_\text{cavity}}=\SI{0.10}{\percent}$ would suffice. For time resolved \gls{thz} experiments, a higher stability of $\op{\%STD}_{P_\text{cavity}}=\SI{0.01}{\percent}$ is necessary. \cite{Nigel2021}
+
+As this is a very demanding task, the goal at the moment is 
+\begin{equation}
+\op{\%STD}_{P_\text{cavity}} \overset{!}{\in} [\SI{0.01}{\percent},\,\SI{0.10}{\percent}].
+\end{equation}
+
+
+From the time plot in \autoref{fig:fluteEgun-deviation} and the periodogram in \autoref{fig:fluteEgun-periodo} it becomes clear that there is random white noise, but also a periodic part and a slow drift in the signal. While it is not possible to counteract the random fluctuations by any means of the control system developed in this thesis, it is possible to compensate for the slower disturbances that have effects over several pulses.
+
+To get more insight into these slowly changing disturbances, the time signals of several available sensors in \gls{epics} are compared to the cavity \gls{rf} power. This shows similar trends in both the cavity \gls{rf} power $P_\text{cavity}$ and the electron gun temperature $\vartheta_\text{gun}$. To analyze them in more detail, the signals are both normalized to zero mean and unity standard deviation as they have different units and would be otherwise difficult to compare (see \autoref{fig:fluteEgun-corrTime}).
+
+\begin{figure}[tb]
+	\centering
+	\includegraphics[width=\textwidth,height=0.5\textwidth]{chap/StabilityOfTheElectronGun/img/corrTime.tikz}
+	\caption[Normalized cavity power and gun temperature]{Cavity \gls{rf} power and electron gun temperature in a normalized plot}
+	\label{fig:fluteEgun-corrTime}
+\end{figure}
+
+To quantify their relation, the normalized cross covariance is used. It is calculated by using \autoref{eq:crosscovariance} with the normalized cavity \gls{rf} power and the normalized electron gun temperature and the result is shown in \autoref{fig:fluteEgun-corrCorr}. This shows the two signals are anti-similar ($\rho=r_\text{norm}(0)=-0.7$) for zero lag, i.e. no shift in time. This suggests a strong relation between them.
+
+\begin{figure}[tb]
+	\centering
+	\includegraphics[width=\textwidth,height=0.5\textwidth]{chap/StabilityOfTheElectronGun/img/corrCorr.tikz}
+	\caption[Cross covariance analysis of cavity power and gun temperature]{Normalized cross covariance of the signals in \autoref{fig:fluteEgun-corrTime}}
+	\label{fig:fluteEgun-corrCorr}
+\end{figure}
+
+Hence in the next chapters, the control system is developed to counteract these noise components, especially the changes in the electron gun temperature. 
+
+To be autonomous from existing components, the control system should be made up with a controllable \gls{rf} attenuator added to the existing \gls{rf} system. This way there is no modification to the proprietary \gls{llrf}\footnote{The \gls{llrf} is visualized as only the oscillator in \autoref{fig:fluteEgun-rfschematicControl} and \autoref{fig:fluteEgun-rfschematic} but contains also its own feedback system and a vector modulator} necessary. With the addition of the control unit (see \autoref{fig:fluteEgun-rfschematicControl}), which is designed in later chapters and contains the controller $G(s)$ and the filter $H(s)$, a closed-loop for feedback control is formed.
+
+\begin{figure}[tb]
+	\centering
+	\includegraphics[]{chap/StabilityOfTheElectronGun/img/fluteSchemControlUnit.tikz}
+	\caption[FLUTE RF schematic with control unit]{Schematic of the \gls{flute} \gls{rf} system with the proposed control unit and the controllable \gls{rf} attenuator added}
+	\label{fig:fluteEgun-rfschematicControl}
+\end{figure}
+
+
 
 
 

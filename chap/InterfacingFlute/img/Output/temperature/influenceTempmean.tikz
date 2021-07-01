@@ -10,11 +10,11 @@ legend style={fill opacity=0.8, draw opacity=1, text opacity=1, draw=white!80!bl
 tick align=outside,
 tick pos=left,
 x grid style={white!69.0196078431373!black},
-xlabel={Case temperature \(\displaystyle \vartheta_{case}\) (\si{\celsius})},
+xlabel={Case temperature \(\displaystyle \vartheta_\text{case}\) (\si{\celsius})},
 xmin=21, xmax=29,
 xtick style={color=black},
 y grid style={white!69.0196078431373!black},
-ylabel={Attenuation \(\displaystyle A(\vartheta_{case})\) (\si{\dB})},
+ylabel={Attenuation \(\displaystyle A(\vartheta_\text{case})\) (\si{\dB})},
 ymin=7.455, ymax=7.51,
 ytick style={color=black}
 ]
@@ -105,7 +105,7 @@ table {%
 29.2040806451613 7.49550421048387
 29.2607692307692 7.49673496461539
 };
-\addlegendentry{$A(\vartheta_{case})$}
+\addlegendentry{$A(\vartheta_\text{case})$}
 \addplot [semithick, color0]
 table {%
 20.78796 7.46647584271932
@@ -193,7 +193,7 @@ table {%
 29.2040806451613 7.50287127530147
 29.2607692307692 7.50311642454334
 };
-\addlegendentry{Linear regression of $A(\vartheta_{case})$}
+\addlegendentry{Linear regression of $A(\vartheta_\text{case})$}
 \end{axis}
 
 \end{tikzpicture}

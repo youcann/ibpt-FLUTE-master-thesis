@@ -23,11 +23,11 @@ point meta min=0,
 tick align=outside,
 tick pos=left,
 x grid style={white!69.0196078431373!black},
-xlabel={Case temperature \(\displaystyle \vartheta_{case}\) (\si{\celsius})},
+xlabel={Case temperature \(\displaystyle \vartheta_\text{case}\) (\si{\celsius})},
 xmin=20.3385532238616, xmax=29.6954467761384,
 xtick style={color=black},
 y grid style={white!69.0196078431373!black},
-ylabel={Attenuation \(\displaystyle A(\vartheta_{case})\) (\si{\dB})},
+ylabel={Attenuation \(\displaystyle A(\vartheta_\text{case})\) (\si{\dB})},
 ymin=7.45390800719777, ymax=7.50944390280223,
 ytick style={color=black}
 ]

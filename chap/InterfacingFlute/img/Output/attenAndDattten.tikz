@@ -10,11 +10,11 @@ tick align=outside,
 tick pos=left,
 legend style={fill opacity=0.8, draw opacity=1, text opacity=1, at={(0.29,0.96)}, draw=white!80!black},
 x grid style={white!69.0196078431373!black},
-xlabel={Control Voltage \(\displaystyle V_{control}\) (\si{\volt})},
+xlabel={Control Voltage \(\displaystyle V_\text{control}\) (\si{\volt})},
 xmin=0.5, xmax=12,
 xtick style={color=black},
 y grid style={white!69.0196078431373!black},
-ylabel={Attenuation \(\displaystyle A(V_{control})\) (\si{\dB})},
+ylabel={Attenuation \(\displaystyle A(V_\text{control})\) (\si{\dB})},
 ymin=4.73645668148202, ymax=43,
 ytick style={color=black}
 ]
@@ -292,7 +292,7 @@ table {%
 12.3 -0.00356849418250516
 12.4 -0.00269368025569079
 };
-\addlegendentry{$S(V_{control})$}
+\addlegendentry{$S(V_\text{control})$}
 \end{axis}
 
 \end{tikzpicture}

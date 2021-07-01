@@ -8,7 +8,7 @@ trim axis left
 \definecolor{color0}{rgb}{0.172549019607843,0.627450980392157,0.172549019607843}
 
 \begin{axis}[
-height=0.3\textwidth,
+height=0.35\textwidth,
 tick align=outside,
 tick pos=left,
 width=0.95\textwidth,
@@ -18,7 +18,7 @@ xmin=0, xmax=1800.934324955,
 xtick style={color=black},
 y grid style={white!69.0196078431373!black},
 ylabel style={align=center},
-ylabel={\(\displaystyle \vartheta_{cav}\) (\si{\celsius})},
+ylabel={\(\displaystyle \vartheta_\text{cav}\) (\si{\celsius})},
 ymin=37.58649755, ymax=37.88350745,
 ytick style={color=black},
 yticklabel pos=lower

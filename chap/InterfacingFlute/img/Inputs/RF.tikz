@@ -8,7 +8,7 @@ trim axis left
 \definecolor{color0}{rgb}{0.12156862745098,0.466666666666667,0.705882352941177}
 
 \begin{axis}[
-height=0.3\textwidth,
+height=0.35\textwidth,
 tick align=outside,
 tick pos=left,
 width=0.95\textwidth,
@@ -18,7 +18,7 @@ xmin=0, xmax=1800.934324955,
 xtick style={color=black},
 y grid style={white!69.0196078431373!black},
 ylabel style={align=center},
-ylabel={\(\displaystyle P_{cav}\) (\si{\kilo\watt})},
+ylabel={\(\displaystyle P_\text{cav}\) (\si{\kilo\watt})},
 ymin=5292.05134765, ymax=5356.13497935,
 ytick style={color=black},
 yticklabel pos=lower
