@@ -1,5 +1,5 @@
 \chapter{Controller Design and Evaluation}
-In this chapter, a control system is designed and evaluated to stabilize \glspl{flute} \gls{rf} system.
+In this chapter a control system is designed and evaluated to stabilize \glspl{flute} \gls{rf} system.
 Referring back to the block diagram of a generic control system in \autoref{fig:theoreticalFramework-feedback-architecture}, there are three building blocks of a control system to be determined.
 First the plant transfer function, which describes the system that is to be controlled.
 Second, based on the plant, an appropriate controller type is chosen and its parameters are calculated.
@@ -13,13 +13,13 @@ In the time domain, a \gls{lti} system is described by its impulse response $h(t
 Using this definition directly, the plant's impulse response $p(t)$ could be measured by applying a short peak in the attenuation setting on the attenuator. The effect on the output is not easy to measure and a single measurement of this kind is very susceptible to noise.
 Therefore it is more common to measure the step response, which is the output of a system, when a step function is applied to its input. As the step function is the time integral of the impulse function, the step response can be converted to the impulse response by differentiation in time. \cite{Wang2000}
 
-Instead of measuring a single step response, often several step responses are measured and their average is computed to reduce the variance of the estimation. When measuring a step response, the minimum needed measuring time depends on the systems time constants, but they are often not known beforehand.
+Instead of measuring a single step response, often several step responses are measured and their average is computed to reduce the variance of the estimation. When measuring a step response the minimum needed measuring time depends on the systems time constants, but they are often not known beforehand.
 
 That is why when there is no prior knowledge of the system, the identification is sometimes done with a \gls{prbs} to excite the system with step functions of different lengths. The \gls{prbs} is chosen in a way that some of the steps will probably last longer than a few dominant time constants of the system. 
 
 To get the transfer function $P(s)=\mathcal{L}\left\{p(t)\right\}$ of the plant from its step response(s), several methods are common, including correlation based and frequency response based algorithms.
 
-\subsection{Identifying the Plant Attenuator+RF}
+\subsection{Identifying the Plant Attenuator \& RF system}
 The input \gls{prbs} signal is generated with the Python script in \autoref{lst:controllerDesignAndEvaluation-randomSequence}.
 Based on the value of a pseudo random number generator, the sequence toggles the attenuator between $V_\text{control}=\SI{7}{\volt}$ and $V_\text{control}=\SI{11}{\volt}$.
 Using \autoref{fig:interfacingFlute_attenDatten}, this equals a span in attenuation of \SIrange{6.892}{6.4026}{\dB}.
@@ -86,7 +86,7 @@ P[z] = \frac{-10.91 z^{-1} - 10.41 z^{-2}}{1 - 1.84 z^{-1} + 0.8519 z^{-2}}.
 \end{equation}
 
 The high model fit percentage of \SI{96.26}{\percent} justifies the choice of a linear model with few parameters and further estimation attempts using other (non-) linear models are not needed.
-Considering the accuracy of the model, it is important to note this estimation is only valid at the time the measurements are taken. With \gls{flute} being a large experimental setup still under commission, it is always possible that small changes to certain (sub-) systems can lead to minor or major influences to others.
+Considering the accuracy of the model, it is important to note this estimation is only valid at the time the measurements are taken. With \gls{flute} being a large experimental setup being still under commission, it is always possible that small changes to certain (sub-) systems can lead to minor or major influences to others.
 For the time being, the estimation is redone a day later and for both measurements days, different parts of the about six hour measurements each are used as the estimation and validation data sets. Doing so shows no significant change in the estimated coefficients and the resulting model fits, indicating the estimated models are at least plausible.
 
 To account for errors in the estimated model (and possible other errors), when designing the controller, sufficient gain and phase margins are set to ensure stable operation.
@@ -104,13 +104,13 @@ To account for errors in the estimated model (and possible other errors), when d
 \section{Measurement Filter}\label{sec:measurementFilter}
 Like all measurements of physical quantities, the measuring of the system output of the control system is subjected to noise.
 In addition to these disturbances of thermal or electrical origins, also high frequency variations of the system output have detrimental effects on the control systems performance.
-For example, the magnitudes of the bunch-by-bunch changes of the measured cavity power are often in the same order as the long-term drifts.
+For example the magnitudes of the bunch-by-bunch changes of the measured cavity power are often in the same order as the long-term drifts.
 Trying to correct for them, instead of the long term drifts, often leads to overcompensating and can even make the system unstable.
 
 To remove the high frequency components, a low pass filter is used as the measurement block $H(s)$.
 
-In pre-tests, the incoming signal was simply filtered with a moving average filter.
-Commonly, the moving average is defined as the mean of a signal $x$ inside a window of length $L$, centered around the current time or sample index $n$, that is shifted along the signal. This smooths out small variations, thus the moving average acts as a low pass filter.
+In pre-tests the incoming signal was simply filtered with a moving average filter.
+Commonly, the moving average is defined as the mean of a signal $x$ inside a window of length $L$, centered around the current time or sample index $n$, that is shifted along the signal. This smooths out small variations thus the moving average acts as a low pass filter.
 This \textit{non-causal} version of the moving average can only be used with already measured data as to compute the moving average at $n$, future values at $n+i$ are needed:
 \begin{equation}
 \operatorname{MA}_{x,\text{non-causal},L}[n] = \frac{1}{L} \sum_{i=n-\frac{L-1}{2}}^{n+\frac{L-1}{2}} x[i]
@@ -320,10 +320,10 @@ u[n] = k_p e[n]
 + k_d \left(\underbrace{\frac{1}{T_s} e[n]-e[n-1]}_{e_d[n]}\right)
 \end{equation}
 
-\subsubsection{Controller Tuning}
+\paragraph{Controller Tuning}
 Next the three free parameters $k_{p,\,i,\,d}$ or $K,\,T_{i,\,d}$ are to be chosen in such a way that the controller has optimal performance. This process is called \textit{tuning}. Tuning of the parameters can be performed online or offline.
 
-Online tuning is done by using the physical\footnote{``Physical'' in the sense that one could touch it. (But should one?)} plant. The most popular member of this class is the Ziegler-Nichols tuning. The method relies on experiments and tabulated values. The mostly used variant uses one measured step response. \cite{Ziegler1942}
+Online tuning is done by using the physical\footnote{``Physical'' in the sense that one could touch it. (But should one?)} plant. One of the most popular member of this class is the Ziegler-Nichols tuning. The method relies on experiments and tabulated values. The mostly used variant uses one measured step response. \cite{Ziegler1942}
 
 Using this method at \gls{flute} produced mixed results. While being a very simple and fast process, the resulting controller is often unstable. This is partially due to errors when extracting the tabulated values from the noisy step response, but also the method intrinsically leads to poor stability margins. \cite[p.~142]{Aastroem1995}
 Nonetheless the Ziegler-Nichols method yields a usable starting point, if the strategy is to fine tune the controller manually by intuition and experience of the user.
@@ -355,7 +355,7 @@ The manual of the PID Tuner (see \cite{pidTunerMan}) describes the expected inpu
 
 The manufacture's documentation in \cite{pidTuner} does not disclose any internals of the PID Tuner nor state which optimization technique is used, but three tuning objectives are stated:
 \begin{itemize}
-\item Stability: The closed loop should be stable (that is BIBO stable as defined in \autoref{def:bibo})
+\item Stability: The closed loop should be stable (that is BIBO stable as defined in Definition~\ref{def:bibo})
 \item Performance: The closed loop system tracks the input well and rejects disturbances as rapidly as possible (see \autoref{sec:drandtrack})
 \item Robustness: A gain and phase margin accounts for errors in the system model (see \autoref{sec:plantIdenti})
 \end{itemize}
@@ -411,14 +411,14 @@ Especially \autoref{fig:controllerDesignAndEvaluation-pidTunerITN40} shows that 
 \begin{figure}[tb]
 	\centering
 	\includegraphics[width=\textwidth,height=0.6\textwidth]{chap/ControllerDesignAndEvaluation/img/controller/pidTuner/trackingN10.tikz}
-	\caption[Input tracking of controller one and two]{Step response of the input tracking $F_T$ for controller $G_1[z]$ and $G_2[z]$, designed with the plant $P[z]$ and a measurement filter of order $N=10$, response time goal to \SI{5}{\second} and \SI{10}{\second}}
+	\caption[Input tracking of controller one and two]{Step response of the input tracking $F_T$ for controller $G_1[z]$ and $G_2[z]$, designed with the plant $P[z]$ and a measurement filter of order $N=10$, response time goal set to \SI{5}{\second} and \SI{10}{\second}}
 	\label{fig:controllerDesignAndEvaluation-pidTunerITN10}
 \end{figure}
 
 \begin{figure}[tb]
 	\centering
 	\includegraphics[width=\textwidth,height=0.6\textwidth]{chap/ControllerDesignAndEvaluation/img/controller/pidTuner/trackingN40.tikz}
-	\caption[Input tracking of controller three and four]{Step response of the input tracking $F_T$ for controller $G_3[z]$ and $G_4[z]$, designed with the plant $P[z]$ and a measurement filter of order $N=40$, response time goal to \SI{5}{\second} and \SI{10}{\second}}
+	\caption[Input tracking of controller three and four]{Step response of the input tracking $F_T$ for controller $G_3[z]$ and $G_4[z]$, designed with the plant $P[z]$ and a measurement filter of order $N=40$, response time goal set to \SI{5}{\second} and \SI{10}{\second}}
 	\label{fig:controllerDesignAndEvaluation-pidTunerITN40}
 \end{figure}
 
@@ -433,14 +433,14 @@ Especially when looking a the plots of $G_3[z]$, it is obvious that there can be
 \begin{figure}[tb]
 	\centering
 	\includegraphics[width=\textwidth,height=0.6\textwidth]{chap/ControllerDesignAndEvaluation/img/controller/pidTuner/rejectionN10.tikz}
-	\caption[Disturbance rejection of controller one and two]{Step response of the disturbance rejection $F_{DR}$ for controller $G_1[z]$ and $G_2[z]$, designed with the plant $P[z]$ and a measurement filter of order $N=10$, response time goal to \SI{5}{\second} and \SI{10}{\second}}
+	\caption[Disturbance rejection of controller one and two]{Step response of the disturbance rejection $F_{DR}$ for controller $G_1[z]$ and $G_2[z]$, designed with the plant $P[z]$ and a measurement filter of order $N=10$, response time goal set to \SI{5}{\second} and \SI{10}{\second}}
 	\label{fig:controllerDesignAndEvaluation-pidTunerDRN10}
 \end{figure}
 
 \begin{figure}[tb]
 	\centering
 	\includegraphics[width=\textwidth,height=0.6\textwidth]{chap/ControllerDesignAndEvaluation/img/controller/pidTuner/rejectionN40.tikz}
-	\caption[Disturbance rejection of controller three and four]{Step response of the disturbance rejection $F_{DR}$ for controller $G_3[z]$ and $G_4[z]$, designed with the plant $P[z]$ and a measurement filter of order $N=40$, response time goal to \SI{5}{\second} and \SI{10}{\second}}
+	\caption[Disturbance rejection of controller three and four]{Step response of the disturbance rejection $F_{DR}$ for controller $G_3[z]$ and $G_4[z]$, designed with the plant $P[z]$ and a measurement filter of order $N=40$, response time goal set to \SI{5}{\second} and \SI{10}{\second}}
 	\label{fig:controllerDesignAndEvaluation-pidTunerDRN40}
 \end{figure}
 
@@ -448,7 +448,7 @@ Especially when looking a the plots of $G_3[z]$, it is obvious that there can be
 \subsection{Analyzing the Controller Stability}
 In this section the stability of the controllers $G_{i}[z]$ from the last section is evaluated.
 
-For that the Nyquist criterion according to \autoref{def:Nyquist} is used. With the Matlab function \texttt{nyquist()}, the locus $w=F_o[w=j2\pi f]$ of the open loops
+For that the Nyquist criterion according to Definition~\ref{def:Nyquist} is used. With the Matlab function \texttt{nyquist()}, the locus $w=F_o[w=j2\pi f]$ of the open loops
 \begin{equation}
 F_o[z]=G[z] P[z] H[z]
 \end{equation}
@@ -548,7 +548,7 @@ while(true) {
 
 To get the timing right and to allow the \gls{gui} to be responsive while the control algorithm runs in the background, a scheduler that activates a callback function every \SI{0.2}{\second} should be used. Since in \autoref{sec:atteneval} the Advanced Python Scheduler (AP scheduler) is used successfully, it should also be used for the control system. Unfortunately the AP scheduler is not compatible with PyQt and using it interferes with the internal Qt timing systems. For this reason, a timer is constructed instead with the  \texttt{QTimer} class. \cite{qtimer}
 
-Logging the data to disk is done by using the same \texttt{QTimer} as is used for the control algorithm, to write one line of CSV data to disk each time the timer is triggered.
+Logging the data to disk is done by using the same \texttt{QTimer} as is used for the control algorithm, to write one line of \gls{csv} data to disk each time the timer is triggered.
 
 With these building blocks ready, the \gls{gui} is build with Qt Designer and based on the \texttt{.ui} file generated from Qt Designer the \gls{gui} Application is implemented. For a screenshot of the program running see \autoref{fig:Appendix-qt}.
 
@@ -561,7 +561,7 @@ With these building blocks ready, the \gls{gui} is build with Qt Designer and ba
 
 
 \newpage
-\section{Evaluation of the Control System (Online)}
+\section{Evaluation of the Control System (Online) and Conclusion}
 After evaluating the controller offline, it is now time to evaluate the performance of the control system on the machine. To do so, \gls{flute} is operated with and without the control system (using the controller $G_1[z]$ and the FIR filter with order $N=40$) switched on for \SI{6}{\hour} each. Before the test, \gls{flute} is allowed to run a few hours for all components to reach operating temperatures.
 The result of the test is shown in \autoref{fig:controllerDesignAndEvaluation_resultTime}.
 Note, that in this test about \SI{7}{\hour} into the experiment there was an unexpected shutdown of \gls{flute} and the corresponding block of data is removed before further processing.
@@ -615,15 +615,16 @@ For that reason, for small window sizes, time averages of $\op{\%STD}$ should be
 \begin{figure}[tb]
 	\centering
 	\includegraphics[width=\textwidth,height=0.5\textwidth]{chap/ControllerDesignAndEvaluation/img/stdp_means.tikz}
-	\caption[Relative standard deviation $STD\%(T)$]{Relative standard deviation $STD\%(T)$, shaded areas show $\operatorname{min}\{STD\%(t,T_0)\}$ and $\operatorname{max}\{STD\%(t,T_0)\}$, solid lines show $\operatorname{mean}\{STD\%(t,T_0)\}$ for a fixed window size $T=T_0$}
+	\caption[Relative standard deviation $\op{\%STD}(T)$]{Relative standard deviation $\op{\%STD}(T)$, shaded areas show $\operatorname{min}\{\op{\%STD}(t,T_0)\}$ and $\operatorname{max}\{\op{\%STD}(t,T_0)\}$, solid lines show $\operatorname{mean}\{\op{\%STD}(t,T_0)\}$ for a fixed window size $T=T_0$}
 	\label{fig:controllerDesignAndEvaluation_resultSTDp_means}
 \end{figure}
 
 
 With the metrics from \autoref{sec:metrics}, the success of the control system is assessed in \autoref{tab:controllerDesignAndEvaluation_metrics}.
 
-\textbf{Result:}\\
-Regarding $\op{\%STD}=\SI{0.0599}{\percent}$, achieved with the control system, shows the \textbf{success} of the control system. With the controller, the variation of the cavity \gls{rf} power can be brought down to lie inside the \SIrange{0.01}{0.1}{\percent} goal, set in \autoref{eq:goalstd}.
+\textbf{Conclusion:}\\
+Regarding $\op{\%STD}=\SI{0.0599}{\percent}$, achieved with the control system, shows the \textbf{success} of the control system. With the controller, the variation of the cavity \gls{rf} power can be brought down to lie inside the \SIrange{0.01}{0.1}{\percent} goal, set in \autoref{eq:goalstd}.\\
+Using the $\op{MPN}$ metric shows the dominant noise component, caused by the electron gun temperature change, to be reduced by \SI{12.6}{\percent}.
 
 \begin{table}[tbh]
 \centering
@@ -640,7 +641,7 @@ Regarding $\op{\%STD}=\SI{0.0599}{\percent}$, achieved with the control system, 
 \section{Further Improvements to the Control System}
 In this section, two method for improving the control system's performance are examined. First the closed-feedback loop is supplemented with an additional input for one disturbance source, the gun's body temperature. A different approach tested is switching from the gun cavity \gls{rf} power to the electron charge, as measured by the Faraday cup at the end of the low-energy section, as the controlled signal.
 
-\subsection{Changing the Controller Architecture: Disturbance Feed-Forward of the Gun Temperature}
+\subsection{Disturbance Feed-Forward of the Gun Temperature}
 Instead of changing only the parameter of the \gls{pid} controller or switching to another type of controller, the strategy presented here relies on changing the architecture over the standard form (see \autoref{fig:theoreticalFramework-feedback-architecture}) to include a feed-forward path\footnote{The calculations here are done in continuous time to be comparable with the control system model in \autoref{sec:feedbackcontrol}}.
 
 To use the disturbance $d(t)$ ($|d(t)|<\infty$) explicitly in the control system, it has to be measurable separately from the control system's output $y(t)$. This can be only done practically if either all disturbance sources or the dominant ones can be identified and measured with some physical sensor. If the signal $d(t)$ is obtainable, it can be fed into the signal path near the controller. In literature, two locations for the disturbance signal to be injected into are described. The method used decides, among other things, which (if any) filtering of $d(t)$ has to be done.
@@ -670,6 +671,9 @@ The new controller architecture is shown in \autoref{fig:controllerDesignAndEval
 	\label{fig:controllerDesignAndEvaluation-distfeedforwardArchitecture}
 \end{figure}
 
+The new system architecture is tested with $P_1(s)=P(s)$ and $P_2(s)=1$, as it is not possible to split the plant due it's being a black box model. $d(t)$ is set to the electron gun body temperature $\vartheta_\text{gun}$ and $k_\text{disturbance}$ to a constant scaling factor of 0.01.
+
+\textbf{Conclusion:}\\
 When testing the newly improved system, there are two observations to be made. First, the stability over a few hours is not improved compared to the system that uses only feedback. But the stability also stays about the same when the control parameters are changed to achieve a slightly ``less aggressive'' controller. Decreasing $k_p$ by a factor of $2$ and $k_i$ by a factor of $4$ does not change stability (measured with the $\op{MSE}$ over \SI{1}{\hour} each) over the feedback-only case.
 
 
@@ -716,6 +720,7 @@ Substituting $I_\text{in}(s)=\frac{V_\text{in}(s)}{Z_\text{in}} = \frac{V_\text{
 \frac{V_\text{out}(s)}{I_\text{in}(s)} = -\left(R+\frac{1}{sC}\right).
 \end{equation}
 
+The \gls{csa} uses no input resistor, so with $R=0$, the transfer function is
 \begin{equation}
 \frac{V_\text{out}(s)}{I_\text{in}(s)} = -\frac{1}{sC}.
 \end{equation}
@@ -736,23 +741,30 @@ V_\text{out}(t) &= \mathscr{L}^{-1}\left\{-I_\text{in}(s) \frac{1}{sC}\right\}\\
 
 The \gls{csa} uses an adjustable capacity (to set the range of expected charges) and an analog switch to clear the accumulated charge on the capacitor.
 
+At the end of one pulse, the output voltage of the \gls{csa} becomes
+\begin{equation}
+V_\text{out}(T_\text{pulse}) = -\frac{1}{C} \underbrace{\int_{0}^{T_\text{pulse}} I_\text{in}(\tau) \d{\tau}}_{Q_B} = -\frac{1}{C} Q_B.
+\end{equation}
+The \gls{csa} has a peak-hold output that keeps the voltage level until it is triggered again.
+
 At the moment, the Faraday cup is mounted at the end of the low energy section. The capacity in the \gls{csa} is resetted at the start of every pulse and outputs a voltage proportional to the range setting and the measured charge. This voltage is measured with a data acquisition system connected to \gls{epics} and thus available in \gls{css} (compare \autoref{sec:inputs}).
 
 To set the range of the \gls{csa}, its serial interface together with a serial to Ethernet adapter is used (See an example of the command structure in \autoref{lst:Appendix-javaPcb}).
 
-\autoref{fig:controllerDesignAndEvaluation-optimCav} and \autoref{fig:controllerDesignAndEvaluation-optimFaraday} show the cavity power and the (un-calibrated) charge reading of the Faraday cup for three different cases: the control system switched off, the control system on with the cavity power used as control input and the control system with the Faraday cup's readout (via the \gls{csa}) as an input.
+\autoref{fig:controllerDesignAndEvaluation-optimCav} and \autoref{fig:controllerDesignAndEvaluation-optimFaraday} show the cavity power and the (un-calibrated) charge reading of the Faraday cup for three different cases: the control system switched off, the control system on with the cavity power used as control input and the control system with the Faraday cup's readout, the electron charge (via the \gls{csa}) as an input.
 
-\begin{figure}[tb]
+\textbf{Conclusion:}\\
+When the controller controls the cavity \gls{rf} power, it becomes more stable than in the uncontrolled case, while the electron charge changes over time and vise versa. This shows that there is no simple linear dependency between the electron charge and the cavity \gls{rf} power (which is measured only in the half-cell).\\
+With electron energy measurements it could be determined if measuring the electron charge is a better indicator for electron energy stability than the cavity \gls{rf} power. As the Faraday cup measurement is destructive, it could instead be advantageous to use additional power sensors in the cavity cells and use their weighted sum as control input instead of $P_\text{cavity}$.
+
+\begin{figure}[tbh]
 	\centering
 	\includegraphics[width=\textwidth,height=0.65\textwidth]{chap/ControllerDesignAndEvaluation/img/optimization/cavityPower.tikz}
-	\caption[Cavity power]{Cavity power without control interaction, with the controller acting on the cavity power and with the controller acting on charge; Note the three curves are measured at different times and have no relation to one another}
+	\caption[Cavity power]{Cavity power with and without control interaction}
 	\label{fig:controllerDesignAndEvaluation-optimCav}
-\end{figure}
-
-\begin{figure}[tb]
-	\centering
+	\vspace{2cm}
 	\includegraphics[width=\textwidth,height=0.65\textwidth]{chap/ControllerDesignAndEvaluation/img/optimization/faradayCharge.tikz}
-	\caption[Electron charge]{Electron charge without control interaction, with the controller acting on the cavity power and with the controller acting on charge; Note the three curves are measured at different times and have no relation to one another}
+	\caption[Electron charge]{Electron charge with and without control interaction}
 	\label{fig:controllerDesignAndEvaluation-optimFaraday}
 \end{figure}
 

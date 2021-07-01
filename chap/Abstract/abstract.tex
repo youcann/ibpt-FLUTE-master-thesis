@@ -9,7 +9,7 @@ As part of the development process, first the stability issue is analyzed and me
 
 Then the control system is implemented as an algorithm with a fixed-interval control loop using the Python programming language. A graphical user interface, written in Qml, provides the user with plots and status information and allows the fine-tuning of the controller.
 
-The following experiments at \gls{flute} show results in accordance to the simulation. That is, the stability, when defined as the relative standard deviation, is improved greatly by about a factor of \num{25}.
+The following experiments at \gls{flute} show results in accordance to the simulation. That is, the stability, when defined as the relative standard deviation, is improved greatly by about a factor of two. The final stability is with $\op{\%STD}=\SI{0.0599}{\percent}$ in the required goal of \SIrange{0.01}{0.1}{\percent}.
 
-Finally, ways to refine the control system are regarded. First, by using disturbance feed-forward of the change in waster temperature, the control system is made more robust and achieves the same results. Second, the usage of a Faraday cup, which measures total electron charge provides a potentially better representation of the electron energies, however as the electron beam is lost in the cup, its usages are limited.
+Finally, ways to refine the control system are regarded. First, by using disturbance feed-forward of the change in waster temperature, the control system is made more robust. Second, the usage of a Faraday cup, which measures total electron charge provides a potentially better representation of the electron energies, however as the electron beam is lost in the cup, its usages are limited to the commissioning phase.
 \cleardoublepage

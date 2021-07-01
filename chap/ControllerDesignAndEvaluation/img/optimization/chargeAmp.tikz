@@ -1,9 +1,12 @@
-\begin{tikzpicture}
+﻿\begin{tikzpicture}
 \node[op amp] (opamp) {};
 
 \draw[] (opamp.-) to [R=$R$] +(-3,0) coordinate(in);
-\draw[] (in) to[open,o-o,v>=$V_{in}$] +(0,-2) coordinate(inh) node[rground] {};
+\draw[] (in) to[open,o-o,v>=$V_\text{in}$] +(0,-2) coordinate(inh) node[rground] {};
 \draw[] (opamp.+) -|+(0,-0.5) node[rground] {};
-\draw[] (opamp.-) to[short,*-] +(0,1.5)  to[C=$C$] +(2,0) coordinate(tmp) -- (opamp.out |- tmp) to[short,-*] (opamp.out);
-\draw[] (opamp.out) to[short] +(2,0) to[open,o-o,v^=$V_{out}$] +(0,-1.5) node[rground] {};
+
+\draw[] (opamp.-) to[short,*-] +(0,1.5)  to[C] +(2,1.5) coordinate(tmp) -- (opamp.out |- tmp) to[short,-*] (opamp.out);
+\node at (0.3,1.5) {$C$};
+
+\draw[] (opamp.out) to[short] ++(2,0) to[open,o-o,v^=$V_\text{out}$] +(0,-1.5) node[rground] {};
 \end{tikzpicture}

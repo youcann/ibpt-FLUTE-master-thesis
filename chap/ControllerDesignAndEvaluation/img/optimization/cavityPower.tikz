@@ -17,7 +17,7 @@ xmin=0, xmax=3,
 xtick style={color=black},
 y grid style={white!69.0196078431373!black},
 ylabel={Cavity power (\si{\mega\watt})},
-ymin=7, ymax=7.4,
+ymin=7, ymax=7.5,
 ytick style={color=black}
 ]
 \addplot [semithick, color0]
@@ -8027,7 +8027,7 @@ table {%
 6.99451208333334 7.255028728
 6.99794166666667 7.269497314
 };
-\addlegendentry{Controller on (Cavity power)}
+\addlegendentry{Controlling cavity power}
 \addplot [semithick, color2]
 table {%
 0 6.927760984
@@ -12033,7 +12033,7 @@ table {%
 3.31429569444445 7.1934069905
 3.31438555555556 7.1934069905
 };
-\addlegendentry{Controller on (Faraday cup)}
+\addlegendentry{Controlling electron charge}
 \end{axis}
 
 \end{tikzpicture}
