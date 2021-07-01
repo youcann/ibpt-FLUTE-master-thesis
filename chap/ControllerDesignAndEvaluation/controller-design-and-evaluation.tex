@@ -1,5 +1,5 @@
 \chapter{Controller Design and Evaluation}
-In this chapter a control system is designed and evaluated to stabilize \glspl{flute} \gls{rf} system.
+In this chapter, a control system is designed and evaluated to stabilize \glspl{flute} \gls{rf} system.
 Referring back to the block diagram of a generic control system in \autoref{fig:theoreticalFramework-feedback-architecture}, there are three building blocks of a control system to be determined.
 First the plant transfer function, which describes the system that is to be controlled.
 Second, based on the plant, an appropriate controller type is chosen and its parameters are calculated.
@@ -13,7 +13,7 @@ In the time domain, a \gls{lti} system is described by its impulse response $h(t
 Using this definition directly, the plant's impulse response $p(t)$ could be measured by applying a short peak in the attenuation setting on the attenuator. The effect on the output is not easy to measure and a single measurement of this kind is very susceptible to noise.
 Therefore it is more common to measure the step response, which is the output of a system, when a step function is applied to its input. As the step function is the time integral of the impulse function, the step response can be converted to the impulse response by differentiation in time. \cite{Wang2000}
 
-Instead of measuring a single step response, often several step responses are measured and their average is computed to reduce the variance of the estimation. When measuring a step response the minimum needed measuring time depends on the systems time constants, but they are often not known beforehand.
+Instead of measuring a single step response, often several step responses are measured and their average is computed to reduce the variance of the estimation. When measuring a step response, the minimum needed measuring time depends on the systems time constants, but they are often not known beforehand.
 
 That is why when there is no prior knowledge of the system, the identification is sometimes done with a \gls{prbs} to excite the system with step functions of different lengths. The \gls{prbs} is chosen in a way that some of the steps will probably last longer than a few dominant time constants of the system. 
 
@@ -86,7 +86,7 @@ P[z] = \frac{-10.91 z^{-1} - 10.41 z^{-2}}{1 - 1.84 z^{-1} + 0.8519 z^{-2}}.
 \end{equation}
 
 The high model fit percentage of \SI{96.26}{\percent} justifies the choice of a linear model with few parameters and further estimation attempts using other (non-) linear models are not needed.
-Considering the accuracy of the model, it is important to note this estimation is only valid at the time the measurements are taken. With \gls{flute} being a large experimental setup being still under commission, it is always possible that small changes to certain (sub-) systems can lead to minor or major influences to others.
+Considering the accuracy of the model, it is important to note this estimation is only valid at the time the measurements are taken. With \gls{flute} being a large experimental setup still under commission, it is always possible that small changes to certain (sub-) systems can lead to minor or major influences to others.
 For the time being, the estimation is redone a day later and for both measurements days, different parts of the about six hour measurements each are used as the estimation and validation data sets. Doing so shows no significant change in the estimated coefficients and the resulting model fits, indicating the estimated models are at least plausible.
 
 To account for errors in the estimated model (and possible other errors), when designing the controller, sufficient gain and phase margins are set to ensure stable operation.
@@ -104,13 +104,13 @@ To account for errors in the estimated model (and possible other errors), when d
 \section{Measurement Filter}\label{sec:measurementFilter}
 Like all measurements of physical quantities, the measuring of the system output of the control system is subjected to noise.
 In addition to these disturbances of thermal or electrical origins, also high frequency variations of the system output have detrimental effects on the control systems performance.
-For example the magnitudes of the bunch-by-bunch changes of the measured cavity power are often in the same order as the long-term drifts.
+For example, the magnitudes of the bunch-by-bunch changes of the measured cavity power are often in the same order as the long-term drifts.
 Trying to correct for them, instead of the long term drifts, often leads to overcompensating and can even make the system unstable.
 
 To remove the high frequency components, a low pass filter is used as the measurement block $H(s)$.
 
-In pre-tests the incoming signal was simply filtered with a moving average filter.
-Commonly, the moving average is defined as the mean of a signal $x$ inside a window of length $L$, centered around the current time or sample index $n$, that is shifted along the signal. This smooths out small variations thus the moving average acts as a low pass filter.
+In pre-tests, the incoming signal was simply filtered with a moving average filter.
+Commonly, the moving average is defined as the mean of a signal $x$ inside a window of length $L$, centered around the current time or sample index $n$, that is shifted along the signal. This smooths out small variations, thus the moving average acts as a low pass filter.
 This \textit{non-causal} version of the moving average can only be used with already measured data as to compute the moving average at $n$, future values at $n+i$ are needed:
 \begin{equation}
 \operatorname{MA}_{x,\text{non-causal},L}[n] = \frac{1}{L} \sum_{i=n-\frac{L-1}{2}}^{n+\frac{L-1}{2}} x[i]

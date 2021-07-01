@@ -62,7 +62,7 @@ table {%
 11.9 6.25773387825
 12 6.2480937065
 };
-\addlegendentry{$A(V_{control})$}
+\addlegendentry{$A(V_\text{control})$}
 \end{axis}
 
 \begin{axis}[

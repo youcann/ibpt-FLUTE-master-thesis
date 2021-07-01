@@ -60,7 +60,7 @@ Next the sample times intervals of the process variables are examined if the val
 \begin{equation}
 \Delta=t_{n+1}-t_n.
 \end{equation}
-Then a histogram with the relative frequency on the y axis is used as an estimator for the probability density function of the sample time differences (see \autoref{fig:interfacingFlute_sampleTimesHist}). The histogram shows that the time series resulting from the export feature are highly unevenly spaced. Thus the data needs to be converted to have evenly spaced sample times to use common signal processing methods like the \gls{dft} or digital \gls{lti} filters. For offline analysis of prerecorded data, it can easily be re-sampled to a fixed time grid, e.g. back to the sample time of \SI{0.2}{\second} matching the \SI{5}{\hertz} pulse repetition frequency.\\
+Then, a histogram with the relative frequency on the y axis is used as an estimator for the probability density function of the sample time differences (see \autoref{fig:interfacingFlute_sampleTimesHist}). The histogram shows that the time series resulting from the export feature are highly unevenly spaced. Thus, the data needs to be converted to have evenly spaced sample times to use common signal processing methods like the \gls{dft} or digital \gls{lti} filters. For offline analysis of prerecorded data, it can easily be re-sampled to a fixed time grid, e.g. back to the sample time of \SI{0.2}{\second} matching the \SI{5}{\hertz} pulse repetition frequency.\\
 Input data for the control system is obtained with a dedicated clock/scheduler, e.g. an \texttt{APscheduler} or \texttt{QTimer} using \texttt{caget()} so the sample time distance depends on the clock or scheduler used.
 
 \begin{figure}[H]
@@ -102,9 +102,9 @@ F:INJ-1:Gun:01:Temperature:Body Value & 18 & 0.1294 & 0.05555\\
 In case of the klystron output \gls{rf} power or the cavity \gls{rf} power, filtering of the signals is needed to remove zero outliers.
 These outliers occur if a high voltage arc occurs inside the cavity. This is detected by an optical sensor and the \gls{llrf} control system shuts off the \gls{rf} power for the current pulse (this is called a ``breakdown'').
 These outliers are not representative of the average \gls{rf} power inside the cavity over multiple pulses and thus would greatly impair the controller performance.
-For that reason, before any further filtering to remove noise etc, a breakdown removal filter is used (\autoref{lst:control-system-breakdownremoval}).
+For that reason, before any further filtering to remove noise etc., a breakdown removal filter is used (\autoref{lst:control-system-breakdownremoval}).
 In principle, the new power value is checked to be inside a band, the size of which is determined by the mean deviation of the $N_\text{filt}$ previous values and a scaling $m$.
-The percentile differences are used here as they are robust against outliers (i.e. other breakdowns) in the $N_\text{filt}$ previous values opposed to a normal standard deviation.
+The percentile differences are used here, as they are robust against outliers (i.e. other breakdowns) in the $N_\text{filt}$ previous values, as opposed to a normal standard deviation.
 The scaling with $(2*1.2815)^{-1}$ is used to make the mean deviation comparable to a standard deviation.
 
 \begin{lstlisting}[style=python,caption = Breakdown removal filtering, label = lst:control-system-breakdownremoval]
@@ -180,7 +180,7 @@ r_d = f(I_F)
 \end{equation}
 being an inverse function of the forward bias current, which makes the attenuator adjustable.
 
-The attenuation versus frequency measurements from the manufactures data sheet are redone to both get a first impression of the device and verify it is generally operational and also as a sanity check for the used laboratory test equipment.
+The attenuation versus frequency measurements from the manufacturer's data sheet are redone to both get a first impression of the device and verify it is generally operational and also as a sanity check for the used laboratory test equipment.
 Because the signal used by the FLUTE \gls{rf} system is a \SI{3}{\GHz} single harmonic, the frequency measurement range is augmented over the maximum of \SI{2.5}{\GHz} in the data sheet to \SI{4}{\GHz}.
 Between the measurement of each network analyzer trace, the control voltage $V_\text{control}$ of the attenuator is set to \SI{0}{\volt}, \SI{2}{\volt}, \SI{4}{\volt}, \SI{6}{\volt} or \SI{12}{\volt}.
 The result is shown in \autoref{fig:interfacingFlute_atteneval-overview-NA}\footnote{A thru calibration of the network analyzer reduces the influence of the cables and connectors on the measurement. The change in attenuation due to play in the connectors and slight bend changes in the cables exceeds the trace noise (\SI{0.004}{\dB rms}) and causes an uncertainty of about \SI{0.5}{\dB}}.
@@ -432,7 +432,7 @@ The bottom of the attenuator is fixed to a rectangular iron profile with zip tie
 	\label{fig:interfacingFlute_atteneval-tempstab-influence}
 \end{figure}
 
-To get $\nicefrac{\Delta A}{\Delta \vartheta_\text{case}} (\vartheta_\text{case})$ from the plot in \autoref{fig:interfacingFlute_atteneval-tempstab-influence} an approximately linear relationship $A(\vartheta_\text{case})$ is assumed. To get the slope, the $\vartheta_\text{case}$ component of the measured data points $(\vartheta_\text{case}|A(\vartheta_\text{case}))$ are rounded to one decimal place. Then data points with the same $A(\vartheta_\text{case})$ are averaged together and a linear regression is applied to the result. See \autoref{fig:interfacingFlute_atteneval-tempstab-influenceMean} for the resulting plot. The linear regression estimator yields
+To get $\nicefrac{\Delta A}{\Delta \vartheta_\text{case}} (\vartheta_\text{case})$ from the plot in \autoref{fig:interfacingFlute_atteneval-tempstab-influence}, an approximately linear relationship $A(\vartheta_\text{case})$ is assumed. To get the slope, the $\vartheta_\text{case}$ component of the measured data points $(\vartheta_\text{case}|A(\vartheta_\text{case}))$ are rounded to one decimal place. Then, data points with the same $A(\vartheta_\text{case})$ are averaged together and a linear regression is applied to the result. See \autoref{fig:interfacingFlute_atteneval-tempstab-influenceMean} for the resulting plot. The linear regression estimator yields
 \begin{equation}
 \frac{\Delta A}{\Delta \vartheta_\text{case}} (\vartheta_\text{case})
 \approx \frac{\Delta A}{\Delta \vartheta_\text{case}}
@@ -469,9 +469,9 @@ This means only slow changes of the ambient temperature have an influence on $A$
 Using a non inverting adder with a \textit{TS912IN} operational amplifier, a sine wave with constant offset is made, which is then used to drive the control voltage $V_\text{control}$. The result for different sine wave frequencies is shown in \autoref{fig:interfacingFlute_atteneval-freqresp}.
 
 This result is to be interpreted purely qualitatively, as neither measurement device and software is designed, nor is the circuit used optimal.
-But the traces in \autoref{fig:interfacingFlute_atteneval-freqresp} verify that the ZX73-2500-S+ attenuator is able to follow changes of $V_\text{control}$ at least up to a few ten \si{\kHz}. If the attenuator should be set to a new value, this is equivalent to applying a step at the attenuators $V_\text{control}$ input, which according to the Fourier transform of a $\text{rect}(t)$ pulse, a $\text{sinc}(f)$ contains high frequencies.
+But the traces in \autoref{fig:interfacingFlute_atteneval-freqresp} verify that the ZX73-2500-S+ attenuator is able to follow changes of $V_\text{control}$ at least up to a few ten \si{\kHz}. If the attenuator should be set to a new value, this is equivalent to applying a step at the attenuators $V_\text{control}$ input which, according to the Fourier transform of a $\text{rect}(t)$ pulse, a $\text{sinc}(f)$, contains high frequencies.
 
-This is at several orders of magnitude bigger than the control system can input, compute and output new values to the attenuator.
+This is several orders of magnitude larger than the control system can input, compute and output new values to the attenuator.
 
 \begin{figure}[H]
 	\centering
