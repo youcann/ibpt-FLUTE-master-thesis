@@ -11,11 +11,11 @@ legend style={fill opacity=0.8, draw opacity=1, text opacity=1, draw=white!80!bl
 tick align=outside,
 tick pos=left,
 x grid style={white!69.0196078431373!black},
-xlabel={Window size \(\displaystyle T\) (in \si{\minute})},
+xlabel={Window size \(\displaystyle T\) (\si{\minute})},
 xmin=0, xmax=120,
 xtick style={color=black},
 y grid style={white!69.0196078431373!black},
-ylabel={Relative STD (in \si{\percent})},
+ylabel={Relative STD (\si{\percent})},
 ymin=0.0868549227100208, ymax=0.231602505376848,
 yticklabel style={/pgf/number format/precision=3,/pgf/number format/fixed},
 ytick style={color=black}

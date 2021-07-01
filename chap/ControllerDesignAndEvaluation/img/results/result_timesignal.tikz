@@ -7,11 +7,11 @@
 tick align=outside,
 tick pos=left,
 x grid style={white!69.0196078431373!black},
-xlabel={Relative time (in \si{\hour})},
+xlabel={Relative time (\si{\hour})},
 xmin=0, xmax=12,
 xtick style={color=black},
 y grid style={white!69.0196078431373!black},
-ylabel={Cavity RF power (in \si{\mega\watt})},
+ylabel={Cavity RF power (\si{\mega\watt})},
 ymin=5.30715937346942, ymax=5.35964166050146,
 ytick style={color=black}
 ]

@@ -1,6 +1,6 @@
 \chapter{Controller Design and Evaluation}
-In this chapter a control system is designed and evaluated to stabilize \glspl{flute} RF system.
-Referring back to the block diagram of a generic control system in \autoref{fig:theoreticalFramework-feedback-architecture}, there are three blocks to determine.
+In this chapter a control system is designed and evaluated to stabilize \glspl{flute} \gls{rf} system.
+Referring back to the block diagram of a generic control system in \autoref{fig:theoreticalFramework-feedback-architecture}, there are three building blocks of a control system to be determined.
 First the plant transfer function, which describes the system that is to be controlled.
 Second, based on the plant, an appropriate controller type is chosen and its parameters are calculated.
 Third, a measurement filter is used to improve the quality of the feedback signal path. As the choice of the measurement filter influences the controller design, its design is treated before the controller.
@@ -11,7 +11,7 @@ Before choosing an appropriate controller, some insight of the system response h
 
 In the time domain, a \gls{lti} system is described by its impulse response $h(t)$, that is the reaction of the plant to an impulse at the input.
 Using this definition directly, the plant's impulse response $p(t)$ could be measured by applying a short peak in the attenuation setting on the attenuator. The effect on the output is not easy to measure and a single measurement of this kind is very susceptible to noise.
-Therefore it is more common to measure the step response\cite{Wang2000}, which is the output of a system, when a step function is applied to its input. As the step function is the time integral of the impulse function, the step response can be converted to the impulse response by differentiation in time.
+Therefore it is more common to measure the step response, which is the output of a system, when a step function is applied to its input. As the step function is the time integral of the impulse function, the step response can be converted to the impulse response by differentiation in time. \cite{Wang2000}
 
 Instead of measuring a single step response, often several step responses are measured and their average is computed to reduce the variance of the estimation. When measuring a step response the minimum needed measuring time depends on the systems time constants, but they are often not known beforehand.
 
@@ -41,7 +41,7 @@ In a test run over six hours (after all \gls{flute} subsystems had stabilized), 
 \begin{figure}[tb]
 	\centering
 	\includegraphics[width=\textwidth,height=0.5\textwidth]{chap/ControllerDesignAndEvaluation/img/identification/excitation.tikz}
-	\caption[Identification sequence and response]{Section of the input sequence (blue) and the system response (orange); Note the inverse relation: A higher attenuation $A$ causes a lower cavity power $P_\text{cavity}$}
+	\caption[Identification sequence and response]{Section of the input sequence (blue, Attenuation) and the system response (orange, cavity RF power); Note the inverse relation: A higher attenuation $A$ causes a lower cavity power $P_\text{cavity}$}
 	\label{fig:controllerDesignAndEvaluation-identify-excitation}
 \end{figure}
 
@@ -66,7 +66,7 @@ Using the Matlab function \texttt{zpk()} the models are converted into the zero-
 \centering
 \begin{tabular}{lcccc}
 \toprule
-Model name & Zeros & Poles & Gain & Model fit \\
+Model & Zeros & Poles & Gain & Model fit \\
 \midrule
 P1   & & $(s+0.3505)$ & $-646.94$ & \SI{89.98}{\percent}\\
 P2   & & $(s+0.6875) (s+0.7039)$ & $-873.18$ & \SI{93.83}{\percent}\\
@@ -133,7 +133,7 @@ The delay introduced by a digital filter can be quantified with the filter's gro
 \begin{equation}
 \frac{\tau_g(f)}{T_s} = \frac{\d{\phi(f)}}{\d{f}}
 \end{equation}
-which is given normalized to the sampling time $T_s$ \cite[p.~70]{Kammeyer2002}. In case of a \gls{fir} filter with linear phase (with a symmetrical impulse response), the group delay is always constant over all frequencies and is only dependent on the filter length $N$\cite[p.~165]{Kammeyer2002}:
+which is given normalized to the sampling time $T_s$. \cite[p.~70]{Kammeyer2002} In case of a \gls{fir} filter with linear phase (with a symmetrical impulse response), the group delay is always constant over all frequencies and is only dependent on the filter length $N$ (see \cite[p.~165]{Kammeyer2002}):
 \begin{equation}\label{eq:groupD}
 \frac{\tau_g(f)}{T_s} = \frac{\d{\phi(f)}}{\d{f}} = \frac{\d{\phi}}{\d{f}} = \frac{N}{2}
 \end{equation}
@@ -147,11 +147,11 @@ On the one hand, a \gls{fir} filter is designed with the Kaiser window method.
 This method starts with the desired frequency response, which is usually given piece-wise. 
 In case of the low pass filter it is a step function at a cutoff frequency $f_c$.
 Then the IDFT is used to compute the corresponding impulse response $h_\text{IIR}[n]$, which is in general infinitely long.
-Windowing with e.g. a Kaiser window and then truncating the impulse response yields the impulse response of the desired \gls{fir} filter $h_\text{FIR}[n]$.\cite[p.~533]{Oppenheim2010}.
+Windowing with e.g. a Kaiser window and then truncating the impulse response yields the impulse response of the desired \gls{fir} filter $h_\text{FIR}[n]$. \cite[p.~533]{Oppenheim2010}
 With SciPy using \texttt{b=signal.firwin(N, fc,fs)}, the coefficients of a \gls{fir} with this method can be calculated.
 
 On the other hand, an \gls{iir} filter is designed with the impulse invariance method and an analog Butterworth filter.
-This method could be interpreted as sampling the infinitely long analog impulse response.\cite[p.~497]{Oppenheim2010}
+This method could be interpreted as sampling the infinitely long analog impulse response. \cite[p.~497]{Oppenheim2010}
 In SciPy using \texttt{b,a=signal.butter(N,fc,'lowpass',fs,)}, the coefficients of an \gls{iir} can be calculated with this method.
 For an \gls{iir} filter, the group delay cannot be calculated with \autoref{eq:groupD} and it is in general frequency-dependent.
 
@@ -272,11 +272,11 @@ This is then scaled by the constant $k_i$. To get the derivative part, the deriv
 e_d(t)=\frac{\d{}}{\d{t}} e(t)
 \end{equation}
 is calculated and weighted with $k_d$.
-All three are then summed to get $u(t)$ in the so called parallel form\cite[p.~5]{Dodds2015}:
+All three are then summed to get $u(t)$ in the so called parallel form (see \cite[p.~5]{Dodds2015}):
 \begin{equation}
 u(t)=k_p e(t) + k_i \int_{0}^{t} e(\tau) \d{\tau} + k_d \frac{\d{}}{\d{t}} e(t)
 \end{equation}
-Often instead of the parallel form, the \gls{pid} controller is stated in \textit{standard form}. Instead of using the gains $k_{p,\,i,\,d}$, the parameters proportional gain $K$, integral time $T_i$ and derivative time $T_d$ are used.\cite[p.~76]{Aastroem1995} With the conversions
+Often instead of the parallel form, the \gls{pid} controller is stated in \textit{standard form}. Instead of using the gains $k_{p,\,i,\,d}$, the parameters proportional gain $K$, integral time $T_i$ and derivative time $T_d$ are used. \cite[p.~76]{Aastroem1995} With the conversions
 \begin{align}
 K&=k_i\\
 T_i=\frac{k_p}{k_i}&=\frac{K}{k_i}\\
@@ -286,7 +286,7 @@ the \gls{pid} controller in standard form is
 \begin{equation}
 u(t)=K\left[e(t) + \frac{1}{T_i} \int_{0}^{t} e(\tau) \d{\tau} + T_d \frac{\d{}}{\d{t}} e(t)\right].
 \end{equation}
-The transfer function $G(s)$ is given by the Laplace of $u(t)$ using the computation rules\cite{Leon2015}
+The transfer function $G(s)$ is given by the Laplace of $u(t)$ using the computation rules (see \cite{Leon2015})
 \begin{align}
 \mathcal{L}\left\{\int_{0}^{t} y(\tau) \d{\tau}\right\} &= \frac{1}{s} Y(s)\\
 \mathcal{L}\left\{\frac{\d{}}{\d{t}} y(t)\right\} &= s Y(s)
@@ -305,7 +305,7 @@ This assumes $e(t)$ is sampled with a sampling rate of $f_s=\nicefrac{1}{T_s}$ t
 e_i[n]=e_i[n-1] + e[n] T_s.
 \end{equation}
 
-Using the shift rule of the $\mathcal{Z}$ transform\cite{Leon2015}
+Using the shift rule of the $\mathcal{Z}$ transform (see \cite{Leon2015})
 \begin{equation}
 y[n-k] \laplace z^{-k} Y[z],
 \end{equation}
@@ -323,9 +323,9 @@ u[n] = k_p e[n]
 \subsubsection{Controller Tuning}
 Next the three free parameters $k_{p,\,i,\,d}$ or $K,\,T_{i,\,d}$ are to be chosen in such a way that the controller has optimal performance. This process is called \textit{tuning}. Tuning of the parameters can be performed online or offline.
 
-Online tuning is done by using the physical\footnote{``Physical'' in the sense that one could touch it. (But should one?)} plant. The most popular member of this class is the Ziegler-Nichols tuning\cite{Ziegler1942}. The method relies on experiments and tabulated values. The mostly used variant uses one measured step response.
+Online tuning is done by using the physical\footnote{``Physical'' in the sense that one could touch it. (But should one?)} plant. The most popular member of this class is the Ziegler-Nichols tuning. The method relies on experiments and tabulated values. The mostly used variant uses one measured step response. \cite{Ziegler1942}
 
-Using this method at \gls{flute} produced mixed results. While being a very simple and fast process, the resulting controller is often unstable. This is partially due to errors when extracting the tabulated values from the noisy step response, but also the method intrinsically leads to poor stability margins.\cite[p.~142]{Aastroem1995}
+Using this method at \gls{flute} produced mixed results. While being a very simple and fast process, the resulting controller is often unstable. This is partially due to errors when extracting the tabulated values from the noisy step response, but also the method intrinsically leads to poor stability margins. \cite[p.~142]{Aastroem1995}
 Nonetheless the Ziegler-Nichols method yields a usable starting point, if the strategy is to fine tune the controller manually by intuition and experience of the user.
 
 As the Ziegler-Nichols method does not yield an acceptable parameter set and the method combined with fine tuning by hand takes a considerable amount of time, next tuning the parameters offline using only the plants transfer function and the measurement filter is done.
@@ -341,10 +341,10 @@ with the parameter vector $\theta=[k_p,\,k_i,\,k_d]$ or $\theta=[K,\,T_i,\,T_d]$
 
 A convenient way to do such an optimization by simulation using the transfer function of the estimated plant is the Matlab \textit{PID Tuner}.
 
-\paragraph{Tuning the Controller with the Matlab PID Tuner}
+\paragraph{Offline Tuning the Controller with the Matlab PID Tuner}
 The Matlab \gls{pid} Tuner accepts different kinds of system models used by the Matlab/Simulink ecosystem. It is possible to directly use estimated models, models defined via their transfer function or the zero-pole-gain representation, Simulink models or combinations of those\footnote{Series connection can be established by multiplying the models transfer functions.}.
 
-The manual of the PID Tuner\cite{pidTunerMan} describes the expected input (see \autoref{fig:controllerDesignAndEvaluation-pidTunersys}). The feedback path has to have unity gain, i.e. there is no measurement filter allowed. Therefore the measurement filter is moved before the junction where the output $y[n]$ would normally be measured. Then the measurement filter $H[z]$ is combined with the plant $P[z]$ to form $Sys[z]$. For that reason $y[n]$ becomes an internal signal of $Sys[z]$. However the new system output $y'[n]=h[z] \ast y[n]$ is not too different from the old one, since $H[z]$ is designed to remove high frequency noise but retain the rest of $y[n]$.
+The manual of the PID Tuner (see \cite{pidTunerMan}) describes the expected input (see \autoref{fig:controllerDesignAndEvaluation-pidTunersys}). The feedback path has to have unity gain, i.e. there is no measurement filter allowed. Therefore the measurement filter is moved before the junction where the output $y[n]$ would normally be measured. Then the measurement filter $H[z]$ is combined with the plant $P[z]$ to form $Sys[z]$. For that reason $y[n]$ becomes an internal signal of $Sys[z]$. However the new system output $y'[n]=h[z] \ast y[n]$ is not too different from the old one, since $H[z]$ is designed to remove high frequency noise but retain the rest of $y[n]$.
 
 \begin{figure}[tb]
 	\centering
@@ -353,7 +353,7 @@ The manual of the PID Tuner\cite{pidTunerMan} describes the expected input (see 
 	\label{fig:controllerDesignAndEvaluation-pidTunersys}
 \end{figure}
 
-The manufacture's documentation \cite{pidTuner} does not disclose any internals of the PID Tuner nor state which optimization technique is used, but three tuning objectives are stated:
+The manufacture's documentation in \cite{pidTuner} does not disclose any internals of the PID Tuner nor state which optimization technique is used, but three tuning objectives are stated:
 \begin{itemize}
 \item Stability: The closed loop should be stable (that is BIBO stable as defined in \autoref{def:bibo})
 \item Performance: The closed loop system tracks the input well and rejects disturbances as rapidly as possible (see \autoref{sec:drandtrack})
@@ -363,7 +363,6 @@ The manufacture's documentation \cite{pidTuner} does not disclose any internals 
 Using \autoref{lst:controllerDesignAndEvaluation-pidTuner}, the estimated plant $P[z]$ is loaded, a measurement filter $H[z]$ is generated and the combination $Sys[z]=P[z]H[z]$ is fed into the PID Tuner.
 
 \begin{lstlisting}[style=matlab,caption = Matlab script to generate an input system for PID Tuner, label = lst:controllerDesignAndEvaluation-pidTuner]
-
 % design lowpass measurement filter H
 N=10;
 lpFilt1 = designfilt('lowpassfir', 'FilterOrder', N, 'CutoffFrequency', ...
@@ -411,14 +410,14 @@ Especially \autoref{fig:controllerDesignAndEvaluation-pidTunerITN40} shows that 
 
 \begin{figure}[tb]
 	\centering
-	\includegraphics[width=\textwidth,height=0.5\textwidth]{chap/ControllerDesignAndEvaluation/img/controller/pidTuner/trackingN10.tikz}
+	\includegraphics[width=\textwidth,height=0.6\textwidth]{chap/ControllerDesignAndEvaluation/img/controller/pidTuner/trackingN10.tikz}
 	\caption[Input tracking of controller one and two]{Step response of the input tracking $F_T$ for controller $G_1[z]$ and $G_2[z]$, designed with the plant $P[z]$ and a measurement filter of order $N=10$, response time goal to \SI{5}{\second} and \SI{10}{\second}}
 	\label{fig:controllerDesignAndEvaluation-pidTunerITN10}
 \end{figure}
 
 \begin{figure}[tb]
 	\centering
-	\includegraphics[width=\textwidth,height=0.5\textwidth]{chap/ControllerDesignAndEvaluation/img/controller/pidTuner/trackingN40.tikz}
+	\includegraphics[width=\textwidth,height=0.6\textwidth]{chap/ControllerDesignAndEvaluation/img/controller/pidTuner/trackingN40.tikz}
 	\caption[Input tracking of controller three and four]{Step response of the input tracking $F_T$ for controller $G_3[z]$ and $G_4[z]$, designed with the plant $P[z]$ and a measurement filter of order $N=40$, response time goal to \SI{5}{\second} and \SI{10}{\second}}
 	\label{fig:controllerDesignAndEvaluation-pidTunerITN40}
 \end{figure}
@@ -433,14 +432,14 @@ Especially when looking a the plots of $G_3[z]$, it is obvious that there can be
 
 \begin{figure}[tb]
 	\centering
-	\includegraphics[width=\textwidth,height=0.5\textwidth]{chap/ControllerDesignAndEvaluation/img/controller/pidTuner/rejectionN10.tikz}
+	\includegraphics[width=\textwidth,height=0.6\textwidth]{chap/ControllerDesignAndEvaluation/img/controller/pidTuner/rejectionN10.tikz}
 	\caption[Disturbance rejection of controller one and two]{Step response of the disturbance rejection $F_{DR}$ for controller $G_1[z]$ and $G_2[z]$, designed with the plant $P[z]$ and a measurement filter of order $N=10$, response time goal to \SI{5}{\second} and \SI{10}{\second}}
 	\label{fig:controllerDesignAndEvaluation-pidTunerDRN10}
 \end{figure}
 
 \begin{figure}[tb]
 	\centering
-	\includegraphics[width=\textwidth,height=0.5\textwidth]{chap/ControllerDesignAndEvaluation/img/controller/pidTuner/rejectionN40.tikz}
+	\includegraphics[width=\textwidth,height=0.6\textwidth]{chap/ControllerDesignAndEvaluation/img/controller/pidTuner/rejectionN40.tikz}
 	\caption[Disturbance rejection of controller three and four]{Step response of the disturbance rejection $F_{DR}$ for controller $G_3[z]$ and $G_4[z]$, designed with the plant $P[z]$ and a measurement filter of order $N=40$, response time goal to \SI{5}{\second} and \SI{10}{\second}}
 	\label{fig:controllerDesignAndEvaluation-pidTunerDRN40}
 \end{figure}
@@ -521,9 +520,9 @@ The system should be implemented as software that runs on most personal computer
 
 Since many other choices depend on it, first the programming language has to be picked. As Python was used in earlier chapters and the communicating abilities to both \gls{epics} and the Keysight 34972A were already proven, it is the obvious choice. 
 
-From there on the \gls{gui} framework is the next decision to be made. For Python popular choices are \textit{Tkinter}, a built in implementation of the Tk/tcl \gls{gui} toolkit, \textit{wxPython}, a Python binding to the cross-platform \gls{gui} library wxWidgets, or \textit{PyQt}\cite{pyqt}, a set of Python bindings for the Qt \gls{gui} framework\cite{qt}. While Tkinter has the advantage of being built into the Python language, wxPython offers more functionality and is more widely adopted. PyQt profits from the large Qt ecosystem, so is it for example possible to develop the \gls{gui} separately from the code using \textit{Qt Designer}.
+From there on the \gls{gui} framework is the next decision to be made. For Python popular choices are \textit{Tkinter}, a built in implementation of the Tk/tcl \gls{gui} toolkit, \textit{wxPython}, a Python binding to the cross-platform \gls{gui} library wxWidgets, or \textit{PyQt}(see \cite{pyqt}), a set of Python bindings for the Qt \gls{gui} framework. \cite{qt} While Tkinter has the advantage of being built into the Python language, wxPython offers more functionality and is more widely adopted. PyQt profits from the large Qt ecosystem, so is it for example possible to develop the \gls{gui} separately from the code using \textit{Qt Designer}.
 
-For (live-) plotting of data in the \gls{gui}, the standard library in Python is \textit{matplotlib}\cite{Hunter2007}. It can be used with all three plotting libraries. However the biggest drawback is the possible update speed of the plots. With more than about a hundred points on the screen, the update frequency drops to well below \SI{1}{\hertz}. A much faster alternative is \textit{pyqtgraph}\cite{pyqtgraph}, a scientific plotting library written in Python and using the Qt GraphicsView. It is only compatible only with PyQt (or the PySide alternatives).
+For (live-) plotting of data in the \gls{gui}, the standard library in Python is \textit{matplotlib}. \cite{Hunter2007} It can be used with all three plotting libraries. However the biggest drawback is the possible update speed of the plots. With more than about a hundred points on the screen, the update frequency drops to well below \SI{1}{\hertz}. A much faster alternative is \textit{pyqtgraph} (see \cite{pyqtgraph}), a scientific plotting library written in Python and using the Qt GraphicsView. It is only compatible only with PyQt (or the PySide alternatives).
 
 Therefore PyQt and pyqtgraph are used to build handle the \gls{gui} and plot the live data. Also Qt Designer is used to model the \gls{gui} graphically.
 
@@ -538,16 +537,16 @@ An example in pseudo code is listed in \autoref{lst:controllerDesignAndEvaluatio
 
 \begin{lstlisting}[caption = PID controller implemented in pseudo code, label = lst:controllerDesignAndEvaluation-pidcode]
 while(true) {
-    e       := x_set - x_actual
-    e_i     := e_i_old + e*T_s
-    e_d     := (e-e_old)/T_s
-    e_i_old := e_i
-    e_old   := e
-    wait_sec(0.2)
+	e := x_set - x_actual
+	e_i := e_i_old + e*T_s
+	e_d := (e-e_old)/T_s
+	e_i_old := e_i
+	e_old := e
+	wait_sec(0.2)
 }
 \end{lstlisting}
 
-To get the timing right and to allow the \gls{gui} to be responsive while the control algorithm runs in the background, a scheduler that activates a callback function every \SI{0.2}{\second} should be used. Since in \autoref{sec:atteneval} the Advanced Python Scheduler (AP scheduler) is used successfully, it should also be used for the control system. Unfortunately the AP scheduler is not compatible with PyQt and using it interferes with the internal Qt timing systems. For this reason, a timer is constructed instead with the  \texttt{QTimer} class.\cite{qtimer}
+To get the timing right and to allow the \gls{gui} to be responsive while the control algorithm runs in the background, a scheduler that activates a callback function every \SI{0.2}{\second} should be used. Since in \autoref{sec:atteneval} the Advanced Python Scheduler (AP scheduler) is used successfully, it should also be used for the control system. Unfortunately the AP scheduler is not compatible with PyQt and using it interferes with the internal Qt timing systems. For this reason, a timer is constructed instead with the  \texttt{QTimer} class. \cite{qtimer}
 
 Logging the data to disk is done by using the same \texttt{QTimer} as is used for the control algorithm, to write one line of CSV data to disk each time the timer is triggered.
 
@@ -563,20 +562,20 @@ With these building blocks ready, the \gls{gui} is build with Qt Designer and ba
 
 \newpage
 \section{Evaluation of the Control System (Online)}
-After evaluating the controller offline, it is now time to evaluate the performance of the control system on the machine. To do so, \gls{flute} is operated with and without the control system switched on for \SI{6}{\hour} each. Before the test, \gls{flute} is allowed to run a few hours for all components to reach operating temperatures.
+After evaluating the controller offline, it is now time to evaluate the performance of the control system on the machine. To do so, \gls{flute} is operated with and without the control system (using the controller $G_1[z]$ and the FIR filter with order $N=40$) switched on for \SI{6}{\hour} each. Before the test, \gls{flute} is allowed to run a few hours for all components to reach operating temperatures.
 The result of the test is shown in \autoref{fig:controllerDesignAndEvaluation_resultTime}.
 Note, that in this test about \SI{7}{\hour} into the experiment there was an unexpected shutdown of \gls{flute} and the corresponding block of data is removed before further processing.
 
 \begin{figure}[tb]
 	\centering
-	\includegraphics[width=\textwidth,height=0.5\textwidth]{chap/ControllerDesignAndEvaluation/img/results/result_timesignal.tikz}
+	\includegraphics[width=\textwidth,height=0.65\textwidth]{chap/ControllerDesignAndEvaluation/img/results/result_timesignal.tikz}
 	\caption[Time signal whole experiment]{Cavity power over about \SI{15}{\hour} (about three hours of downtime removed for clarity around the \SI{7}{\hour} mark); control system switched off at \SI{6}{\hour} (recording started 2021/05/01 20:00)}
 	\label{fig:controllerDesignAndEvaluation_resultTime}
 \end{figure}
 
 \begin{figure}[tb]
 	\centering
-	\includegraphics[width=\textwidth,height=0.5\textwidth]{chap/ControllerDesignAndEvaluation/img/results/result_spectrogram.tikz}
+	\includegraphics[width=\textwidth,height=0.65\textwidth]{chap/ControllerDesignAndEvaluation/img/results/result_spectrogram.tikz}
 	\caption[Spectogram of \autoref{fig:controllerDesignAndEvaluation_resultTime}]{Spectrogram of the cavity power in \autoref{fig:controllerDesignAndEvaluation_resultTime}}
 	\label{fig:controllerDesignAndEvaluation_resultSpectg}
 \end{figure}
@@ -587,7 +586,7 @@ This allows the spectrum for these two blocks to be estimated using a periodogra
 \begin{figure}[tb]
 	\centering
 	\includegraphics[width=\textwidth,height=0.7\textwidth]{chap/ControllerDesignAndEvaluation/img/results/controllerOnVsOff.tikz}
-	\caption[Controller success time signal]{Time plots comparing between the control system on and off}
+	\caption[Controller success time signal]{The cavity RF power plotted over time for the two cases control system on and control system off (recorded one after the other and overlayed for comparison)}
 	\label{fig:controllerDesignAndEvaluation_resultComp}
 \end{figure}
 
@@ -600,18 +599,18 @@ This allows the spectrum for these two blocks to be estimated using a periodogra
 
 With the periodogram data, the control system success can be measured with the most prominent noise metric.
 
-Next, the cases controller on and controller off should be compared with the relative standard deviation. Measuring and displaying the relative standard deviation $STD\%$ is also supported on the \gls{llrf} \gls{css} panel at \gls{flute}, so while the experiments run, the values are checked from time to time. It can be observed that different values are shown over time although the plotted time signal looks stationary by eye. This suggests that the relative standard deviation does not only depend on the window size $T$ over which it is calculated, but also heavily on the absolute position in time $t$. This effect is more visible for small window sizes. The issue is illustrated in \autoref{fig:controllerDesignAndEvaluation_resultSTDp}, where $STD\%=STD\%(t,T)$ is plotted as a function of the time $t$ and the window size $T$.
+Next, the cases controller on and controller off should be compared with the relative standard deviation. Measuring and displaying the relative standard deviation $\op{\%STD}$ is also supported on the \gls{llrf} \gls{css} panel at \gls{flute}, so while the experiments run, the values are checked from time to time. It can be observed that different values are shown over time although the plotted time signal looks stationary by eye. This suggests that the relative standard deviation does not only depend on the window size $T$ over which it is calculated, but also heavily on the absolute position in time $t$. This effect is more visible for small window sizes. The issue is illustrated in \autoref{fig:controllerDesignAndEvaluation_resultSTDp}, where $\op{\%STD}=\op{\%STD}(t,T)$ is plotted as a function of the time $t$ and the window size $T$.
 
 \begin{figure}[tb]
     \centering
         \subfloat[Controller off]{\includegraphics[width=\textwidth,height=0.4\textwidth]{chap/ControllerDesignAndEvaluation/img/stdp_off.tikz}}
         \\
         \subfloat[Controller on]{\includegraphics[width=\textwidth,height=0.4\textwidth]{chap/ControllerDesignAndEvaluation/img/stdp_on.tikz}}
-       \caption{Relative standard deviation $STD\%(t,T)$}
+       \caption{Relative standard deviation $\op{\%STD}(t,T)$}
     \label{fig:controllerDesignAndEvaluation_resultSTDp}
 \end{figure}
 
-For that reason, for small window sizes, time averages of $STD\%$ should be used instead of single values. For the measured $STD\%(t,T)$ for the controller off and the controller on cases, $STD\%(T)$ is plotted in \autoref{fig:controllerDesignAndEvaluation_resultSTDp_means}. This plot shows what could already be guessed from \autoref{fig:controllerDesignAndEvaluation_resultSTDp}: with the $STD\%$ metric, the system seems \textit{less} stable with the controller on, if the $STD\%$ is calculated over small window sizes e.g. $T=\SI{1}{\minute}$. For very long windows, the dependency on the window position becomes very small. So for the comparison with the other metrics, $STD\%(T=\SI{4}{\hour})$ is used.
+For that reason, for small window sizes, time averages of $\op{\%STD}$ should be used instead of single values. For the measured $\op{\%STD}(t,T)$ for the controller off and the controller on cases, $STD\%(T)$ is plotted in \autoref{fig:controllerDesignAndEvaluation_resultSTDp_means}. This plot shows what is already suggested by \autoref{fig:controllerDesignAndEvaluation_resultSTDp}: with the $\op{\%STD}$ metric, the system seems \textit{less} stable with the controller on, if the $\op{\%STD}$ is calculated over small window sizes e.g. $T=\SI{1}{\minute}$. For very long windows, the dependency on the window position becomes negligible. So for the comparison with the other metrics, $\op{\%STD}(T=\SI{4}{\hour})$ is used. 
 
 \begin{figure}[tb]
 	\centering
@@ -623,7 +622,8 @@ For that reason, for small window sizes, time averages of $STD\%$ should be used
 
 With the metrics from \autoref{sec:metrics}, the success of the control system is assessed in \autoref{tab:controllerDesignAndEvaluation_metrics}.
 
-This shows for example the mean squared error is improved by a factor of about \num{371} by using the control system.
+\textbf{Result:}\\
+Regarding $\op{\%STD}=\SI{0.0599}{\percent}$, achieved with the control system, shows the \textbf{success} of the control system. With the controller, the variation of the cavity \gls{rf} power can be brought down to lie inside the \SIrange{0.01}{0.1}{\percent} goal, set in \autoref{eq:goalstd}.
 
 \begin{table}[tbh]
 \centering
@@ -631,9 +631,9 @@ This shows for example the mean squared error is improved by a factor of about \
 \begin{tabular}{lSSS}
 	\toprule
 	Metric                 & {Controller off} & {Controller on} & {Controller off/Controller on} \\ \midrule
-	$\%STD(\SI{4}{\hour})$ & 0.11559          & 0.00599225      & 19.2891                        \\
+	$\%STD(\SI{4}{\hour})$ & 0.11559          & 0.0599225       & 1.92891                        \\
 	$MSE$                  & 37.639           & 0.10133         & 371.44                         \\
-	$MPN$                  & 487309.29        & 14386.25        & 33.873                         \\ \bottomrule
+	$MPN$                  & 0.0170           & 0.0151          & 1.126                          \\ \bottomrule
 \end{tabular}
 \end{table}
 
@@ -700,9 +700,9 @@ The Faraday cup does not discriminate between the origin of the electrons in the
 
 The charge is captured as a current over some time. This charge then needs to be transformed into a voltage readable by the \gls{flute} data acquisition system, which takes voltages as an input. This is done with a \gls{csa}.
 
-It is similar to an analog integrator (see \autoref{fig:controllerDesignAndEvaluation-integrator}). In principle it can be constructed using an operational amplifier as depicted in \autoref{fig:controllerDesignAndEvaluation-integrator}.\cite[p.~230]{Horowitz2015}
+It is similar to an analog integrator (see \autoref{fig:controllerDesignAndEvaluation-integrator}). In principle it can be constructed using an operational amplifier as depicted in \autoref{fig:controllerDesignAndEvaluation-integrator}. \cite[p.~230]{Horowitz2015}
 
-By using one of the fundamental rules of the ideal model of an operational amplifier, that is the voltage difference between the $+$ and $-$ inputs vanishes, the input impedance is
+By using the fundamental rules of the ideal model of an operational amplifier, that is the voltage difference between the $+$ and $-$ inputs vanishes and the input currents flowing in the $+$ and $-$ inputs are zero, the input impedance is
 \begin{equation}
 Z_\text{in} = \frac{V_\text{in}}{I_\text{in}} = R.
 \end{equation}
@@ -720,7 +720,7 @@ Substituting $I_\text{in}(s)=\frac{V_\text{in}(s)}{Z_\text{in}} = \frac{V_\text{
 \frac{V_\text{out}(s)}{I_\text{in}(s)} = -\frac{1}{sC}.
 \end{equation}
 
-With $\mathscr{L}\left\{\int_{0}^{t} x(\tau) \d{\tau}\right\}=\frac{1}{s} X(s)$, the output in the time domain becomes
+With $\mathscr{L}\left\{\int_{0}^{t} x(\tau) \d{\tau}\right\}=\frac{1}{s} X(s)$ (see \cite{Leon2015}), the output in the time domain becomes
 \begin{align}
 V_\text{out}(t) &= \mathscr{L}^{-1}\left\{-I_\text{in}(s) \frac{1}{sC}\right\}\\
                 &= -\frac{1}{C} \frac{1}{s} I_\text{in}(s)\\
@@ -736,7 +736,7 @@ V_\text{out}(t) &= \mathscr{L}^{-1}\left\{-I_\text{in}(s) \frac{1}{sC}\right\}\\
 
 The \gls{csa} uses an adjustable capacity (to set the range of expected charges) and an analog switch to clear the accumulated charge on the capacitor.
 
-At the moment, the Faraday cup is mounted at the end of the low energy section. The capacity in the \gls{csa} is resetted at the start of every pulse and outputs a voltage proportional to the range setting and the measured charge.
+At the moment, the Faraday cup is mounted at the end of the low energy section. The capacity in the \gls{csa} is resetted at the start of every pulse and outputs a voltage proportional to the range setting and the measured charge. This voltage is measured with a data acquisition system connected to \gls{epics} and thus available in \gls{css} (compare \autoref{sec:inputs}).
 
 To set the range of the \gls{csa}, its serial interface together with a serial to Ethernet adapter is used (See an example of the command structure in \autoref{lst:Appendix-javaPcb}).
 

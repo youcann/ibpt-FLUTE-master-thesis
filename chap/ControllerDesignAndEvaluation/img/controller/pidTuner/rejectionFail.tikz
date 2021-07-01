@@ -15,8 +15,8 @@ xmin=0,
 xmax=300,
 ymin=-1000,
 ymax=1000,
-xlabel={Time $t$ (in \si{\second})},
-ylabel={Norm. amp. (in AU)},
+xlabel={Time $t$ (\si{\second})},
+ylabel={Norm. amp. (AU)},
 axis background/.style={fill=white},
 legend style={legend cell align=left, align=left, draw=white!15!black}
 ]

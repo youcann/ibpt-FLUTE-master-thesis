@@ -8,11 +8,12 @@
 \begin{tikzpicture}
 
 \begin{axis}[%
+legend cell align={left},
 xmin=18898.5530711986,
 xmax=19093.4038515444,
 xlabel style={font=\color{white!15!black}},
-xlabel={Time $t$},
-ylabel={$\Delta P_{cavity}$ (in \si{\kilo\watt})},
+xlabel={Time $t$ (\si{second})},
+ylabel={$\Delta P_{cavity}$ (\si{\kilo\watt})},
 ymin=-600,
 ymax=850,
 axis background/.style={fill=white},

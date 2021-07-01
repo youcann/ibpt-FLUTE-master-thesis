@@ -11,11 +11,11 @@ legend style={fill opacity=0.8, draw opacity=1, text opacity=1, draw=white!80!bl
 tick align=outside,
 tick pos=left,
 x grid style={white!69.0196078431373!black},
-xlabel={Frequency (in \si{\hertz})},
+xlabel={Frequency (\si{\hertz})},
 xmin=0, xmax=0.004,
 xtick style={color=black},
 y grid style={white!69.0196078431373!black},
-ylabel={Spectral Density of Cavity RF power (in \si{\dB\per\hertz})},
+ylabel={Spectral Density of Cavity RF power (\si{\dB\per\hertz})},
 ymin=13.9822845721523, ymax=75,
 ytick style={color=black}
 ]

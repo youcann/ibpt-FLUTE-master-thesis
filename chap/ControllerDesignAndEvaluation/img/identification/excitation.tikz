@@ -9,11 +9,11 @@
 tick align=outside,
 tick pos=left,
 x grid style={white!69.0196078431373!black},
-xlabel={Elapsed time \(\displaystyle t\) (in \si{\second})},
+xlabel={Elapsed time \(\displaystyle t\) (\si{\second})},
 xmin=0, xmax=220,
 xtick style={color=black},
 y grid style={white!69.0196078431373!black},
-ylabel={Input Attenuation $A(t)$ (in \si{\dB})},
+ylabel={Input Attenuation $A(t)$ (\si{\dB})},
 ymin=6.2, ymax=7,
 ytick style={color=black}
 ]
@@ -2232,7 +2232,7 @@ table {%
 \end{axis}
 
 \begin{axis}[
-axis y line=right,
+axis y line*=right,
 tick align=outside,
 x grid style={white!69.0196078431373!black},
 xmin=0, xmax=220,

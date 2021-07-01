@@ -11,11 +11,11 @@ legend style={fill opacity=0.8, draw opacity=1, text opacity=1, draw=white!80!bl
 tick align=outside,
 tick pos=left,
 x grid style={white!69.0196078431373!black},
-xlabel={Relative time (in \si{\second})},
+xlabel={Relative time (\si{\second})},
 xmin=0, xmax=600,
 xtick style={color=black},
 y grid style={white!69.0196078431373!black},
-ylabel={Cavity power (in \si{\mega\watt})},
+ylabel={Cavity power (\si{\mega\watt})},
 ymin=4.8356544879, ymax=4.9535982281,
 ytick style={color=black}
 ]

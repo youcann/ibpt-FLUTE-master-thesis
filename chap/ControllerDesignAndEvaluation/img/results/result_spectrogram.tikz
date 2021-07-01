@@ -3,18 +3,18 @@
 
 \begin{axis}[
 colorbar,
-colorbar style={ylabel={Spectral Power (in \si{\mega\watt\per\hertz})}},
+colorbar style={ylabel={Spectral Power (\si{\mega\watt\per\hertz})}},
 colormap/viridis,
 point meta max=5,
 point meta min=0.03,
 tick align=outside,
 tick pos=left,
 x grid style={white!69.0196078431373!black},
-xlabel={Relative time (in \si{\hour})},
+xlabel={Relative time (\si{\hour})},
 xmin=0, xmax=12,
 xtick style={color=black},
 y grid style={white!69.0196078431373!black},
-ylabel={Frequency (in \si{\hertz})},
+ylabel={Frequency (\si{\hertz})},
 ymin=-0.00048828125, ymax=0.12548828125,
 ytick style={color=black}
 ]
